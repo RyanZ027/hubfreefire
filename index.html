@@ -971,22 +971,15 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       </div>
       <div class="modal-body">
         <input type="hidden" id="finMatchId">
-        <p style="color: var(--muted); margin-bottom: 16px; font-size: 14px;">O ELO será distribuído (+25 a +30 Win / -20 a -25 Loss) baseado no desequilíbrio das equipes.</p>
-        <div class="input-group">
-          <label>Vencedor</label>
-          <select class="select" id="finWinner">
-            <option value="A">Time A</option>
-            <option value="B">Time B</option>
-          </select>
-        </div>
+        <p style="color: var(--muted); margin-bottom: 16px; font-size: 14px;">Partida MD15 (Primeiro a 7 rounds vence). O ELO será distribuído (+25 a +30 Win / -20 a -25 Loss) baseado no desequilíbrio das equipes.</p>
         <div class="grid-2">
           <div class="input-group">
             <label>Placar Time A</label>
-            <input type="number" id="finScoreA" class="input" value="0" min="0">
+            <input type="number" id="finScoreA" class="input" value="0" min="0" max="7">
           </div>
           <div class="input-group">
             <label>Placar Time B</label>
-            <input type="number" id="finScoreB" class="input" value="0" min="0">
+            <input type="number" id="finScoreB" class="input" value="0" min="0" max="7">
           </div>
         </div>
         <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.confirmFinishMatch()">Confirmar Resultado</button>
@@ -2089,17 +2082,28 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     
     window.confirmFinishMatch = async () => {
       const matchInp = document.getElementById('finMatchId');
-      const winInp = document.getElementById('finWinner');
       const scoreAInp = document.getElementById('finScoreA');
       const scoreBInp = document.getElementById('finScoreB');
-      if(!matchInp || !winInp || !scoreAInp || !scoreBInp) return;
+      if(!matchInp || !scoreAInp || !scoreBInp) return;
 
       const matchId = matchInp.value;
       const m = state.matches.find(x => x.id === matchId);
       if(!m) return;
 
-      m.status = 'closed'; m.winner = winInp.value; 
-      m.scoreA = parseInt(scoreAInp.value); m.scoreB = parseInt(scoreBInp.value);
+      const scoreA = parseInt(scoreAInp.value);
+      const scoreB = parseInt(scoreBInp.value);
+
+      if (scoreA !== 7 && scoreB !== 7) {
+          return window.customAlert("Partida MD15: O time vencedor precisa alcançar exatos 7 rounds!");
+      }
+      if (scoreA === 7 && scoreB === 7) {
+          return window.customAlert("Placar inválido. Apenas um time pode ter 7 rounds.");
+      }
+
+      m.status = 'closed'; 
+      m.winner = scoreA > scoreB ? 'A' : 'B'; 
+      m.scoreA = scoreA; 
+      m.scoreB = scoreB;
       
       const wIds = m.winner === 'A' ? m.teamA : m.teamB;
       const lIds = m.winner === 'A' ? m.teamB : m.teamA;
