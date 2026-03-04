@@ -389,7 +389,7 @@
                   <option value="livre">AP VALOR LIVRE (Min R$ 5)</option>
                 </select>
                 <div id="customPixContainer" class="hidden" style="margin-top: 8px;">
-                  <input type="number" id="customPixValue" class="input" placeholder="Digite o valor (Min 5)" min="5" onchange="window.updateQueueCounts()" onkeyup="window.updateQueueCounts()">
+                  <input type="number" id="customPixValue" class="input" placeholder="Digite o valor (Min 5)" min="5" onchange="window.updateQueueCountsUI()" onkeyup="window.updateQueueCountsUI()">
                 </div>
               </div>
               <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;">
@@ -492,6 +492,7 @@
             </div>
             <div class="ff-stats">
               <span>ID: <b id="pfId" class="mono">Opcional</b></span>
+              <span class="hidden">Nível: <b id="pfLevel">-</b></span>
               <span>Elo Sistema: <b id="pfRankPts">Unranked</b></span>
               <span>Patente FF: <b id="pfRank">Unranked</b></span>
             </div>
@@ -856,19 +857,28 @@
     }
 
     window.customAlert = (msg, title="Aviso") => {
-      document.getElementById('customAlertTitle').innerText = title;
-      document.getElementById('customAlertMsg').innerText = msg;
-      document.getElementById('modalCustomAlert').classList.add('active');
+      const elTitle = document.getElementById('customAlertTitle');
+      const elMsg = document.getElementById('customAlertMsg');
+      const modal = document.getElementById('modalCustomAlert');
+      if (elTitle) elTitle.innerText = title;
+      if (elMsg) elMsg.innerText = msg;
+      if (modal) modal.classList.add('active');
     };
+
     window.customConfirm = (msg, onConfirm, title="Confirmação") => {
-      document.getElementById('customConfirmTitle').innerText = title;
-      document.getElementById('customConfirmMsg').innerText = msg;
+      const elTitle = document.getElementById('customConfirmTitle');
+      const elMsg = document.getElementById('customConfirmMsg');
+      if (elTitle) elTitle.innerText = title;
+      if (elMsg) elMsg.innerText = msg;
+      
       const modal = document.getElementById('modalCustomConfirm');
       const btnOk = document.getElementById('btnCustomConfirmOk');
-      const newBtnOk = btnOk.cloneNode(true);
-      btnOk.parentNode.replaceChild(newBtnOk, btnOk);
-      newBtnOk.addEventListener('click', () => { modal.classList.remove('active'); if(onConfirm) onConfirm(); });
-      modal.classList.add('active');
+      if (btnOk && modal) {
+          const newBtnOk = btnOk.cloneNode(true);
+          btnOk.parentNode.replaceChild(newBtnOk, btnOk);
+          newBtnOk.addEventListener('click', () => { modal.classList.remove('active'); if(onConfirm) onConfirm(); });
+          modal.classList.add('active');
+      }
     };
 
     // --- Firebase Auth & Sync ---
@@ -900,9 +910,13 @@
             loadedCount++;
             if(loadedCount === collections.length) {
               initialized = true;
-              document.getElementById('globalLoader').classList.add('hidden');
-              document.getElementById('mainNavbar').classList.remove('hidden');
-              document.getElementById('mainContainer').classList.remove('hidden');
+              const loader = document.getElementById('globalLoader');
+              if(loader) loader.classList.add('hidden');
+              const navbar = document.getElementById('mainNavbar');
+              if(navbar) navbar.classList.remove('hidden');
+              const mainCont = document.getElementById('mainContainer');
+              if(mainCont) mainCont.classList.remove('hidden');
+              
               checkAdminExists();
               syncCurrentUser();
               
@@ -963,15 +977,18 @@
     // --- Rendering Core ---
     function renderApp() {
       const hash = window.location.hash.replace('#', '') || 'home';
-      if(hash === 'home') renderHome();
-      if(hash === 'planos') renderPlanos();
-      if(hash === 'perfil') renderPerfil();
-      if(hash === 'ranking') renderRanking();
-      if(hash === 'partidas') renderPartidas();
-      if(hash === 'admin') renderAdminQueue();
+      
+      // Execute all view renders safely to avoid mismatch bugs
+      renderHome();
+      renderPlanos();
+      renderPerfil();
+      renderRanking();
+      renderPartidas();
+      renderAdminQueue();
+      
       if(hash === 'fila') {
         renderChat();
-        updateQueueCountsUI();
+        window.updateQueueCountsUI();
         updateQueueStateUI();
         updatePrivateUsageLabel();
       }
@@ -996,7 +1013,8 @@
     function renderNav() {
       const navLinks = document.getElementById("navLinks");
       const userMenu = document.getElementById("userMenu");
-      
+      if(!navLinks || !userMenu) return;
+
       let linksHTML = `
         <div class="nav-tab" data-target="home" onclick="window.switchView('home')">Início</div>
         <div class="nav-tab" data-target="planos" onclick="window.switchView('planos')">Planos VIP</div>
@@ -1025,22 +1043,37 @@
     }
 
     // --- AUTH FLOW ---
-    window.openAuthModal = (type) => { document.getElementById('modalAuth').classList.add('active'); window.switchAuth(type); };
-    window.closeAuthModal = () => document.getElementById('modalAuth').classList.remove('active');
+    window.openAuthModal = (type) => { 
+        const modal = document.getElementById('modalAuth');
+        if(modal) { modal.classList.add('active'); window.switchAuth(type); }
+    };
+    window.closeAuthModal = () => {
+        const modal = document.getElementById('modalAuth');
+        if(modal) modal.classList.remove('active');
+    };
     window.switchAuth = (type) => {
+      const loginForm = document.getElementById('formLogin');
+      const regForm = document.getElementById('formRegister');
+      const title = document.getElementById('authTitle');
+      if(!loginForm || !regForm || !title) return;
+
       if(type === 'login') {
-        document.getElementById('formLogin').classList.remove('hidden'); document.getElementById('formRegister').classList.add('hidden');
-        document.getElementById('authTitle').innerText = 'Entrar no Hub';
+        loginForm.classList.remove('hidden'); regForm.classList.add('hidden');
+        title.innerText = 'Entrar no Hub';
       } else {
-        document.getElementById('formLogin').classList.add('hidden'); document.getElementById('formRegister').classList.remove('hidden');
-        document.getElementById('authTitle').innerText = 'Criar Conta';
+        loginForm.classList.add('hidden'); regForm.classList.remove('hidden');
+        title.innerText = 'Criar Conta';
       }
     };
     window.goToFilaOrLogin = () => currentUser ? window.switchView('fila') : window.openAuthModal('login');
 
     window.doLogin = () => {
-      const email = document.getElementById('logEmail').value.trim();
-      const pass = document.getElementById('logPass').value;
+      const emailEl = document.getElementById('logEmail');
+      const passEl = document.getElementById('logPass');
+      if(!emailEl || !passEl) return;
+
+      const email = emailEl.value.trim();
+      const pass = passEl.value;
       const user = state.users.find(u => u.email === email && u.pass === pass);
       if(user) {
         if(user.isBanned) return window.customAlert("Conta Suspensa.");
@@ -1054,9 +1087,14 @@
     };
 
     window.doRegister = async () => {
-      const nick = document.getElementById('regNick').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const pass = document.getElementById('regPass').value;
+      const nickEl = document.getElementById('regNick');
+      const emailEl = document.getElementById('regEmail');
+      const passEl = document.getElementById('regPass');
+      if(!nickEl || !emailEl || !passEl) return;
+
+      const nick = nickEl.value.trim();
+      const email = emailEl.value.trim();
+      const pass = passEl.value;
       
       if(!nick || !email || !pass) return window.customAlert("Preencha todos os campos.");
       if(state.users.some(u => u.email === email)) return window.customAlert("Email já cadastrado.");
@@ -1081,18 +1119,29 @@
     };
 
     // --- PLANOS VIP ---
-    function renderPlanos() { }
+    function renderPlanos() { /* static */ }
     window.openBuyVipModal = (planId, price) => {
         if(!currentUser) return window.openAuthModal('login');
         if(currentUser.plan === planId) return window.customAlert("Você já possui este plano ativo!");
-        document.getElementById('buyVipPlanId').value = planId;
-        document.getElementById('buyVipPlanName').innerText = getPlanName(planId);
-        document.getElementById('buyVipPrice').innerText = money(price);
-        document.getElementById('modalBuyVip').classList.add('active');
+        
+        const inputId = document.getElementById('buyVipPlanId');
+        const nameEl = document.getElementById('buyVipPlanName');
+        const priceEl = document.getElementById('buyVipPrice');
+        const modal = document.getElementById('modalBuyVip');
+        
+        if(inputId) inputId.value = planId;
+        if(nameEl) nameEl.innerText = getPlanName(planId);
+        if(priceEl) priceEl.innerText = money(price);
+        if(modal) modal.classList.add('active');
     };
-    window.closeBuyVipModal = () => document.getElementById('modalBuyVip').classList.remove('active');
+    window.closeBuyVipModal = () => {
+        const m = document.getElementById('modalBuyVip');
+        if(m) m.classList.remove('active');
+    };
     window.simulateVipPayment = async () => {
-        const planId = document.getElementById('buyVipPlanId').value;
+        const inputId = document.getElementById('buyVipPlanId');
+        if(!inputId) return;
+        const planId = inputId.value;
         currentUser.plan = planId;
         await setDoc(getDocRef('users', currentUser.id), currentUser);
         window.closeBuyVipModal();
@@ -1104,50 +1153,75 @@
     function renderPerfil() {
       if(!currentUser) return;
       const u = currentUser;
-      document.getElementById('pfNick').innerText = getUserNick(u);
-      document.getElementById('pfAvatar').style.backgroundImage = `url('${getUserAvatar(u)}')`;
+      
+      const elNick = document.getElementById('pfNick');
+      if(elNick) elNick.innerText = getUserNick(u);
+      
+      const elAvatar = document.getElementById('pfAvatar');
+      if(elAvatar) elAvatar.style.backgroundImage = `url('${getUserAvatar(u)}')`;
       
       const badgePlan = document.getElementById('pfPlanBadge');
-      badgePlan.innerText = getPlanName(u.plan);
-      badgePlan.className = `badge ${getPlanClass(u.plan)}`;
+      if(badgePlan) {
+          badgePlan.innerText = getPlanName(u.plan);
+          badgePlan.className = `badge ${getPlanClass(u.plan)}`;
+      }
+
+      const elVerifiedBadge = document.getElementById('pfVerifiedBadge');
+      const elId = document.getElementById('pfId');
+      const lvlEl = document.getElementById('pfLevel');
+      const elRank = document.getElementById('pfRank');
+      const btnToggle = document.getElementById('btnToggleLink');
+      const linkSection = document.getElementById('linkFfSection');
 
       if(u.isVerified) {
-        document.getElementById('pfVerifiedBadge').innerText = "Conta FF Verificada ✓";
-        document.getElementById('pfVerifiedBadge').className = "badge badge-green";
-        document.getElementById('pfId').innerText = u.ffid;
-        document.getElementById('pfLevel').innerText = u.ffLevel;
-        document.getElementById('pfRank').innerText = u.ffRank;
-        document.getElementById('btnToggleLink').innerText = "Atualizar ID";
-        document.getElementById('linkFfSection').classList.add('hidden');
+        if(elVerifiedBadge) { elVerifiedBadge.innerText = "Conta FF Verificada ✓"; elVerifiedBadge.className = "badge badge-green"; }
+        if(elId) elId.innerText = u.ffid;
+        if(lvlEl) lvlEl.innerText = u.ffLevel;
+        if(elRank) elRank.innerText = u.ffRank;
+        if(btnToggle) btnToggle.innerText = "Atualizar ID";
+        if(linkSection) linkSection.classList.add('hidden');
       } else {
-        document.getElementById('pfVerifiedBadge').innerText = "FF Não Vinculado";
-        document.getElementById('pfVerifiedBadge').className = "badge badge-gray";
-        document.getElementById('pfId').innerText = "Opcional";
-        document.getElementById('pfLevel').innerText = "-";
-        document.getElementById('pfRank').innerText = "Unranked";
-        document.getElementById('btnToggleLink').innerText = "Vincular ID FF";
+        if(elVerifiedBadge) { elVerifiedBadge.innerText = "FF Não Vinculado"; elVerifiedBadge.className = "badge badge-gray"; }
+        if(elId) elId.innerText = "Opcional";
+        if(lvlEl) lvlEl.innerText = "-";
+        if(elRank) elRank.innerText = "Unranked";
+        if(btnToggle) btnToggle.innerText = "Vincular ID FF";
       }
 
       const r = getRankDetails(u.stats.pts || 0);
-      document.getElementById('pfRankPts').innerHTML = `<span style="color:${r.color}">${r.name}</span>`;
+      const elRankPts = document.getElementById('pfRankPts');
+      if(elRankPts) elRankPts.innerHTML = `<span style="color:${r.color}">${r.name}</span>`;
       
-      document.getElementById('pfPts').innerText = u.stats.pts || 0;
-      document.getElementById('pfBalance').innerText = money(u.stats.balance);
-      document.getElementById('pfWL').innerText = `${u.stats.w} / ${u.stats.l}`;
-      document.getElementById('pfWr').innerText = pct((u.stats.w + u.stats.l)>0 ? (u.stats.w/(u.stats.w+u.stats.l)) : 0);
+      const elPts = document.getElementById('pfPts');
+      if(elPts) elPts.innerText = u.stats.pts || 0;
+      
+      const elBalance = document.getElementById('pfBalance');
+      if(elBalance) elBalance.innerText = money(u.stats.balance);
+      
+      const elWL = document.getElementById('pfWL');
+      if(elWL) elWL.innerText = `${u.stats.w} / ${u.stats.l}`;
+      
+      const elWr = document.getElementById('pfWr');
+      if(elWr) elWr.innerText = pct((u.stats.w + u.stats.l)>0 ? (u.stats.w/(u.stats.w+u.stats.l)) : 0);
       
       const used = getPrivateRoomsUsage(u);
       const limit = getPlanLimits(u.plan);
-      document.getElementById('pfPrivs').innerText = limit >= 999999 ? 'Ilimitado' : `${used}/${limit}`;
+      const elPrivs = document.getElementById('pfPrivs');
+      if(elPrivs) elPrivs.innerText = limit >= 999999 ? 'Ilimitado' : `${used}/${limit}`;
     }
 
-    window.toggleIdLinkSection = () => document.getElementById('linkFfSection').classList.toggle('hidden');
+    window.toggleIdLinkSection = () => {
+        const el = document.getElementById('linkFfSection');
+        if(el) el.classList.toggle('hidden');
+    };
     
     window.verifyFfId = () => {
-      const ffid = document.getElementById('inpFfId').value.trim();
+      const inp = document.getElementById('inpFfId');
+      if(!inp) return;
+      const ffid = inp.value.trim();
       if(!ffid || ffid.length < 5) return window.customAlert("Digite um ID válido.");
       const btn = document.getElementById('btnVerifyFF');
-      btn.innerText = "Buscando..."; btn.disabled = true;
+      if(btn) { btn.innerText = "Buscando..."; btn.disabled = true; }
 
       setTimeout(async () => {
         const ranks = ["Prata II", "Ouro III", "Platina I", "Diamante IV", "Mestre", "Desafiante"];
@@ -1159,20 +1233,30 @@
         currentUser.isVerified = true;
         
         await setDoc(getDocRef('users', currentUser.id), currentUser);
-        btn.innerText = "Buscar Conta"; btn.disabled = false;
+        if(btn) { btn.innerText = "Buscar Conta"; btn.disabled = false; }
         window.customAlert("Conta vinculada com sucesso!", "Sucesso");
       }, 1000);
     };
 
     // --- SALAS PRIVADAS E FILAS PÚBLICAS ---
     window.getFilaPixValue = () => {
-      const val = document.getElementById('filaPixValue').value;
-      return val === 'livre' ? (parseFloat(document.getElementById('customPixValue').value) || 0) : parseFloat(val);
+      const valEl = document.getElementById('filaPixValue');
+      if(!valEl) return 10;
+      const val = valEl.value;
+      if (val === 'livre') {
+          const cust = document.getElementById('customPixValue');
+          return cust ? (parseFloat(cust.value) || 0) : 0;
+      }
+      return parseFloat(val);
     };
 
     window.handlePixChange = () => {
-      document.getElementById('customPixContainer').classList[document.getElementById('filaPixValue').value === 'livre' ? 'remove' : 'add']('hidden');
-      updateQueueCountsUI();
+      const cont = document.getElementById('customPixContainer');
+      const val = document.getElementById('filaPixValue');
+      if(cont && val) {
+          cont.classList[val.value === 'livre' ? 'remove' : 'add']('hidden');
+      }
+      window.updateQueueCountsUI();
     };
 
     function updatePrivateUsageLabel() {
@@ -1180,22 +1264,33 @@
         const used = getPrivateRoomsUsage(currentUser);
         const limit = getPlanLimits(currentUser.plan);
         const txt = limit >= 999999 ? 'Ilimitado' : `${used} de ${limit}`;
-        document.getElementById('lblPrivateUsage').innerText = `Salas Privadas Criadas neste Mês: ${txt}`;
+        const el = document.getElementById('lblPrivateUsage');
+        if(el) el.innerText = `Salas Privadas Criadas neste Mês: ${txt}`;
     }
 
     // Modais Sala Privada
-    window.openPrivateModal = () => document.getElementById('modalPrivate').classList.add('active');
-    window.closePrivateModal = () => document.getElementById('modalPrivate').classList.remove('active');
+    window.openPrivateModal = () => {
+        const m = document.getElementById('modalPrivate');
+        if(m) m.classList.add('active');
+    };
+    window.closePrivateModal = () => {
+        const m = document.getElementById('modalPrivate');
+        if(m) m.classList.remove('active');
+    };
     window.switchPrivTab = (tab) => {
         const createBtn = document.getElementById('tabPrivCreate');
         const joinBtn = document.getElementById('tabPrivJoin');
+        const createPnl = document.getElementById('privCreate');
+        const joinPnl = document.getElementById('privJoin');
+        if(!createBtn || !joinBtn || !createPnl || !joinPnl) return;
+
         if(tab === 'create') {
-            document.getElementById('privCreate').classList.remove('hidden');
-            document.getElementById('privJoin').classList.add('hidden');
+            createPnl.classList.remove('hidden');
+            joinPnl.classList.add('hidden');
             createBtn.classList.add('btn-primary'); joinBtn.classList.remove('btn-primary');
         } else {
-            document.getElementById('privCreate').classList.add('hidden');
-            document.getElementById('privJoin').classList.remove('hidden');
+            createPnl.classList.add('hidden');
+            joinPnl.classList.remove('hidden');
             joinBtn.classList.add('btn-primary'); createBtn.classList.remove('btn-primary');
         }
     };
@@ -1210,8 +1305,12 @@
            }, "Limite Atingido");
        }
 
-       const size = parseInt(document.getElementById('privMode').value);
-       const pix = parseFloat(document.getElementById('privAposta').value);
+       const modeEl = document.getElementById('privMode');
+       const apostaEl = document.getElementById('privAposta');
+       if(!modeEl || !apostaEl) return;
+
+       const size = parseInt(modeEl.value);
+       const pix = parseFloat(apostaEl.value);
        if(!pix || pix < 5) return window.customAlert("O valor mínimo é R$ 5,00.");
        
        await incrementPrivateRoomUsage();
@@ -1230,7 +1329,9 @@
     };
 
     window.joinPrivateRoom = async () => {
-       const code = document.getElementById('privCode').value.trim().toUpperCase();
+       const codeEl = document.getElementById('privCode');
+       if(!codeEl) return;
+       const code = codeEl.value.trim().toUpperCase();
        if(!code) return window.customAlert("Digite o código da sala.");
        
        const roomPlayers = state.queue.filter(q => q.tier === code && q.isPrivate);
@@ -1256,21 +1357,24 @@
       const card = document.querySelector(`.queue-card[data-tier="${tier}"]`);
       if(card) card.classList.add('selected');
       
-      let title = tier.toUpperCase();
-      if(tier.startsWith("SALA-")) title = "SALA PRIVADA (" + tier + ")";
-      document.getElementById('chatTitle').innerText = '💬 Chat da Fila - ' + title;
+      const chatTitle = document.getElementById('chatTitle');
+      if(chatTitle) {
+          let title = tier.toUpperCase();
+          if(tier.startsWith("SALA-")) title = "SALA PRIVADA (" + tier + ")";
+          chatTitle.innerText = '💬 Chat da Fila - ' + title;
+      }
       
       renderChat();
     };
 
-    function updateQueueCountsUI() {
+    window.updateQueueCountsUI = () => {
       const pixVal = window.getFilaPixValue();
       ['iniciante', 'medio', 'dificil', 'mix', 'vip'].forEach(tier => {
         const count = state.queue.filter(q => q.tier === tier && q.pix === pixVal).length;
         const el = document.getElementById(`count-${tier}`);
         if(el) el.innerText = `${count}/8`;
       });
-    }
+    };
 
     function updateQueueStateUI() {
       const viewFila = document.getElementById('view-fila');
@@ -1282,27 +1386,36 @@
       const filaStatus = document.getElementById('filaStatus');
 
       if(!myQueue) {
-        filaControls.classList.remove('hidden'); filaWaiting.classList.add('hidden');
-        filaStatus.className = "badge badge-gray"; filaStatus.innerText = "Não está na fila";
+        if(filaControls) filaControls.classList.remove('hidden'); 
+        if(filaWaiting) filaWaiting.classList.add('hidden');
+        if(filaStatus) { filaStatus.className = "badge badge-gray"; filaStatus.innerText = "Não está na fila"; }
       } else {
-        filaControls.classList.add('hidden'); filaWaiting.classList.remove('hidden');
-        filaStatus.className = "badge badge-gold"; 
+        if(filaControls) filaControls.classList.add('hidden'); 
+        if(filaWaiting) filaWaiting.classList.remove('hidden');
+        if(filaStatus) filaStatus.className = "badge badge-gold"; 
+        
+        const lblTitle = document.getElementById('lblWaitTitle');
+        const lblTier = document.getElementById('lblWaitTier');
+        const btnSim = document.getElementById('btnSimulate');
         
         if (myQueue.isPrivate) {
-            filaStatus.innerText = "Na Sala Privada";
-            document.getElementById('lblWaitTitle').innerText = "Aguardando Amigos...";
-            document.getElementById('lblWaitTier').innerText = myQueue.tier.toUpperCase();
-            document.getElementById('btnSimulate').classList.add('hidden');
+            if(filaStatus) filaStatus.innerText = "Na Sala Privada";
+            if(lblTitle) lblTitle.innerText = "Aguardando Amigos...";
+            if(lblTier) lblTier.innerText = myQueue.tier.toUpperCase();
+            if(btnSim) btnSim.classList.add('hidden');
         } else {
-            filaStatus.innerText = "Buscando Partida...";
-            document.getElementById('lblWaitTitle').innerText = "Procurando jogadores...";
-            document.getElementById('lblWaitTier').innerText = myQueue.tier.toUpperCase();
-            document.getElementById('btnSimulate').classList.remove('hidden');
+            if(filaStatus) filaStatus.innerText = "Buscando Partida...";
+            if(lblTitle) lblTitle.innerText = "Procurando jogadores...";
+            if(lblTier) lblTier.innerText = myQueue.tier.toUpperCase();
+            if(btnSim) btnSim.classList.remove('hidden');
         }
         
-        document.getElementById('lblWaitPix').innerText = money(myQueue.pix);
+        const lblPix = document.getElementById('lblWaitPix');
+        if(lblPix) lblPix.innerText = money(myQueue.pix);
+        
         const sameQueue = state.queue.filter(q => q.tier === myQueue.tier && q.pix === myQueue.pix);
-        document.getElementById('lblWaitCount').innerText = `Jogadores: ${sameQueue.length}/${myQueue.maxPlayers || 8}`;
+        const lblCount = document.getElementById('lblWaitCount');
+        if(lblCount) lblCount.innerText = `Jogadores: ${sameQueue.length}/${myQueue.maxPlayers || 8}`;
       }
     }
 
@@ -1417,6 +1530,8 @@
     // --- CHAT ---
     function renderChat() {
       const box = document.getElementById('chatBox');
+      if(!box) return;
+
       const filteredChat = state.chat.filter(c => c.tier === currentQueueTier).sort((a,b)=>a.time-b.time);
       
       box.innerHTML = filteredChat.slice(-50).map(c => {
@@ -1437,6 +1552,7 @@
     window.sendChatMessage = async () => {
       if(!currentUser) return window.customAlert("Faça login para participar do chat.");
       const inp = document.getElementById('chatInput');
+      if(!inp) return;
       const text = inp.value.trim();
       if(!text) return;
       
@@ -1448,6 +1564,8 @@
     // --- PARTIDAS E RESULTADOS ---
     function renderPartidas() {
       const list = document.getElementById('matchesList');
+      if(!list) return;
+
       if(state.matches.length === 0) return list.innerHTML = `<div class="text-center" style="padding: 40px; color: var(--muted);">Nenhuma partida registrada ainda.</div>`;
 
       const order = {"pending_pix": 1, "active": 2, "closed": 3};
@@ -1500,9 +1618,12 @@
       }).join('');
     }
 
-    window.openPixModal = () => document.getElementById('modalPix').classList.add('active');
-    window.closePixModal = () => document.getElementById('modalPix').classList.remove('active');
-    window.copyPixKey = () => { document.getElementById('pixKeyMatch').select(); document.execCommand('copy'); window.customAlert("Chave PIX copiada!", "Sucesso"); };
+    window.openPixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.add('active'); };
+    window.closePixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.remove('active'); };
+    window.copyPixKey = () => { 
+        const el = document.getElementById('pixKeyMatch'); 
+        if(el) { el.select(); document.execCommand('copy'); window.customAlert("Chave PIX copiada!", "Sucesso"); }
+    };
 
     window.adminConfirmPix = (matchId) => {
       window.customConfirm("Confirmar recebimento de todos os PIX? A partida será iniciada!", async () => {
@@ -1511,15 +1632,26 @@
       });
     };
 
-    window.openFinishMatch = (matchId) => { document.getElementById('finMatchId').value = matchId; document.getElementById('modalMatch').classList.add('active'); };
-    window.closeMatchModal = () => document.getElementById('modalMatch').classList.remove('active');
+    window.openFinishMatch = (matchId) => { 
+        const matchInp = document.getElementById('finMatchId');
+        const modal = document.getElementById('modalMatch');
+        if(matchInp && modal) { matchInp.value = matchId; modal.classList.add('active'); }
+    };
+    window.closeMatchModal = () => { const m = document.getElementById('modalMatch'); if(m) m.classList.remove('active'); };
+    
     window.confirmFinishMatch = async () => {
-      const matchId = document.getElementById('finMatchId').value;
+      const matchInp = document.getElementById('finMatchId');
+      const winInp = document.getElementById('finWinner');
+      const scoreAInp = document.getElementById('finScoreA');
+      const scoreBInp = document.getElementById('finScoreB');
+      if(!matchInp || !winInp || !scoreAInp || !scoreBInp) return;
+
+      const matchId = matchInp.value;
       const m = state.matches.find(x => x.id === matchId);
       if(!m) return;
 
-      m.status = 'closed'; m.winner = document.getElementById('finWinner').value; 
-      m.scoreA = parseInt(document.getElementById('finScoreA').value); m.scoreB = parseInt(document.getElementById('finScoreB').value);
+      m.status = 'closed'; m.winner = winInp.value; 
+      m.scoreA = parseInt(scoreAInp.value); m.scoreB = parseInt(scoreBInp.value);
       
       const wIds = m.winner === 'A' ? m.teamA : m.teamB;
       const lIds = m.winner === 'A' ? m.teamB : m.teamA;
@@ -1537,10 +1669,8 @@
       const avgL = m.winner === 'A' ? avgB : avgA;
 
       let gain = 25; let loss = 20;
-      // Underdog WINS (+30)
-      if (avgL > avgW + 50) gain = 30;
-      // Favorite LOSES (-25)
-      if (avgL > avgW + 50) loss = 25;
+      if (avgL > avgW + 50) gain = 30; // Underdog WINS
+      if (avgL > avgW + 50) loss = 25; // Favorite LOSES
 
       for(let id of wIds) {
         let u = state.users.find(x => x.id === id);
@@ -1558,10 +1688,14 @@
 
     // --- HOME, RANKING, ADMIN ---
     function renderHome() {
+      const el = document.getElementById('homeKpis');
+      if(!el) return;
+
       const verified = state.users.filter(u => u.role !== 'admin').length;
       const closed = state.matches.filter(m => m.status === 'closed').length;
       const totalPot = state.matches.filter(m => m.status === 'closed').reduce((acc, m) => acc + (m.pixValue * 2), 0);
-      document.getElementById('homeKpis').innerHTML = `
+      
+      el.innerHTML = `
         <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--text);">${verified}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Jogadores</div></div>
         <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--text);">${closed}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Partidas Finalizadas</div></div>
         <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--success);">${money(totalPot)}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Giro de PIX</div></div>
@@ -1570,6 +1704,9 @@
     }
 
     function renderRanking() {
+      const el = document.querySelector('#rankingTable tbody');
+      if(!el) return;
+
       let players = state.users.filter(u => u.role !== 'admin').sort((a,b) => {
         if(b.stats.pts !== a.stats.pts) return (b.stats.pts || 0) - (a.stats.pts || 0);
         if(b.stats.balance !== a.stats.balance) return b.stats.balance - a.stats.balance;
@@ -1578,7 +1715,7 @@
         return wrB - wrA;
       });
 
-      document.querySelector('#rankingTable tbody').innerHTML = players.length === 0 ? `<tr><td colspan="8" class="text-center">Nenhum jogador registrado.</td></tr>` : players.map((p, idx) => {
+      el.innerHTML = players.length === 0 ? `<tr><td colspan="8" class="text-center">Nenhum jogador registrado.</td></tr>` : players.map((p, idx) => {
         const wr = (p.stats.w + p.stats.l) > 0 ? (p.stats.w / (p.stats.w + p.stats.l)) : 0;
         let streakBadge = p.stats.streak > 0 ? `<span class="badge badge-green">W${p.stats.streak}</span>` : p.stats.streak < 0 ? `<span class="badge badge-red">L${Math.abs(p.stats.streak)}</span>` : `<span class="badge badge-gray">0</span>`;
         let balanceColor = p.stats.balance > 0 ? 'var(--success)' : (p.stats.balance < 0 ? 'var(--danger)' : 'var(--muted)');
