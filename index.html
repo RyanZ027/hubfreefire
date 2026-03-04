@@ -3,28 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HUB EXPRESSO • FF 4x4</title>
-  <meta name="description" content="Hub de partidas 4x4 apostadas de Free Fire com matchmaking, PIX e ranking." />
+  <title>CPR APOSTAS • FF 4x4</title>
+  <meta name="description" content="A maior plataforma de 4x4 apostado de Free Fire." />
   <style>
-    /* Design Tokens & Reset */
+    /* Design Tokens - Premium Gold/Dark Theme */
     :root {
-      --bg: #0b0e14;
-      --panel: #151a27;
-      --panel-hover: #1c2235;
-      --stroke: rgba(255,255,255,0.08);
-      --stroke-glow: rgba(74, 163, 255, 0.3);
-      --text: #F8FAFC;
-      --muted: #94A3B8;
-      --primary: #3B82F6;
-      --primary-hover: #2563EB;
-      --accent: #8B5CF6;
-      --success: #10B981;
-      --warning: #F59E0B;
-      --danger: #EF4444;
+      --bg: #09090b; /* zinc-950 */
+      --panel: #18181b; /* zinc-900 */
+      --panel-hover: #27272a; /* zinc-800 */
+      --stroke: rgba(250, 204, 21, 0.15); /* gold subtle */
+      --stroke-glow: rgba(250, 204, 21, 0.4);
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --primary: #eab308; /* yellow-500 (Gold) */
+      --primary-hover: #ca8a04;
+      --accent: #f59e0b; /* amber-500 */
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      
+      /* Novos Tokens VIP */
+      --vip-basic: #10b981;
+      --vip-pro: #3b82f6;
+      --vip-premium: #a855f7;
+      
       --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, monospace;
-      --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.3);
-      --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.5);
+      --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.5);
+      --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.8);
       --radius: 12px;
     }
     
@@ -32,52 +38,75 @@
     body {
       font-family: var(--font-sans); background: var(--bg); color: var(--text);
       background-image: 
-        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
+        radial-gradient(circle at 15% 50%, rgba(250, 204, 21, 0.03), transparent 30%),
+        radial-gradient(circle at 85% 30%, rgba(245, 158, 11, 0.03), transparent 30%);
       background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column;
     }
     a { color: inherit; text-decoration: none; }
     button, input, select, textarea { font: inherit; color: inherit; border: none; outline: none; background: none; }
     
     /* Layout */
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; display: flex; flex-direction: column; }
     
     /* Navbar */
     .navbar {
-      background: rgba(15, 20, 31, 0.85); backdrop-filter: blur(12px);
+      background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--stroke); position: sticky; top: 0; z-index: 50;
     }
     .nav-inner {
       max-width: 1200px; margin: 0 auto; padding: 16px 20px;
       display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
     }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 18px; letter-spacing: -0.5px; }
-    .brand-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      display: flex; align-items: center; justify-content: center; font-weight: bold;
+    
+    /* === LOGO PREMIUM CPR === */
+    .brand {
+      display: flex; align-items: center; gap: 14px; text-decoration: none; user-select: none;
+      transition: transform 0.2s; cursor: pointer;
     }
+    .brand:hover { transform: scale(1.02); }
+    .brand-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #a16207 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      border: 1px solid #fef08a; position: relative;
+    }
+    .brand-icon::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 50%);
+    }
+    .brand-icon svg {
+      width: 24px; height: 24px; fill: #422006; z-index: 1; filter: drop-shadow(0 1px 0px rgba(255,255,255,0.4));
+    }
+    .brand-text { display: flex; flex-direction: column; justify-content: center; line-height: 1; }
+    .brand-text-main {
+      font-size: 22px; font-weight: 900; letter-spacing: 1px;
+      background: linear-gradient(to right, #fef08a, #eab308, #d97706);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase;
+    }
+    .brand-text-sub { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 4px; text-transform: uppercase; margin-top: 4px; }
+
     .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
     .nav-tab {
       padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--muted);
       cursor: pointer; transition: all 0.2s;
     }
     .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-    .nav-tab.active { color: var(--text); background: rgba(59, 130, 246, 0.15); color: #60A5FA; }
+    .nav-tab.active { color: var(--primary); background: rgba(250, 204, 21, 0.1); }
     
     .user-menu { display: flex; align-items: center; gap: 12px; }
     
     /* UI Components */
     .btn {
-      padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 700;
       cursor: pointer; transition: all 0.2s; border: 1px solid var(--stroke);
       background: rgba(255,255,255,0.03); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
-    .btn-primary { background: var(--primary); border-color: var(--primary); color: white; }
+    .btn-primary { background: var(--primary); border-color: var(--primary); color: #000; }
     .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); transform: translateY(-1px); }
-    .btn-accent { background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; }
-    .btn-accent:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-accent { background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; color: #000; }
+    .btn-accent:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3); }
     .btn-danger { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #FCA5A5; }
     .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
     
@@ -86,31 +115,33 @@
       padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 20px;
     }
     .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .panel-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .panel-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; color: var(--text); }
     .panel-desc { color: var(--muted); font-size: 14px; margin-top: 4px; }
     
     .input-group { margin-bottom: 16px; }
     .input-group label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
     .input, .select {
-      width: 100%; padding: 12px 16px; background: rgba(0,0,0,0.2); border: 1px solid var(--stroke);
-      border-radius: 8px; font-size: 14px; transition: all 0.2s;
+      width: 100%; padding: 12px 16px; background: rgba(0,0,0,0.3); border: 1px solid var(--stroke);
+      border-radius: 8px; font-size: 14px; transition: all 0.2s; color: var(--text);
     }
-    .input:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+    .input:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15); }
     
-    .badge {
-      padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-    }
+    .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
     .badge-gray { background: rgba(255,255,255,0.1); color: #E2E8F0; }
-    .badge-blue { background: rgba(59, 130, 246, 0.15); color: #93C5FD; border: 1px solid rgba(59,130,246,0.3); }
-    .badge-green { background: rgba(16, 185, 129, 0.15); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.3); }
+    .badge-gold { background: rgba(250, 204, 21, 0.15); color: var(--primary); border: 1px solid rgba(250,204,21,0.3); }
+    .badge-green { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
     .badge-orange { background: rgba(245, 158, 11, 0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
     .badge-red { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.3); }
+    
+    /* Plan Badges */
+    .badge-vip-basic { background: rgba(16, 185, 129, 0.15); color: var(--vip-basic); border: 1px solid var(--vip-basic); }
+    .badge-vip-pro { background: rgba(59, 130, 246, 0.15); color: var(--vip-pro); border: 1px solid var(--vip-pro); }
+    .badge-vip-premium { background: rgba(168, 85, 247, 0.15); color: var(--vip-premium); border: 1px solid var(--vip-premium); }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-    @media (max-width: 768px) {
-      .grid-2, .grid-4 { grid-template-columns: 1fr; }
-    }
+    .grid-5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    @media (max-width: 768px) { .grid-2, .grid-4, .grid-5 { grid-template-columns: 1fr; } }
     
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--stroke); }
@@ -120,17 +151,17 @@
 
     /* Modals */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
       display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
     }
     .modal-overlay.active { display: flex; }
     .modal {
       background: var(--panel); border: 1px solid var(--stroke); border-radius: 16px;
-      width: 100%; max-width: 450px; box-shadow: var(--shadow-lg); overflow: hidden;
+      width: 100%; max-width: 450px; box-shadow: var(--shadow-lg); overflow: hidden; max-height: 90vh; overflow-y: auto;
       animation: modalIn 0.2s ease-out forwards;
     }
     @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--stroke); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--stroke); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; background: var(--panel); z-index: 10; }
     .modal-body { padding: 24px; }
     .close-btn { background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer; }
 
@@ -139,57 +170,34 @@
     .view.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Matchmaking Cards */
+    /* Cards */
     .queue-card {
-      background: rgba(0,0,0,0.2); border: 1px solid var(--stroke); border-radius: 12px;
-      padding: 20px; text-align: center; transition: all 0.2s; cursor: pointer; position: relative;
+      background: rgba(0,0,0,0.3); border: 1px solid var(--stroke); border-radius: 12px;
+      padding: 16px 12px; text-align: center; transition: all 0.2s; cursor: pointer; position: relative;
     }
-    .queue-card:hover, .queue-card.selected {
-      border-color: var(--primary); background: rgba(59, 130, 246, 0.05); transform: translateY(-2px);
-    }
-    .queue-icon { font-size: 32px; margin-bottom: 12px; }
-    .queue-title { font-weight: 800; font-size: 16px; margin-bottom: 4px; }
-    .queue-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-    .queue-count { font-size: 12px; font-weight: bold; background: rgba(59,130,246,0.2); padding: 4px 8px; border-radius: 8px; color: var(--primary); display: inline-block; border: 1px solid rgba(59,130,246,0.3); }
+    .queue-card:hover, .queue-card.selected { border-color: var(--primary); background: rgba(250, 204, 21, 0.05); transform: translateY(-2px); }
+    .queue-icon { font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 0 8px rgba(250,204,21,0.2)); }
+    .queue-title { font-weight: 800; font-size: 14px; margin-bottom: 4px; text-transform: uppercase; }
+    .queue-desc { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+    .queue-count { font-size: 11px; font-weight: bold; background: rgba(250, 204, 21, 0.15); padding: 4px 8px; border-radius: 8px; color: var(--primary); display: inline-block; border: 1px solid rgba(250,204,21,0.3); }
+    .queue-vip { border-color: var(--vip-premium); background: linear-gradient(180deg, rgba(168,85,247,0.1), rgba(0,0,0,0)); }
+    .queue-vip:hover, .queue-vip.selected { border-color: var(--vip-premium); background: rgba(168,85,247,0.15); box-shadow: 0 0 15px rgba(168,85,247,0.3); }
 
-    /* Profile FF Card */
-    .ff-card {
-      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-      border: 1px solid var(--stroke-glow); border-radius: 16px; padding: 24px;
-      display: flex; gap: 24px; align-items: center; position: relative; overflow: hidden;
+    /* Plan Cards */
+    .plan-card {
+      background: var(--panel-hover); border: 1px solid var(--stroke); border-radius: 16px;
+      padding: 24px; display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden;
     }
-    .ff-card::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-    }
-    .ff-avatar { width: 80px; height: 80px; border-radius: 12px; background: rgba(0,0,0,0.3); border: 2px solid var(--stroke); }
-    .ff-info h2 { font-size: 24px; margin-bottom: 4px; }
-    .ff-stats { display: flex; gap: 16px; font-size: 14px; color: var(--muted); margin-top: 12px; flex-wrap: wrap; }
-    .ff-stats span { display: flex; align-items: center; gap: 6px; }
-    .ff-stats b { color: var(--text); }
+    .plan-card.pro { border-color: var(--vip-pro); box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15); }
+    .plan-card.premium { border-color: var(--vip-premium); box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15); }
+    .plan-name { font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+    .plan-price { font-size: 28px; font-weight: 900; margin-bottom: 16px; color: var(--text); }
+    .plan-price span { font-size: 14px; color: var(--muted); font-weight: 600; }
+    .plan-features { list-style: none; padding: 0; margin: 0 0 24px 0; flex: 1; }
+    .plan-features li { font-size: 13px; color: var(--muted); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px; }
+    .plan-features li::before { content: '✓'; color: var(--success); font-weight: bold; }
+    .plan-features li.cross::before { content: '✕'; color: var(--danger); }
 
-    /* Match Card */
-    .match-card {
-      background: rgba(0,0,0,0.2); border: 1px solid var(--stroke); border-radius: 12px;
-      padding: 16px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px;
-    }
-    .match-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; }
-    .match-teams { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-    .team { flex: 1; text-align: center; }
-    .team-name { font-weight: 800; font-size: 16px; margin-bottom: 8px; }
-    .team-players { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
-    .vs { font-weight: 900; color: var(--muted); font-style: italic; opacity: 0.5; }
-    .match-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); }
-
-    /* Chat da Fila */
-    .chat-container { display: flex; flex-direction: column; height: 100%; max-height: 400px; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--stroke); }
-    .chat-msg { font-size: 13px; line-height: 1.4; display: flex; flex-direction: column; }
-    .chat-msg .author { font-weight: bold; color: var(--primary); font-size: 12px; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
-    .chat-msg .author span { font-weight: normal; color: var(--muted); font-size: 10px; }
-    .chat-msg.me .author { color: var(--accent); }
-    .chat-msg .text { color: #E2E8F0; }
-    
     /* Utils */
     .hidden { display: none !important; }
     .text-center { text-align: center; }
@@ -198,101 +206,181 @@
     .flex-center { display: flex; align-items: center; justify-content: center; gap: 8px; }
     .mono { font-family: var(--font-mono); }
     .loading-spinner {
-      width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary);
+      width: 24px; height: 24px; border: 3px solid rgba(250,204,21,0.1); border-top-color: var(--primary);
       border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    #globalLoader { position: fixed; inset: 0; background: var(--bg); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <div class="brand">
-        <div class="brand-icon">4x4</div>
-        HUB EXPRESSO
+  <!-- Loading Initial -->
+  <div id="globalLoader">
+    <div class="brand" style="flex-direction: column; gap: 16px; margin-bottom: 30px;">
+      <div class="brand-icon" style="width: 70px; height: 70px; border-radius: 20px; box-shadow: 0 10px 30px rgba(234, 179, 8, 0.4);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 38px; height: 38px;"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z"></path></svg>
       </div>
-      
-      <div class="nav-links" id="navLinks">
-        <!-- Injetado via JS dependendo da sessão -->
+      <div class="brand-text" style="align-items: center; gap: 6px;">
+        <div class="brand-text-main" style="font-size: 32px;">CPR</div>
+        <div class="brand-text-sub" style="font-size: 14px; letter-spacing: 8px;">Apostas</div>
       </div>
+    </div>
+    <div class="flex-center" style="color: var(--muted); font-size: 14px;">
+      <div class="loading-spinner" style="width: 18px; height: 18px; margin: 0; border-width: 2px;"></div>
+      Conectando ao servidor...
+    </div>
+  </div>
 
-      <div class="user-menu" id="userMenu">
-        <!-- Injetado via JS (Login ou Nome do Usuário) -->
+  <!-- Navbar -->
+  <nav class="navbar hidden" id="mainNavbar">
+    <div class="nav-inner">
+      <div class="brand" onclick="window.switchView('home')">
+        <div class="brand-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z"></path></svg></div>
+        <div class="brand-text"><div class="brand-text-main">CPR</div><div class="brand-text-sub">Apostas</div></div>
       </div>
+      <div class="nav-links" id="navLinks"></div>
+      <div class="user-menu" id="userMenu"></div>
     </div>
   </nav>
 
   <!-- Container Principal -->
-  <div class="container">
+  <div class="container hidden" id="mainContainer">
     
     <!-- VIEW: INÍCIO -->
     <div id="view-home" class="view">
-      <div class="panel" style="text-align: center; padding: 60px 20px; background: linear-gradient(180deg, rgba(30,41,59,0.5), rgba(15,23,42,0.8));">
-        <h1 style="font-size: 36px; margin-bottom: 16px;">O Maior Hub de 4x4 Apostado</h1>
+      <div class="panel" style="text-align: center; padding: 60px 20px; background: linear-gradient(180deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0.5)); border-color: var(--stroke-glow);">
+        <h1 style="font-size: 38px; margin-bottom: 16px; font-weight: 900; text-transform: uppercase; color: var(--primary);">O Maior Hub de Apostas</h1>
         <p style="color: var(--muted); font-size: 18px; max-width: 600px; margin: 0 auto 32px auto;">
-          Matchmaking automatizado, ranking em tempo real e segurança nos seus PIX. Jogue com ou sem ID verificado.
+          Temporadas Oficiais, Matchmaking por Elo, Salas Privadas com amigos e Planos VIP exclusivos.
         </p>
         <div class="flex-center">
-          <button class="btn btn-accent" style="padding: 14px 32px; font-size: 16px;" onclick="goToFilaOrLogin()">Jogar Agora</button>
-          <button class="btn" onclick="switchView('ranking')">Ver Ranking</button>
+          <button class="btn btn-accent" style="padding: 14px 32px; font-size: 16px;" onclick="window.goToFilaOrLogin()">Jogar Agora</button>
+          <button class="btn" style="padding: 14px 32px; font-size: 16px; border-color: var(--vip-premium); color: var(--vip-premium);" onclick="window.switchView('planos')">👑 Ver Planos VIP</button>
         </div>
       </div>
+      <div class="grid-4" id="homeKpis"></div>
+    </div>
 
-      <div class="grid-4" id="homeKpis">
-        <!-- KPIs dinâmicos -->
+    <!-- VIEW: PLANOS VIP -->
+    <div id="view-planos" class="view">
+      <div class="panel text-center" style="border: none; background: transparent; padding-top: 0;">
+        <h2 style="font-size: 28px; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 8px;">Seja um VIP CPR</h2>
+        <p style="color: var(--muted); margin-bottom: 30px;">Aumente seu limite de salas privadas, ganhe destaque no ranking e acesso à fila exclusiva.</p>
+        
+        <div class="grid-4" style="text-align: left;">
+          
+          <!-- FREE -->
+          <div class="plan-card">
+            <div class="plan-name" style="color: var(--muted);">Free</div>
+            <div class="plan-price">R$ 0,00 <span>/mês</span></div>
+            <ul class="plan-features">
+              <li>Acesso a filas normais por Elo</li>
+              <li>Acesso ao Ranking</li>
+              <li>3 filas privadas por mês</li>
+              <li class="cross">Acesso à Fila VIP Exclusiva</li>
+              <li class="cross">Destaque no Ranking</li>
+            </ul>
+            <button class="btn" disabled style="opacity: 0.5;">Plano Atual</button>
+          </div>
+
+          <!-- VIP BASIC -->
+          <div class="plan-card" style="border-color: var(--vip-basic);">
+            <div class="plan-name" style="color: var(--vip-basic);">VIP Básico</div>
+            <div class="plan-price">R$ 9,90 <span>/mês</span></div>
+            <ul class="plan-features">
+              <li>Tudo do plano FREE</li>
+              <li>10 filas privadas por mês</li>
+              <li>Acesso à Fila VIP Exclusiva</li>
+              <li>Badge "VIP Básico"</li>
+            </ul>
+            <button class="btn" style="background: var(--vip-basic); color: #000;" onclick="window.openBuyVipModal('vip_basic', 9.90)">Assinar VIP Básico</button>
+          </div>
+
+          <!-- VIP PRO -->
+          <div class="plan-card pro">
+            <div class="plan-name" style="color: var(--vip-pro);">VIP PRO</div>
+            <div class="plan-price">R$ 19,90 <span>/mês</span></div>
+            <ul class="plan-features">
+              <li>Tudo do VIP Básico</li>
+              <li>30 filas privadas por mês</li>
+              <li>Prioridade leve nas filas</li>
+              <li>Badge "VIP PRO"</li>
+              <li>Destaque moderado no Ranking</li>
+            </ul>
+            <button class="btn" style="background: var(--vip-pro); color: #fff;" onclick="window.openBuyVipModal('vip_pro', 19.90)">Assinar VIP PRO</button>
+          </div>
+
+          <!-- VIP PREMIUM -->
+          <div class="plan-card premium">
+            <div class="plan-name" style="color: var(--vip-premium);">VIP PREMIUM</div>
+            <div class="plan-price">R$ 39,90 <span>/mês</span></div>
+            <ul class="plan-features">
+              <li>Tudo do VIP PRO</li>
+              <li>Filas privadas ILIMITADAS</li>
+              <li>Prioridade máxima nas filas</li>
+              <li>Badge "VIP PREMIUM"</li>
+              <li>Destaque absoluto no Ranking</li>
+            </ul>
+            <button class="btn" style="background: var(--vip-premium); color: #fff;" onclick="window.openBuyVipModal('vip_premium', 39.90)">Assinar PREMIUM</button>
+          </div>
+
+        </div>
       </div>
     </div>
 
     <!-- VIEW: FILA (MATCHMAKING) -->
     <div id="view-fila" class="view">
-      <div class="grid-2" style="grid-template-columns: 1.5fr 1fr;">
+      <div class="grid-2" style="grid-template-columns: 1.8fr 1fr;">
         <!-- Left: Fila Controls -->
         <div class="panel" style="margin-bottom: 0;">
           <div class="panel-header">
             <div>
-              <div class="panel-title">Fila de Partidas</div>
-              <div class="panel-desc">Selecione nível e valor para entrar. Veja os membros esperando.</div>
+              <div class="panel-title">Fila de Partidas Competitivas</div>
+              <div class="panel-desc">Sua dificuldade é baseada nos seus pontos do Ranking.</div>
             </div>
             <div id="filaStatus" class="badge badge-gray">Não está na fila</div>
           </div>
 
           <div id="filaControls">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <label style="font-weight: bold; color: var(--muted);">1. Escolha a Fila</label>
-            </div>
-            <div class="grid-2" style="margin-bottom: 24px;">
-              <div class="queue-card" data-tier="iniciante" onclick="selectQueueTier('iniciante')">
+            <label style="font-weight: bold; color: var(--muted); display: block; margin-bottom: 12px;">1. Escolha a Fila (Limitada por seu Elo)</label>
+            <div class="grid-5" style="margin-bottom: 24px;">
+              <div class="queue-card" data-tier="iniciante" onclick="window.selectQueueTier('iniciante')">
                 <div class="queue-icon">🥉</div>
                 <div class="queue-title">Iniciante</div>
-                <div class="queue-desc">Bronze ao Ouro</div>
-                <div class="queue-count" id="count-iniciante">0/8 na fila</div>
+                <div class="queue-desc">0 a 299 Pts</div>
+                <div class="queue-count" id="count-iniciante">0/8</div>
               </div>
-              <div class="queue-card" data-tier="medio" onclick="selectQueueTier('medio')">
+              <div class="queue-card" data-tier="medio" onclick="window.selectQueueTier('medio')">
                 <div class="queue-icon">🥈</div>
                 <div class="queue-title">Médio</div>
-                <div class="queue-desc">Platina ao Diamante</div>
-                <div class="queue-count" id="count-medio">0/8 na fila</div>
+                <div class="queue-desc">150 a 599 Pts</div>
+                <div class="queue-count" id="count-medio">0/8</div>
               </div>
-              <div class="queue-card" data-tier="dificil" onclick="selectQueueTier('dificil')">
+              <div class="queue-card" data-tier="dificil" onclick="window.selectQueueTier('dificil')">
                 <div class="queue-icon">🏆</div>
                 <div class="queue-title">Difícil</div>
-                <div class="queue-desc">Mestre e Desafiante</div>
-                <div class="queue-count" id="count-dificil">0/8 na fila</div>
+                <div class="queue-desc">450+ Pts</div>
+                <div class="queue-count" id="count-dificil">0/8</div>
               </div>
-              <div class="queue-card" data-tier="mix" onclick="selectQueueTier('mix')">
+              <div class="queue-card" data-tier="mix" onclick="window.selectQueueTier('mix')">
                 <div class="queue-icon">🎲</div>
                 <div class="queue-title">Mix Geral</div>
-                <div class="queue-desc">Qualquer patente</div>
-                <div class="queue-count" id="count-mix">0/8 na fila</div>
+                <div class="queue-desc">Aberto</div>
+                <div class="queue-count" id="count-mix">0/8</div>
+              </div>
+              <div class="queue-card queue-vip" data-tier="vip" onclick="window.selectQueueTier('vip')">
+                <div class="queue-icon">👑</div>
+                <div class="queue-title" style="color:var(--vip-premium);">Fila VIP</div>
+                <div class="queue-desc">Exclusiva</div>
+                <div class="queue-count" id="count-vip">0/8</div>
               </div>
             </div>
 
             <div class="grid-2">
               <div>
                 <label style="display: block; font-weight: bold; margin-bottom: 12px; color: var(--muted);">2. Valor da Aposta por Time (PIX)</label>
-                <select class="select" id="filaPixValue" onchange="handlePixChange()">
+                <select class="select" id="filaPixValue" onchange="window.handlePixChange()">
                   <option value="5">AP R$ 5,00 (Pot: R$ 10)</option>
                   <option value="10" selected>AP R$ 10,00 (Pot: R$ 20)</option>
                   <option value="20">AP R$ 20,00 (Pot: R$ 40)</option>
@@ -301,24 +389,26 @@
                   <option value="livre">AP VALOR LIVRE (Min R$ 5)</option>
                 </select>
                 <div id="customPixContainer" class="hidden" style="margin-top: 8px;">
-                  <input type="number" id="customPixValue" class="input" placeholder="Digite o valor (Min 5)" min="5" onchange="updateQueueCounts()" onkeyup="updateQueueCounts()">
+                  <input type="number" id="customPixValue" class="input" placeholder="Digite o valor (Min 5)" min="5" onchange="window.updateQueueCounts()" onkeyup="window.updateQueueCounts()">
                 </div>
               </div>
-              <div style="display: flex; align-items: flex-end;">
-                <button class="btn btn-primary" style="width: 100%; height: 44px;" id="btnEnterQueue" onclick="toggleQueue()">Entrar na Fila</button>
+              <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;">
+                <button class="btn btn-primary" style="width: 100%; height: 44px;" id="btnEnterQueue" onclick="window.toggleQueue()">Entrar na Fila</button>
+                <button class="btn btn-accent" style="width: 100%; height: 44px; box-shadow: 0 0 10px rgba(250,204,21,0.2);" onclick="window.openPrivateModal()">🔑 Sala Privada (Amigos)</button>
               </div>
             </div>
+            <div id="lblPrivateUsage" style="font-size: 12px; color: var(--muted); text-align: right; margin-top: 12px;">Uso de Salas Privadas: Calculando...</div>
           </div>
           
           <div id="filaWaiting" class="hidden text-center" style="padding: 40px 0;">
             <div class="loading-spinner" style="width: 40px; height: 40px; margin-bottom: 20px;"></div>
-            <h3 style="margin-bottom: 8px;">Procurando jogadores...</h3>
-            <p style="color: var(--muted); margin-bottom: 24px;">Fila: <b id="lblWaitTier">Médio</b> | Aposta do Time: <b id="lblWaitPix">R$ 10</b></p>
-            <p style="color: var(--primary); font-weight: bold; margin-bottom: 24px; font-size: 18px;" id="lblWaitCount">Jogadores: 1/8</p>
+            <h3 style="margin-bottom: 8px;" id="lblWaitTitle">Procurando jogadores...</h3>
+            <p style="color: var(--muted); margin-bottom: 24px;">Fila: <b id="lblWaitTier" style="color:var(--primary)">Médio</b> | Aposta: <b id="lblWaitPix" style="color:var(--primary)">R$ 10</b></p>
+            <p style="color: var(--text); font-weight: bold; margin-bottom: 24px; font-size: 18px;" id="lblWaitCount">Jogadores: 1/8</p>
             
             <div class="flex-center">
-              <button class="btn btn-danger" onclick="toggleQueue()">Sair da Fila</button>
-              <button class="btn" onclick="addBotToQueue()" title="Adiciona um bot falso para testar o fechamento da sala">Simular +1 Jogador</button>
+              <button class="btn btn-danger" onclick="window.toggleQueue()">Sair da Fila</button>
+              <button class="btn" id="btnSimulate" onclick="window.addBotToQueue()" title="Simula entrada de players falsos">Simular +1 Jogador</button>
             </div>
           </div>
         </div>
@@ -329,12 +419,10 @@
             <div class="panel-title" id="chatTitle" style="font-size: 15px;">💬 Chat da Fila</div>
           </div>
           <div class="chat-container">
-            <div class="chat-messages" id="chatBox">
-              <!-- Mensagens renderizadas via JS -->
-            </div>
+            <div class="chat-messages" id="chatBox"></div>
             <div style="padding: 16px; border-top: 1px solid var(--stroke); display: flex; gap: 8px;">
-              <input type="text" id="chatInput" class="input" placeholder="Mande uma mensagem..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-              <button class="btn btn-primary" onclick="sendChatMessage()">Enviar</button>
+              <input type="text" id="chatInput" class="input" placeholder="Mande uma mensagem..." onkeypress="if(event.key==='Enter') window.sendChatMessage()">
+              <button class="btn btn-primary" onclick="window.sendChatMessage()">Enviar</button>
             </div>
           </div>
         </div>
@@ -350,9 +438,7 @@
             <div class="panel-desc">Acompanhe as partidas em aberto, pendentes de PIX e finalizadas.</div>
           </div>
         </div>
-        <div id="matchesList">
-          <!-- Partidas injetadas via JS -->
-        </div>
+        <div id="matchesList"></div>
       </div>
     </div>
 
@@ -360,7 +446,8 @@
     <div id="view-ranking" class="view">
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title">Ranking Geral</div>
+          <div class="panel-title">Ranking da Temporada</div>
+          <div class="panel-desc">Ganhe +25 a +30 pontos por vitória, perca -20 a -25 por derrota!</div>
         </div>
         <div style="overflow-x: auto;">
           <table id="rankingTable">
@@ -368,10 +455,10 @@
               <tr>
                 <th>#</th>
                 <th>Jogador (Nick)</th>
-                <th>Patente</th>
+                <th>Plano</th>
+                <th>Elo (Faixa)</th>
                 <th>Pts</th>
                 <th>W/L</th>
-                <th>WR%</th>
                 <th>Saldo PIX</th>
                 <th>Streak</th>
               </tr>
@@ -387,7 +474,7 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Meu Perfil</div>
-          <button class="btn btn-danger" onclick="logout()">Sair da Conta</button>
+          <button class="btn btn-danger" onclick="window.logout()">Sair da Conta</button>
         </div>
 
         <div class="ff-card">
@@ -395,30 +482,33 @@
           <div class="ff-info" style="width: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div>
-                <h2 id="pfNick">Nick</h2>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                    <h2 id="pfNick" style="margin:0;">Nick</h2>
+                    <span id="pfPlanBadge" class="badge badge-gray">FREE</span>
+                </div>
                 <div id="pfVerifiedBadge" class="badge badge-gray" style="margin-bottom: 8px; display: inline-block;">Não Vinculado</div>
               </div>
-              <button class="btn btn-primary" id="btnToggleLink" onclick="toggleIdLinkSection()">Vincular ID FF</button>
+              <button class="btn btn-primary" id="btnToggleLink" onclick="window.toggleIdLinkSection()">Vincular ID FF</button>
             </div>
             <div class="ff-stats">
               <span>ID: <b id="pfId" class="mono">Opcional</b></span>
-              <span>Nível: <b id="pfLevel">-</b></span>
-              <span>Patente: <b id="pfRank">Unranked</b></span>
+              <span>Elo Sistema: <b id="pfRankPts">Unranked</b></span>
+              <span>Patente FF: <b id="pfRank">Unranked</b></span>
             </div>
           </div>
         </div>
 
-        <div id="linkFfSection" class="hidden mt-4" style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: 12px; border: 1px solid var(--stroke);">
-          <label style="display: block; font-size: 13px; margin-bottom: 8px; color: var(--muted);">Vincule seu ID do Free Fire para exibir sua patente real (Opcional)</label>
+        <div id="linkFfSection" class="hidden mt-4" style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; border: 1px solid var(--stroke);">
+          <label style="display: block; font-size: 13px; margin-bottom: 8px; color: var(--muted);">Vincule seu ID do Free Fire (Opcional)</label>
           <div style="display: flex; gap: 8px; max-width: 400px;">
             <input type="text" class="input" id="inpFfId" placeholder="Ex: 12345678" />
-            <button class="btn btn-accent" onclick="verifyFfId()" id="btnVerifyFF">Buscar Conta</button>
+            <button class="btn btn-accent" onclick="window.verifyFfId()" id="btnVerifyFF">Buscar Conta</button>
           </div>
         </div>
 
         <div class="grid-4 mt-4">
           <div class="panel" style="margin-bottom: 0; padding: 16px; text-align: center;">
-            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Pontos</div>
+            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Pontos ELO</div>
             <div style="font-size: 24px; font-weight: 900;" id="pfPts">0</div>
           </div>
           <div class="panel" style="margin-bottom: 0; padding: 16px; text-align: center;">
@@ -430,56 +520,150 @@
             <div style="font-size: 24px; font-weight: 900;" id="pfWL">0 / 0</div>
           </div>
           <div class="panel" style="margin-bottom: 0; padding: 16px; text-align: center;">
-            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Winrate</div>
-            <div style="font-size: 24px; font-weight: 900;" id="pfWr">0%</div>
+            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Salas Privadas</div>
+            <div style="font-size: 24px; font-weight: 900;" id="pfPrivs">0/3</div>
           </div>
         </div>
-
       </div>
     </div>
 
     <!-- VIEW: REGRAS -->
     <div id="view-regras" class="view">
       <div class="panel">
-        <div class="panel-header"><div class="panel-title">Regras do Hub</div></div>
+        <div class="panel-header"><div class="panel-title">Regras do CPR APOSTAS</div></div>
         <div style="line-height: 1.6; color: var(--muted);">
-          <p><b>1. ID Opcional:</b> Você não é obrigado a vincular seu ID do Free Fire, mas usar seu Nick ajuda a galera a te reconhecer no game.</p><br>
-          <p><b>2. Aposta por Time:</b> A aposta selecionada na fila representa o valor total que a equipe apostará.</p><br>
-          <p><b>3. Pagamento:</b> O PIX deve ser realizado utilizando o botão "PIX Copia e Cola" na aba Partidas, ANTES de a sala iniciar. A chave fixa de recebimento é: <b>contato.coparyan@gmail.com</b>.</p><br>
-          <p><b>4. Resultados:</b> Apenas os Administradores lançam o placar e encerram a partida. O capitão vencedor deve enviar o print lá no privado ou chat da Fila.</p><br>
-          <p><b>5. Ofensas / Toxidade:</b> Tolerância zero. Banimento sumário e retenção do saldo em caso de tretas.</p>
+          <p><b>1. Dificuldade e Pontos:</b> Acesso às filas depende da sua pontuação no Ranking. Bronze/Prata (0-299), Médio (150-599), Difícil (450+).</p><br>
+          <p><b>2. Salas Privadas (X1, 2x2, 4x4):</b> O limite mensal depende do seu plano VIP. O Free possui 3 salas mensais.</p><br>
+          <p><b>3. Pagamento:</b> O PIX deve ser realizado utilizando o botão "PIX Copia e Cola" na aba Partidas. Chave: <b style="color:var(--text);">contato.coparyan@gmail.com</b>.</p><br>
+          <p><b>4. Resultados e ELO:</b> Apenas Admins lançam resultados. Você ganha de +25 a +30 pontos por vitória, e perde -20 a -25 por derrota. Ao fim da temporada ocorre Soft Reset (25% a menos de pontos).</p><br>
+          <p><b>5. Anti-Smurf / Toxidade:</b> Tolerância zero. Contas suspeitas de Smurf ou comportamento tóxico serão banidas permanentemente pelos Masters.</p>
         </div>
       </div>
     </div>
 
     <!-- VIEW: ADMIN -->
     <div id="view-admin" class="view">
-      <div class="panel">
+      <div class="panel" style="border-color: var(--danger); box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);">
         <div class="panel-header">
-          <div class="panel-title">Painel Admin</div>
+          <div class="panel-title" style="color: #fca5a5;">Painel MASTER (Admin)</div>
           <div class="badge badge-red">Acesso Restrito</div>
         </div>
-        <p style="color: var(--muted); margin-bottom: 20px;">Você está logado como Master. Ações administrativas globais:</p>
+        <p style="color: var(--muted); margin-bottom: 20px;">Ferramentas exclusivas para gerenciamento total da plataforma.</p>
         
         <div class="grid-2">
           <!-- Monitor de Filas -->
-          <div class="panel" style="background: rgba(0,0,0,0.2); margin: 0;">
+          <div class="panel" style="background: rgba(0,0,0,0.3); margin: 0;">
             <h3 style="margin-bottom: 12px; font-size: 15px;">Monitor de Filas Ativas</h3>
-            <div id="adminQueueList" style="font-size: 13px; color: var(--muted); margin-bottom: 16px; max-height: 150px; overflow-y: auto;">
-              <!-- Preenchido via JS -->
-            </div>
-            <button class="btn btn-danger" style="width: 100%;" onclick="adminClearQueue()">Esvaziar Todas as Filas</button>
+            <div id="adminQueueList" style="font-size: 13px; color: var(--muted); margin-bottom: 16px; max-height: 150px; overflow-y: auto;"></div>
+            <button class="btn btn-danger" style="width: 100%;" onclick="window.adminClearQueue()">Esvaziar Todas as Filas</button>
           </div>
           
-          <div class="panel" style="background: rgba(0,0,0,0.2); margin: 0;">
-            <h3 style="margin-bottom: 12px; font-size: 15px;">Gerenciamento Global</h3>
-            <button class="btn btn-danger" style="width: 100%; margin-bottom: 8px;" onclick="nukeDB()">Resetar Banco de Dados (Apagar Tudo)</button>
-            <p style="font-size: 12px; color: var(--muted); margin-top: 12px;">Para aprovar PIX ou definir resultados, vá até a aba <b>Partidas</b>.</p>
+          <div class="panel" style="background: rgba(0,0,0,0.3); margin: 0;">
+            <h3 style="margin-bottom: 12px; font-size: 15px;">Gerenciamento de Temporada</h3>
+            <p style="font-size: 12px; color: var(--muted); margin-bottom: 16px;">O Reset de Temporada aplica o cálculo "EloAtual x 0.75" para todos os usuários.</p>
+            <button class="btn btn-accent" style="width: 100%; margin-bottom: 8px;" onclick="window.adminResetSeason()">Resetar Temporada (0.75x)</button>
+            <button class="btn btn-danger" style="width: 100%; margin-top: 16px;" onclick="window.nukeDB()">Apagar TUDO (Reset DB)</button>
+          </div>
+        </div>
+
+        <div class="panel mt-4" style="background: rgba(0,0,0,0.3); margin-bottom: 0;">
+          <h3 style="margin-bottom: 12px; font-size: 15px;">Gerenciamento de Jogadores (Anti-Smurf & VIP)</h3>
+          <div style="overflow-x: auto; max-height: 300px; overflow-y: auto;">
+             <table id="adminUsersTable">
+                <thead><tr><th>ID / Nick</th><th>Plano</th><th>Pts</th><th>Ações</th></tr></thead>
+                <tbody></tbody>
+             </table>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Footer Copyright -->
+    <div style="text-align: center; padding: 40px 20px 20px; color: var(--muted); font-size: 13px; margin-top: auto;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; font-size: 14px;">
+        Desenvolvido por <strong style="color: var(--text);">RyanZ</strong> 
+        <!-- Selo de verificado -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill: var(--primary); color: #000; filter: drop-shadow(0 0 4px rgba(250,204,21,0.5));"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+        2026
+      </div>
+      <div style="margin-bottom: 4px;">Todos os direitos reservados</div>
+      <div style="color: var(--danger); font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Proibido a Venda, Para Utilização Gratuita</div>
+    </div>
+
+  </div>
+
+  <!-- MODAL COMPRAR VIP (PIX) -->
+  <div class="modal-overlay" id="modalBuyVip">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Assinar Plano VIP</h3>
+        <button class="close-btn" onclick="window.closeBuyVipModal()">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <input type="hidden" id="buyVipPlanId">
+        <p style="color: var(--muted); margin-bottom: 10px; font-size: 14px;">
+          Você está prestes a assinar o plano <b id="buyVipPlanName" style="color:var(--primary)">...</b>
+        </p>
+        <p style="font-size: 24px; font-weight: 900; margin-bottom: 20px; color: var(--text);" id="buyVipPrice">R$ 0,00</p>
+
+        <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=contato.coparyan@gmail.com" alt="QR Code PIX VIP" style="display: block; width: 150px; height: 150px;">
+        </div>
+        <div class="input-group">
+          <label style="text-align: left;">Chave PIX (E-mail)</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" class="input text-center" id="pixKeyVip" value="contato.coparyan@gmail.com" readonly>
+            <button class="btn btn-primary" onclick="document.getElementById('pixKeyVip').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: var(--warning); margin-top: 16px; margin-bottom: 16px;">
+          ⚠️ Faça o PIX e envie o comprovante para a administração para liberação, OU simule o pagamento abaixo (modo de teste).
+        </p>
+        <button class="btn btn-accent" style="width:100%" onclick="window.simulateVipPayment()">Simular Pagamento Aprovado</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL SALA PRIVADA (CRIAR E ENTRAR) -->
+  <div class="modal-overlay" id="modalPrivate">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>⚔️ Sala Privada</h3>
+        <button class="close-btn" onclick="window.closePrivateModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+         <div style="display:flex; gap:8px; margin-bottom: 20px;">
+            <button class="btn btn-primary" id="tabPrivCreate" style="flex:1" onclick="window.switchPrivTab('create')">Criar Sala</button>
+            <button class="btn" id="tabPrivJoin" style="flex:1" onclick="window.switchPrivTab('join')">Entrar na Sala</button>
+         </div>
+
+         <!-- Painel de Criação -->
+         <div id="privCreate">
+            <div class="input-group">
+               <label>Modo de Jogo</label>
+               <select id="privMode" class="select">
+                  <option value="2">1x1 (2 Jogadores)</option>
+                  <option value="4">2x2 (4 Jogadores)</option>
+                  <option value="8" selected>4x4 (8 Jogadores)</option>
+               </select>
+            </div>
+            <div class="input-group">
+               <label>Aposta por Time (R$)</label>
+               <input type="number" id="privAposta" class="input" min="5" value="10">
+            </div>
+            <button class="btn btn-accent" style="width: 100%; margin-top: 8px;" onclick="window.createPrivateRoom()">Gerar Sala Privada</button>
+         </div>
+
+         <!-- Painel de Entrada -->
+         <div id="privJoin" class="hidden">
+            <div class="input-group">
+               <label>Código da Sala</label>
+               <input type="text" id="privCode" class="input text-center" placeholder="Ex: SALA-XXXX" style="text-transform: uppercase; font-weight: 800; font-size: 16px; letter-spacing: 2px;">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.joinPrivateRoom()">Entrar na Sala</button>
+         </div>
+      </div>
+    </div>
   </div>
 
   <!-- MODALS AUTH -->
@@ -487,10 +671,9 @@
     <div class="modal">
       <div class="modal-header">
         <h3 id="authTitle">Entrar no Hub</h3>
-        <button class="close-btn" onclick="closeAuthModal()">&times;</button>
+        <button class="close-btn" onclick="window.closeAuthModal()">&times;</button>
       </div>
       <div class="modal-body">
-        <!-- Form Login -->
         <div id="formLogin">
           <div class="input-group">
             <label>Login / Email</label>
@@ -500,12 +683,11 @@
             <label>Senha</label>
             <input type="password" id="logPass" class="input" placeholder="••••••••">
           </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="doLogin()">Entrar</button>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.doLogin()">Entrar</button>
           <p class="text-center mt-4" style="font-size: 13px; color: var(--muted);">
-            Não tem conta? <a href="#" style="color: var(--primary);" onclick="switchAuth('register')">Criar agora</a>
+            Não tem conta? <a href="#" style="color: var(--primary);" onclick="window.switchAuth('register')">Criar agora</a>
           </p>
         </div>
-        <!-- Form Register -->
         <div id="formRegister" class="hidden">
           <div class="input-group">
             <label>Nome de Usuário (Nick no Hub)</label>
@@ -519,9 +701,9 @@
             <label>Senha</label>
             <input type="password" id="regPass" class="input" placeholder="Crie uma senha forte">
           </div>
-          <button class="btn btn-accent" style="width: 100%; margin-top: 8px;" onclick="doRegister()">Criar Conta</button>
+          <button class="btn btn-accent" style="width: 100%; margin-top: 8px;" onclick="window.doRegister()">Criar Conta</button>
           <p class="text-center mt-4" style="font-size: 13px; color: var(--muted);">
-            Já tem conta? <a href="#" style="color: var(--primary);" onclick="switchAuth('login')">Fazer Login</a>
+            Já tem conta? <a href="#" style="color: var(--primary);" onclick="window.switchAuth('login')">Fazer Login</a>
           </p>
         </div>
       </div>
@@ -533,7 +715,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3>Pagamento PIX</h3>
-        <button class="close-btn" onclick="closePixModal()">&times;</button>
+        <button class="close-btn" onclick="window.closePixModal()">&times;</button>
       </div>
       <div class="modal-body text-center">
         <p style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">
@@ -545,8 +727,8 @@
         <div class="input-group">
           <label style="text-align: left;">PIX Copia e Cola / Chave E-mail</label>
           <div style="display: flex; gap: 8px;">
-            <input type="text" class="input text-center" id="pixKeyInput" value="contato.coparyan@gmail.com" readonly>
-            <button class="btn btn-primary" onclick="copyPixKey()">Copiar</button>
+            <input type="text" class="input text-center" id="pixKeyMatch" value="contato.coparyan@gmail.com" readonly>
+            <button class="btn btn-primary" onclick="document.getElementById('pixKeyMatch').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
           </div>
         </div>
         <p style="font-size: 12px; color: var(--warning); margin-top: 16px;">
@@ -561,12 +743,11 @@
     <div class="modal">
       <div class="modal-header">
         <h3>Finalizar Partida</h3>
-        <button class="close-btn" onclick="closeMatchModal()">&times;</button>
+        <button class="close-btn" onclick="window.closeMatchModal()">&times;</button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="finMatchId">
-        <p style="color: var(--muted); margin-bottom: 16px; font-size: 14px;">Defina o vencedor para distribuir os pontos e repassar o saldo PIX.</p>
-        
+        <p style="color: var(--muted); margin-bottom: 16px; font-size: 14px;">O ELO será distribuído (+25 a +30 Win / -20 a -25 Loss) baseado no desequilíbrio das equipes.</p>
         <div class="input-group">
           <label>Vencedor</label>
           <select class="select" id="finWinner">
@@ -584,7 +765,7 @@
             <input type="number" id="finScoreB" class="input" value="0" min="0">
           </div>
         </div>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="confirmFinishMatch()">Confirmar Resultado</button>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.confirmFinishMatch()">Confirmar Resultado</button>
       </div>
     </div>
   </div>
@@ -619,266 +800,317 @@
     </div>
   </div>
 
-  <script>
-    /********************
-     * UTILS CUSTOMIZADAS (ALERTAS E CONFIRMAÇÕES)
-     ********************/
-    function customAlert(msg, title="Aviso") {
+  <!-- FIREBASE & LOGIC SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // --- Firebase Init ---
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'cpr-apostas-default';
+    
+    // Helpers paths Firestore (Sempre Public para app colaborativo)
+    const getDocRef = (coll, docId) => doc(db, 'artifacts', appId, 'public', 'data', coll, docId);
+    const getCollRef = (coll) => collection(db, 'artifacts', appId, 'public', 'data', coll);
+
+    // --- State Global ---
+    const state = { users: [], matches: [], queue: [], chat: [] };
+    let currentUser = null; 
+    let currentQueueTier = 'iniciante';
+    let initialized = false;
+
+    // --- Utils Basicos ---
+    const uid = () => 'id_' + Math.random().toString(36).substr(2, 9);
+    const money = (v) => Number(v||0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+    const pct = (x) => isFinite(x) ? (x*100).toFixed(1) + '%' : '0.0%';
+    const getUserNick = (u) => !u ? "Desconhecido" : (u.isVerified && u.ffNick ? u.ffNick : u.nick);
+    const getUserAvatar = (u) => !u ? "" : (u.isVerified && u.ffAvatar ? u.ffAvatar : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}&backgroundColor=eab308`);
+    const formatTime = (ts) => { const d = new Date(ts); return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0'); };
+    const getPlanName = (p) => { if(p==='vip_premium') return 'VIP PREMIUM'; if(p==='vip_pro') return 'VIP PRO'; if(p==='vip_basic') return 'VIP BÁSICO'; return 'FREE'; };
+    const getPlanClass = (p) => { if(p==='vip_premium') return 'badge-vip-premium'; if(p==='vip_pro') return 'badge-vip-pro'; if(p==='vip_basic') return 'badge-vip-basic'; return 'badge-gray'; };
+    const getPlanLimits = (p) => { if(p==='vip_premium') return 999999; if(p==='vip_pro') return 30; if(p==='vip_basic') return 10; return 3; };
+
+    // --- Utils: Rank (ELO) ---
+    function getRankDetails(pts) {
+      if (pts < 50) return { name: "Bronze III", color: "#cd7f32" };
+      if (pts < 100) return { name: "Bronze II", color: "#cd7f32" };
+      if (pts < 150) return { name: "Bronze I", color: "#cd7f32" };
+      if (pts < 200) return { name: "Prata III", color: "#c0c0c0" };
+      if (pts < 250) return { name: "Prata II", color: "#c0c0c0" };
+      if (pts < 300) return { name: "Prata I", color: "#c0c0c0" };
+      if (pts < 350) return { name: "Ouro III", color: "#ffd700" };
+      if (pts < 400) return { name: "Ouro II", color: "#ffd700" };
+      if (pts < 450) return { name: "Ouro I", color: "#ffd700" };
+      if (pts < 500) return { name: "Platina III", color: "#00ced1" };
+      if (pts < 550) return { name: "Platina II", color: "#00ced1" };
+      if (pts < 600) return { name: "Platina I", color: "#00ced1" };
+      if (pts < 650) return { name: "Diamante III", color: "#b9f2ff" };
+      if (pts < 700) return { name: "Diamante II", color: "#b9f2ff" };
+      if (pts < 750) return { name: "Diamante I", color: "#b9f2ff" };
+      if (pts < 850) return { name: "Mestre", color: "#ff4500" };
+      return { name: "Desafiante", color: "#ff0000" };
+    }
+
+    window.customAlert = (msg, title="Aviso") => {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = msg;
       document.getElementById('modalCustomAlert').classList.add('active');
-    }
-
-    function customConfirm(msg, onConfirm, title="Confirmação") {
+    };
+    window.customConfirm = (msg, onConfirm, title="Confirmação") => {
       document.getElementById('customConfirmTitle').innerText = title;
       document.getElementById('customConfirmMsg').innerText = msg;
       const modal = document.getElementById('modalCustomConfirm');
       const btnOk = document.getElementById('btnCustomConfirmOk');
-      
-      // Reseta event listeners antigos do botão para evitar triggers múltiplos
       const newBtnOk = btnOk.cloneNode(true);
       btnOk.parentNode.replaceChild(newBtnOk, btnOk);
-      
-      newBtnOk.addEventListener('click', () => {
-        modal.classList.remove('active');
-        if(onConfirm) onConfirm();
-      });
-      
+      newBtnOk.addEventListener('click', () => { modal.classList.remove('active'); if(onConfirm) onConfirm(); });
       modal.classList.add('active');
-    }
+    };
 
-    /********************
-     * STATE & STORAGE
-     ********************/
-    const LS_KEY = "ff4x4_hub_v4"; 
-    
-    function defaultState() {
-      return {
-        users: [
-          // Admin pré-configurado
-          {
-            id: "u_admin", nick: "Admin Master", email: "ADM01", pass: "@Master01", role: "admin",
-            ffid: null, isVerified: false, stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0 }
-          }
-        ],
-        matches: [],
-        queue: [], // { userId, tier, pix, time }
-        chat: []   // { id, userId, nick, text, time, tier }
-      };
-    }
-
-    let state = loadState();
-    let currentUser = null; 
-    let currentQueueTier = 'iniciante';
-    let loopsInterval = null;
-
-    function loadState() {
+    // --- Firebase Auth & Sync ---
+    async function initApp() {
       try {
-        const raw = localStorage.getItem(LS_KEY);
-        if(!raw) return defaultState();
-        const parsed = JSON.parse(raw);
-        if(!parsed.chat) parsed.chat = [];
-        return parsed;
-      } catch(e) { return defaultState(); }
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+      } catch (e) {
+        console.error("Auth error:", e);
+      }
     }
-    
-    function saveState() {
-      localStorage.setItem(LS_KEY, JSON.stringify(state));
+
+    onAuthStateChanged(auth, (user) => {
+      if(user) setupFirestoreListeners();
+    });
+
+    function setupFirestoreListeners() {
+      const collections = ['users', 'matches', 'queue', 'chat'];
+      let loadedCount = 0;
+
+      collections.forEach(coll => {
+        onSnapshot(getCollRef(coll), (snap) => {
+          state[coll] = snap.docs.map(d => ({...d.data(), _docId: d.id}));
+          
+          if(!initialized) {
+            loadedCount++;
+            if(loadedCount === collections.length) {
+              initialized = true;
+              document.getElementById('globalLoader').classList.add('hidden');
+              document.getElementById('mainNavbar').classList.remove('hidden');
+              document.getElementById('mainContainer').classList.remove('hidden');
+              checkAdminExists();
+              syncCurrentUser();
+              
+              const initialHash = window.location.hash.replace('#', '') || 'home';
+              window.switchView(initialHash);
+            }
+          } else {
+            syncCurrentUser();
+            renderApp();
+          }
+        }, (err) => console.error("Firestore Listen Error:", err));
+      });
+    }
+
+    async function checkAdminExists() {
+      // Create ADM01 to ADM11 if they don't exist
+      for(let i=1; i<=11; i++){
+          let admEmail = `ADM${i.toString().padStart(2, '0')}`;
+          if(!state.users.some(u => u.email === admEmail)) {
+            const adminData = {
+              id: "u_admin_" + i, nick: "Master " + i, email: admEmail, pass: "@Master01", role: "admin", plan: "vip_premium",
+              ffid: null, isVerified: false, isBanned: false, stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0 }
+            };
+            await setDoc(getDocRef('users', adminData.id), adminData);
+          }
+      }
     }
 
     function syncCurrentUser() {
       const sid = sessionStorage.getItem("loggedUserId");
-      if(sid) {
-        currentUser = state.users.find(u => u.id === sid) || null;
-      } else {
-        currentUser = null;
+      currentUser = sid ? (state.users.find(u => u.id === sid) || null) : null;
+      if(currentUser && currentUser.isBanned) {
+          window.customAlert("Sua conta foi suspensa pelos administradores.");
+          sessionStorage.removeItem("loggedUserId");
+          currentUser = null;
       }
-    }
-
-    /********************
-     * UTILS (LÓGICA)
-     ********************/
-    const uid = () => 'id_' + Math.random().toString(36).substr(2, 9);
-    const money = (v) => Number(v||0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-    const pct = (x) => isFinite(x) ? (x*100).toFixed(1) + '%' : '0.0%';
-
-    function getUserNick(u) {
-      if(!u) return "Desconhecido";
-      return u.isVerified && u.ffNick ? u.ffNick : u.nick;
-    }
-    function getUserAvatar(u) {
-      if(!u) return "";
-      return u.isVerified && u.ffAvatar ? u.ffAvatar : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}&backgroundColor=3b82f6`;
-    }
-    function formatTime(timestamp) {
-      const d = new Date(timestamp);
-      return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
-    }
-
-    /********************
-     * UI & NAVIGATION
-     ********************/
-    function init() {
-      syncCurrentUser();
       renderNav();
-      
+    }
+
+    function getPrivateRoomsUsage(user) {
+        if(!user || user.role === 'admin') return 0;
+        const currentMonth = new Date().toISOString().slice(0,7);
+        if(!user.stats.privUsage || user.stats.privUsage.month !== currentMonth) return 0;
+        return user.stats.privUsage.count || 0;
+    }
+
+    async function incrementPrivateRoomUsage() {
+        if(!currentUser || currentUser.role === 'admin') return true;
+        const currentMonth = new Date().toISOString().slice(0,7);
+        if(!currentUser.stats.privUsage || currentUser.stats.privUsage.month !== currentMonth) {
+            currentUser.stats.privUsage = { month: currentMonth, count: 0 };
+        }
+        currentUser.stats.privUsage.count++;
+        await setDoc(getDocRef('users', currentUser.id), currentUser);
+        return true;
+    }
+
+    // --- Rendering Core ---
+    function renderApp() {
       const hash = window.location.hash.replace('#', '') || 'home';
-      switchView(hash);
-      
-      selectQueueTier('iniciante');
-      
-      // Sincronização em tempo real entre abas e renderização dinâmica das telas
-      if(loopsInterval) clearInterval(loopsInterval);
-      loopsInterval = setInterval(() => {
-        state = loadState(); 
-        updateQueueUI();
-        updateQueueCounts();
-        
-        const currentHash = window.location.hash.replace('#', '') || 'home';
-        if(currentHash === 'fila') renderChat();
-        if(currentHash === 'partidas') renderPartidas(); // Garante que as filas formadas apareçam ao vivo
-        if(currentHash === 'admin') renderAdminQueue();
-        if(currentHash === 'ranking') renderRanking();
-      }, 1000);
-    }
-
-    function renderNav() {
-      const navLinks = document.getElementById("navLinks");
-      const userMenu = document.getElementById("userMenu");
-      
-      let linksHTML = `
-        <div class="nav-tab" data-target="home" onclick="switchView('home')">Início</div>
-        <div class="nav-tab" data-target="fila" onclick="switchView('fila')">Fila</div>
-        <div class="nav-tab" data-target="partidas" onclick="switchView('partidas')">Partidas</div>
-        <div class="nav-tab" data-target="ranking" onclick="switchView('ranking')">Ranking</div>
-        <div class="nav-tab" data-target="regras" onclick="switchView('regras')">Regras</div>
-      `;
-      
-      if(currentUser && currentUser.role === 'admin') {
-        linksHTML += `<div class="nav-tab" data-target="admin" onclick="switchView('admin')" style="color: #FCA5A5;">Admin</div>`;
-      }
-      navLinks.innerHTML = linksHTML;
-
-      if(currentUser) {
-        userMenu.innerHTML = `
-          <div class="badge badge-blue">R$ ${currentUser.stats.balance.toFixed(2)}</div>
-          <button class="btn btn-accent" onclick="switchView('perfil')" style="padding: 8px 12px;">Meu Perfil</button>
-        `;
-      } else {
-        userMenu.innerHTML = `
-          <button class="btn" onclick="openAuthModal('login')">Entrar</button>
-          <button class="btn btn-primary" onclick="openAuthModal('register')">Criar Conta</button>
-        `;
+      if(hash === 'home') renderHome();
+      if(hash === 'planos') renderPlanos();
+      if(hash === 'perfil') renderPerfil();
+      if(hash === 'ranking') renderRanking();
+      if(hash === 'partidas') renderPartidas();
+      if(hash === 'admin') renderAdminQueue();
+      if(hash === 'fila') {
+        renderChat();
+        updateQueueCountsUI();
+        updateQueueStateUI();
+        updatePrivateUsageLabel();
       }
     }
 
-    function switchView(viewId) {
-      if((viewId === 'perfil' || viewId === 'fila') && !currentUser) {
-        openAuthModal('login');
-        return;
-      }
-      if(viewId === 'admin' && (!currentUser || currentUser.role !== 'admin')) {
-        customAlert('Acesso negado.'); return;
-      }
+    window.switchView = (viewId) => {
+      if((viewId === 'perfil' || viewId === 'fila') && !currentUser) return window.openAuthModal('login');
+      if(viewId === 'admin' && (!currentUser || currentUser.role !== 'admin')) return window.customAlert('Acesso negado.');
 
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       
       const el = document.getElementById(`view-${viewId}`);
       if(el) el.classList.add('active');
-      
       const tab = document.querySelector(`.nav-tab[data-target="${viewId}"]`);
       if(tab) tab.classList.add('active');
 
       window.location.hash = viewId;
+      renderApp();
+    };
 
-      if(viewId === 'home') renderHome();
-      if(viewId === 'perfil') renderPerfil();
-      if(viewId === 'ranking') renderRanking();
-      if(viewId === 'partidas') renderPartidas();
-      if(viewId === 'admin') renderAdminQueue();
-      if(viewId === 'fila') {
-        renderChat();
-        updateQueueCounts();
+    function renderNav() {
+      const navLinks = document.getElementById("navLinks");
+      const userMenu = document.getElementById("userMenu");
+      
+      let linksHTML = `
+        <div class="nav-tab" data-target="home" onclick="window.switchView('home')">Início</div>
+        <div class="nav-tab" data-target="planos" onclick="window.switchView('planos')">Planos VIP</div>
+        <div class="nav-tab" data-target="fila" onclick="window.switchView('fila')">Fila</div>
+        <div class="nav-tab" data-target="partidas" onclick="window.switchView('partidas')">Partidas</div>
+        <div class="nav-tab" data-target="ranking" onclick="window.switchView('ranking')">Ranking</div>
+        <div class="nav-tab" data-target="regras" onclick="window.switchView('regras')">Regras</div>
+      `;
+      if(currentUser && currentUser.role === 'admin') {
+        linksHTML += `<div class="nav-tab" data-target="admin" onclick="window.switchView('admin')" style="color: var(--danger);">Admin</div>`;
+      }
+      navLinks.innerHTML = linksHTML;
+
+      if(currentUser) {
+        userMenu.innerHTML = `
+          <div class="badge ${getPlanClass(currentUser.plan)}">${getPlanName(currentUser.plan)}</div>
+          <div class="badge badge-gold" style="font-size:13px;">R$ ${currentUser.stats.balance.toFixed(2)}</div>
+          <button class="btn btn-accent" onclick="window.switchView('perfil')" style="padding: 8px 12px;">Meu Perfil</button>
+        `;
+      } else {
+        userMenu.innerHTML = `
+          <button class="btn" onclick="window.openAuthModal('login')">Entrar</button>
+          <button class="btn btn-primary" onclick="window.openAuthModal('register')">Criar Conta</button>
+        `;
       }
     }
 
-    /********************
-     * AUTHENTICATION
-     ********************/
-    function openAuthModal(type) {
-      document.getElementById('modalAuth').classList.add('active');
-      switchAuth(type);
-    }
-    function closeAuthModal() {
-      document.getElementById('modalAuth').classList.remove('active');
-    }
-    function switchAuth(type) {
+    // --- AUTH FLOW ---
+    window.openAuthModal = (type) => { document.getElementById('modalAuth').classList.add('active'); window.switchAuth(type); };
+    window.closeAuthModal = () => document.getElementById('modalAuth').classList.remove('active');
+    window.switchAuth = (type) => {
       if(type === 'login') {
-        document.getElementById('formLogin').classList.remove('hidden');
-        document.getElementById('formRegister').classList.add('hidden');
+        document.getElementById('formLogin').classList.remove('hidden'); document.getElementById('formRegister').classList.add('hidden');
         document.getElementById('authTitle').innerText = 'Entrar no Hub';
       } else {
-        document.getElementById('formLogin').classList.add('hidden');
-        document.getElementById('formRegister').classList.remove('hidden');
+        document.getElementById('formLogin').classList.add('hidden'); document.getElementById('formRegister').classList.remove('hidden');
         document.getElementById('authTitle').innerText = 'Criar Conta';
       }
-    }
+    };
+    window.goToFilaOrLogin = () => currentUser ? window.switchView('fila') : window.openAuthModal('login');
 
-    function doLogin() {
+    window.doLogin = () => {
       const email = document.getElementById('logEmail').value.trim();
       const pass = document.getElementById('logPass').value;
       const user = state.users.find(u => u.email === email && u.pass === pass);
       if(user) {
+        if(user.isBanned) return window.customAlert("Conta Suspensa.");
         sessionStorage.setItem("loggedUserId", user.id);
-        closeAuthModal();
-        init(); 
+        syncCurrentUser();
+        window.closeAuthModal();
+        window.switchView('home');
       } else {
-        customAlert("Credenciais inválidas.");
+        window.customAlert("Credenciais inválidas.");
       }
-    }
+    };
 
-    function doRegister() {
+    window.doRegister = async () => {
       const nick = document.getElementById('regNick').value.trim();
       const email = document.getElementById('regEmail').value.trim();
       const pass = document.getElementById('regPass').value;
       
-      if(!nick || !email || !pass) { customAlert("Preencha todos os campos."); return; }
-      if(state.users.some(u => u.email === email)) { customAlert("Email já cadastrado."); return; }
+      if(!nick || !email || !pass) return window.customAlert("Preencha todos os campos.");
+      if(state.users.some(u => u.email === email)) return window.customAlert("Email já cadastrado.");
 
+      const newId = uid();
       const newUser = {
-        id: uid(), nick, email, pass, role: "user", ffid: null, isVerified: false,
-        stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0 }
+        id: newId, nick, email, pass, role: "user", plan: "free", ffid: null, isVerified: false, isBanned: false,
+        stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0, privUsage: { month: new Date().toISOString().slice(0,7), count: 0 } }
       };
       
-      state.users.push(newUser);
-      saveState();
-      
-      sessionStorage.setItem("loggedUserId", newUser.id);
-      closeAuthModal();
-      init();
-    }
+      await setDoc(getDocRef('users', newId), newUser);
+      sessionStorage.setItem("loggedUserId", newId);
+      syncCurrentUser();
+      window.closeAuthModal();
+      window.switchView('home');
+    };
 
-    function logout() {
+    window.logout = () => {
       sessionStorage.removeItem("loggedUserId");
-      init();
-      switchView('home');
-    }
+      syncCurrentUser();
+      window.switchView('home');
+    };
 
-    function goToFilaOrLogin() {
-      if(currentUser) switchView('fila'); else openAuthModal('login');
-    }
+    // --- PLANOS VIP ---
+    function renderPlanos() { }
+    window.openBuyVipModal = (planId, price) => {
+        if(!currentUser) return window.openAuthModal('login');
+        if(currentUser.plan === planId) return window.customAlert("Você já possui este plano ativo!");
+        document.getElementById('buyVipPlanId').value = planId;
+        document.getElementById('buyVipPlanName').innerText = getPlanName(planId);
+        document.getElementById('buyVipPrice').innerText = money(price);
+        document.getElementById('modalBuyVip').classList.add('active');
+    };
+    window.closeBuyVipModal = () => document.getElementById('modalBuyVip').classList.remove('active');
+    window.simulateVipPayment = async () => {
+        const planId = document.getElementById('buyVipPlanId').value;
+        currentUser.plan = planId;
+        await setDoc(getDocRef('users', currentUser.id), currentUser);
+        window.closeBuyVipModal();
+        window.customAlert(`Pagamento Aprovado! Bem-vindo ao plano ${getPlanName(planId)}.`, "VIP Ativado");
+        syncCurrentUser();
+    };
 
-    /********************
-     * PERFIL & FF ID (OPCIONAL)
-     ********************/
+    // --- PERFIL ---
     function renderPerfil() {
       if(!currentUser) return;
       const u = currentUser;
-      
       document.getElementById('pfNick').innerText = getUserNick(u);
       document.getElementById('pfAvatar').style.backgroundImage = `url('${getUserAvatar(u)}')`;
       
+      const badgePlan = document.getElementById('pfPlanBadge');
+      badgePlan.innerText = getPlanName(u.plan);
+      badgePlan.className = `badge ${getPlanClass(u.plan)}`;
+
       if(u.isVerified) {
         document.getElementById('pfVerifiedBadge').innerText = "Conta FF Verificada ✓";
         document.getElementById('pfVerifiedBadge').className = "badge badge-green";
@@ -888,7 +1120,7 @@
         document.getElementById('btnToggleLink').innerText = "Atualizar ID";
         document.getElementById('linkFfSection').classList.add('hidden');
       } else {
-        document.getElementById('pfVerifiedBadge').innerText = "Não Vinculado";
+        document.getElementById('pfVerifiedBadge').innerText = "FF Não Vinculado";
         document.getElementById('pfVerifiedBadge').className = "badge badge-gray";
         document.getElementById('pfId').innerText = "Opcional";
         document.getElementById('pfLevel').innerText = "-";
@@ -896,330 +1128,371 @@
         document.getElementById('btnToggleLink').innerText = "Vincular ID FF";
       }
 
-      document.getElementById('pfPts').innerText = u.stats.pts;
+      const r = getRankDetails(u.stats.pts || 0);
+      document.getElementById('pfRankPts').innerHTML = `<span style="color:${r.color}">${r.name}</span>`;
+      
+      document.getElementById('pfPts').innerText = u.stats.pts || 0;
       document.getElementById('pfBalance').innerText = money(u.stats.balance);
       document.getElementById('pfWL').innerText = `${u.stats.w} / ${u.stats.l}`;
-      const wr = (u.stats.w + u.stats.l) > 0 ? (u.stats.w / (u.stats.w + u.stats.l)) : 0;
-      document.getElementById('pfWr').innerText = pct(wr);
-    }
-
-    function toggleIdLinkSection() {
-      document.getElementById('linkFfSection').classList.toggle('hidden');
-    }
-
-    function verifyFfId() {
-      const inp = document.getElementById('inpFfId');
-      const ffid = inp.value.trim();
-      if(!ffid || ffid.length < 5) { customAlert("Digite um ID válido (min 5 números)."); return; }
+      document.getElementById('pfWr').innerText = pct((u.stats.w + u.stats.l)>0 ? (u.stats.w/(u.stats.w+u.stats.l)) : 0);
       
+      const used = getPrivateRoomsUsage(u);
+      const limit = getPlanLimits(u.plan);
+      document.getElementById('pfPrivs').innerText = limit >= 999999 ? 'Ilimitado' : `${used}/${limit}`;
+    }
+
+    window.toggleIdLinkSection = () => document.getElementById('linkFfSection').classList.toggle('hidden');
+    
+    window.verifyFfId = () => {
+      const ffid = document.getElementById('inpFfId').value.trim();
+      if(!ffid || ffid.length < 5) return window.customAlert("Digite um ID válido.");
       const btn = document.getElementById('btnVerifyFF');
       btn.innerText = "Buscando..."; btn.disabled = true;
 
-      setTimeout(() => {
+      setTimeout(async () => {
         const ranks = ["Prata II", "Ouro III", "Platina I", "Diamante IV", "Mestre", "Desafiante"];
-        const num = parseInt(ffid.slice(-2) || "0"); 
-        const rank = ranks[num % ranks.length];
-        
         currentUser.ffid = ffid;
         currentUser.ffNick = "LB_" + Math.random().toString(36).substr(2, 5).toUpperCase();
         currentUser.ffLevel = Math.floor(Math.random() * 50) + 20;
-        currentUser.ffRank = rank;
-        currentUser.ffAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${ffid}&backgroundColor=3b82f6`;
+        currentUser.ffRank = ranks[parseInt(ffid.slice(-2) || "0") % ranks.length];
+        currentUser.ffAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${ffid}&backgroundColor=eab308`;
         currentUser.isVerified = true;
         
-        const idx = state.users.findIndex(u => u.id === currentUser.id);
-        if(idx !== -1) state.users[idx] = currentUser;
-        saveState();
-        
+        await setDoc(getDocRef('users', currentUser.id), currentUser);
         btn.innerText = "Buscar Conta"; btn.disabled = false;
-        renderPerfil();
-      }, 1500);
-    }
+        window.customAlert("Conta vinculada com sucesso!", "Sucesso");
+      }, 1000);
+    };
 
-    /********************
-     * MATCHMAKING (FILAS) & VALORES DE APOSTA
-     ********************/
-    function getFilaPixValue() {
+    // --- SALAS PRIVADAS E FILAS PÚBLICAS ---
+    window.getFilaPixValue = () => {
       const val = document.getElementById('filaPixValue').value;
-      if (val === 'livre') {
-        return parseFloat(document.getElementById('customPixValue').value) || 0;
-      }
-      return parseFloat(val);
+      return val === 'livre' ? (parseFloat(document.getElementById('customPixValue').value) || 0) : parseFloat(val);
+    };
+
+    window.handlePixChange = () => {
+      document.getElementById('customPixContainer').classList[document.getElementById('filaPixValue').value === 'livre' ? 'remove' : 'add']('hidden');
+      updateQueueCountsUI();
+    };
+
+    function updatePrivateUsageLabel() {
+        if(!currentUser) return;
+        const used = getPrivateRoomsUsage(currentUser);
+        const limit = getPlanLimits(currentUser.plan);
+        const txt = limit >= 999999 ? 'Ilimitado' : `${used} de ${limit}`;
+        document.getElementById('lblPrivateUsage').innerText = `Salas Privadas Criadas neste Mês: ${txt}`;
     }
 
-    function handlePixChange() {
-      const val = document.getElementById('filaPixValue').value;
-      const customInput = document.getElementById('customPixContainer');
-      if (val === 'livre') {
-        customInput.classList.remove('hidden');
-      } else {
-        customInput.classList.add('hidden');
-      }
-      updateQueueCounts();
-    }
+    // Modais Sala Privada
+    window.openPrivateModal = () => document.getElementById('modalPrivate').classList.add('active');
+    window.closePrivateModal = () => document.getElementById('modalPrivate').classList.remove('active');
+    window.switchPrivTab = (tab) => {
+        const createBtn = document.getElementById('tabPrivCreate');
+        const joinBtn = document.getElementById('tabPrivJoin');
+        if(tab === 'create') {
+            document.getElementById('privCreate').classList.remove('hidden');
+            document.getElementById('privJoin').classList.add('hidden');
+            createBtn.classList.add('btn-primary'); joinBtn.classList.remove('btn-primary');
+        } else {
+            document.getElementById('privCreate').classList.add('hidden');
+            document.getElementById('privJoin').classList.remove('hidden');
+            joinBtn.classList.add('btn-primary'); createBtn.classList.remove('btn-primary');
+        }
+    };
 
-    function selectQueueTier(tier) {
+    window.createPrivateRoom = async () => {
+       const limit = getPlanLimits(currentUser.plan);
+       const used = getPrivateRoomsUsage(currentUser);
+       if(used >= limit) {
+           window.closePrivateModal();
+           return window.customConfirm("Você atingiu o limite mensal de filas privadas para o seu plano atual. Faça upgrade para continuar criando partidas privadas.", () => {
+               window.switchView('planos');
+           }, "Limite Atingido");
+       }
+
+       const size = parseInt(document.getElementById('privMode').value);
+       const pix = parseFloat(document.getElementById('privAposta').value);
+       if(!pix || pix < 5) return window.customAlert("O valor mínimo é R$ 5,00.");
+       
+       await incrementPrivateRoomUsage();
+
+       const code = "SALA-" + Math.random().toString(36).substr(2, 4).toUpperCase();
+       const qId = uid();
+       await setDoc(getDocRef('queue', qId), {
+          userId: currentUser.id, tier: code, pix, time: Date.now(), maxPlayers: size, isPrivate: true
+       });
+       
+       window.closePrivateModal();
+       window.customAlert(`Sala Privada criada com sucesso!\n\nEnvie o código para seus amigos: ${code}`, "Código da Sala");
+       
+       window.selectQueueTier(code);
+       checkMatchmaking();
+    };
+
+    window.joinPrivateRoom = async () => {
+       const code = document.getElementById('privCode').value.trim().toUpperCase();
+       if(!code) return window.customAlert("Digite o código da sala.");
+       
+       const roomPlayers = state.queue.filter(q => q.tier === code && q.isPrivate);
+       if(roomPlayers.length === 0) return window.customAlert("Sala não encontrada. Verifique o código ou veja se a sala já iniciou.");
+       
+       const roomInfo = roomPlayers[0];
+       if(roomPlayers.length >= roomInfo.maxPlayers) return window.customAlert("Esta sala já está cheia!");
+       
+       const qId = uid();
+       await setDoc(getDocRef('queue', qId), {
+          userId: currentUser.id, tier: code, pix: roomInfo.pix, time: Date.now(), maxPlayers: roomInfo.maxPlayers, isPrivate: true
+       });
+       
+       window.closePrivateModal();
+       window.selectQueueTier(code);
+       checkMatchmaking();
+    };
+
+    window.selectQueueTier = (tier) => {
       currentQueueTier = tier;
       document.querySelectorAll('.queue-card').forEach(c => c.classList.remove('selected'));
-      document.querySelector(`.queue-card[data-tier="${tier}"]`).classList.add('selected');
-
-      document.getElementById('chatTitle').innerText = '💬 Chat da Fila - ' + tier.toUpperCase();
       
-      if (!window.lastChatCounts) window.lastChatCounts = {};
-      window.lastChatCounts[tier] = -1;
+      const card = document.querySelector(`.queue-card[data-tier="${tier}"]`);
+      if(card) card.classList.add('selected');
+      
+      let title = tier.toUpperCase();
+      if(tier.startsWith("SALA-")) title = "SALA PRIVADA (" + tier + ")";
+      document.getElementById('chatTitle').innerText = '💬 Chat da Fila - ' + title;
+      
       renderChat();
-    }
+    };
 
-    function updateQueueCounts() {
-      const pixVal = getFilaPixValue();
-      
-      ['iniciante', 'medio', 'dificil', 'mix'].forEach(tier => {
+    function updateQueueCountsUI() {
+      const pixVal = window.getFilaPixValue();
+      ['iniciante', 'medio', 'dificil', 'mix', 'vip'].forEach(tier => {
         const count = state.queue.filter(q => q.tier === tier && q.pix === pixVal).length;
         const el = document.getElementById(`count-${tier}`);
-        if(el) el.innerText = `${count}/8 na fila`;
+        if(el) el.innerText = `${count}/8`;
       });
     }
 
-    function toggleQueue() {
-      const pixVal = getFilaPixValue();
-      if (pixVal < 5) {
-        return customAlert("O valor mínimo de aposta por time é de R$ 5,00.");
-      }
+    function updateQueueStateUI() {
+      const viewFila = document.getElementById('view-fila');
+      if(!viewFila || !viewFila.classList.contains('active')) return;
 
-      const tier = currentQueueTier;
+      const myQueue = state.queue.find(q => q.userId === currentUser?.id);
+      const filaControls = document.getElementById('filaControls');
+      const filaWaiting = document.getElementById('filaWaiting');
+      const filaStatus = document.getElementById('filaStatus');
 
-      const idx = state.queue.findIndex(q => q.userId === currentUser.id);
-      
-      if(idx !== -1) {
-        state.queue.splice(idx, 1);
-        document.getElementById('filaControls').classList.remove('hidden');
-        document.getElementById('filaWaiting').classList.add('hidden');
-        document.getElementById('filaStatus').className = "badge badge-gray";
-        document.getElementById('filaStatus').innerText = "Não está na fila";
+      if(!myQueue) {
+        filaControls.classList.remove('hidden'); filaWaiting.classList.add('hidden');
+        filaStatus.className = "badge badge-gray"; filaStatus.innerText = "Não está na fila";
       } else {
-        state.queue.push({ userId: currentUser.id, tier, pix: pixVal, time: Date.now() });
-        document.getElementById('filaControls').classList.add('hidden');
-        document.getElementById('filaWaiting').classList.remove('hidden');
-        document.getElementById('lblWaitTier').innerText = tier.toUpperCase();
-        document.getElementById('lblWaitPix').innerText = money(pixVal);
-        document.getElementById('filaStatus').className = "badge badge-blue";
-        document.getElementById('filaStatus').innerText = "Na Fila (Buscando...)";
+        filaControls.classList.add('hidden'); filaWaiting.classList.remove('hidden');
+        filaStatus.className = "badge badge-gold"; 
         
-        checkMatchmaking(); 
-      }
-      saveState();
-      updateQueueUI();
-      updateQueueCounts();
-    }
-
-    function updateQueueUI() {
-      if(document.getElementById('view-fila').classList.contains('active') && !document.getElementById('filaWaiting').classList.contains('hidden')) {
-        const myQueue = state.queue.find(q => q.userId === currentUser.id);
-        if(!myQueue) {
-          // Tirado da fila (partida começou)
-          document.getElementById('filaControls').classList.remove('hidden');
-          document.getElementById('filaWaiting').classList.add('hidden');
-          document.getElementById('filaStatus').className = "badge badge-gray";
-          document.getElementById('filaStatus').innerText = "Não está na fila";
-          return;
+        if (myQueue.isPrivate) {
+            filaStatus.innerText = "Na Sala Privada";
+            document.getElementById('lblWaitTitle').innerText = "Aguardando Amigos...";
+            document.getElementById('lblWaitTier').innerText = myQueue.tier.toUpperCase();
+            document.getElementById('btnSimulate').classList.add('hidden');
+        } else {
+            filaStatus.innerText = "Buscando Partida...";
+            document.getElementById('lblWaitTitle').innerText = "Procurando jogadores...";
+            document.getElementById('lblWaitTier').innerText = myQueue.tier.toUpperCase();
+            document.getElementById('btnSimulate').classList.remove('hidden');
         }
-
+        
+        document.getElementById('lblWaitPix').innerText = money(myQueue.pix);
         const sameQueue = state.queue.filter(q => q.tier === myQueue.tier && q.pix === myQueue.pix);
-        document.getElementById('lblWaitCount').innerText = `Jogadores: ${sameQueue.length}/8`;
+        document.getElementById('lblWaitCount').innerText = `Jogadores: ${sameQueue.length}/${myQueue.maxPlayers || 8}`;
       }
     }
 
-    function addBotToQueue() {
+    window.toggleQueue = async () => {
+      const pixVal = window.getFilaPixValue();
+      if (pixVal < 5) return window.customAlert("O valor mínimo é R$ 5,00.");
+      
+      const myQueue = state.queue.find(q => q.userId === currentUser.id);
+      
+      if(myQueue) {
+        // Sair
+        await deleteDoc(getDocRef('queue', myQueue._docId));
+        window.selectQueueTier('iniciante'); 
+      } else {
+        const pts = currentUser.stats.pts || 0;
+        const uPlan = currentUser.plan || 'free';
+
+        if (currentQueueTier === 'vip' && uPlan === 'free') {
+            return window.customConfirm("A fila VIP é exclusiva para assinantes. O ambiente é mais sério e balanceado. Deseja ver os planos?", () => { window.switchView('planos'); }, "Acesso Negado");
+        }
+        if (currentQueueTier === 'iniciante' && pts >= 300) return window.customAlert("Você tem pontos demais para a fila Iniciante. Vá para a fila Média ou Difícil.");
+        if (currentQueueTier === 'medio' && (pts < 150 || pts > 599)) return window.customAlert("A fila MÉDIA é para jogadores entre 150 e 599 pontos ELO.");
+        if (currentQueueTier === 'dificil' && pts < 450) return window.customAlert("A fila DIFÍCIL requer no mínimo 450 pontos ELO (Platina+).");
+
+        // Prioridade baseada no plano: Injeta timestamp mais antigo pra ser escolhido primeiro
+        let timeModifier = Date.now();
+        if(uPlan === 'vip_premium') timeModifier -= 100000;
+        if(uPlan === 'vip_pro') timeModifier -= 50000;
+        if(uPlan === 'vip_basic') timeModifier -= 10000;
+
+        await setDoc(getDocRef('queue', uid()), { 
+            userId: currentUser.id, tier: currentQueueTier, pix: pixVal, time: timeModifier, maxPlayers: 8, isPrivate: false 
+        });
+        checkMatchmaking();
+      }
+    };
+
+    window.addBotToQueue = async () => {
       const myQueue = state.queue.find(q => q.userId === currentUser.id);
       if(!myQueue) return;
 
       const fakeId = uid();
-      state.users.push({
-        id: fakeId, nick: "Bot_" + Math.floor(Math.random()*100), email: "bot@bot", role: "user",
-        ffid: null, isVerified: false, 
-        stats: { pts:0, w:0, l:0, streak:0, balance:0, betTotal:0 }
+      const botPts = currentQueueTier === 'dificil' ? 600 : (currentQueueTier === 'medio' ? 300 : 50);
+      const botUser = {
+        id: fakeId, nick: "Bot_" + Math.floor(Math.random()*100), email: "bot@bot", role: "user", plan: "free", ffid: null, isVerified: false, isBanned: false,
+        stats: { pts: botPts, w:0, l:0, streak:0, balance:0, betTotal:0 }
+      };
+      await setDoc(getDocRef('users', fakeId), botUser);
+      await setDoc(getDocRef('queue', uid()), { 
+        userId: fakeId, tier: myQueue.tier, pix: myQueue.pix, time: Date.now(), maxPlayers: myQueue.maxPlayers || 8, isPrivate: myQueue.isPrivate || false
       });
-      
-      state.queue.push({ userId: fakeId, tier: myQueue.tier, pix: myQueue.pix, time: Date.now() });
-      saveState();
-      updateQueueUI();
-      updateQueueCounts();
       checkMatchmaking();
-    }
+    };
 
-    function checkMatchmaking() {
+    async function checkMatchmaking() {
       const groups = {};
-      state.queue.forEach(q => {
-        const key = `${q.tier}_${q.pix}`;
+      // Ordenar a fila pelo timestamp modificado garante que VIPs entrem primeiro
+      const sortedQueue = [...state.queue].sort((a,b) => a.time - b.time);
+      
+      sortedQueue.forEach(q => {
+        const key = q.isPrivate ? q.tier : `${q.tier}_${q.pix}`;
         if(!groups[key]) groups[key] = [];
         groups[key].push(q);
       });
 
       for(const key in groups) {
-        if(groups[key].length >= 8) {
-          const playersToMatch = groups[key].slice(0, 8);
-          createMatchFromQueue(playersToMatch);
+        const sample = groups[key][0];
+        const maxPlayers = sample.maxPlayers || 8;
+        
+        if(groups[key].length >= maxPlayers) {
+          const playersToMatch = groups[key].slice(0, maxPlayers);
           
-          const pIds = playersToMatch.map(p => p.userId);
-          state.queue = state.queue.filter(q => !pIds.includes(q.userId));
-          saveState();
+          // ELO Balance System - Sort players by ELO then distribute like a snake draft to balance teams
+          const mapped = playersToMatch.map(p => {
+              const u = state.users.find(x => x.id === p.userId);
+              return { pData: p, pts: u ? u.stats.pts || 0 : 0 };
+          });
+          mapped.sort((a,b) => b.pts - a.pts);
           
-          if(pIds.includes(currentUser?.id)) {
-            customAlert("SALA ENCONTRADA! 4x4 Formado. O sistema vai te redirecionar.", "Sala Pronta");
-            switchView('partidas');
+          const teamA = []; const teamB = [];
+          mapped.forEach((m, idx) => {
+              // Snake draft: 1st -> A, 2nd -> B, 3rd -> B, 4th -> A...
+              if(idx % 4 === 0 || idx % 4 === 3) teamA.push(m.pData.userId);
+              else teamB.push(m.pData.userId);
+          });
+          
+          const matchId = uid();
+          const matchObj = {
+            id: matchId, createdAt: Date.now(), tier: sample.tier, pixValue: sample.pix,
+            status: "pending_pix", teamA: teamA, teamB: teamB,
+            scoreA: null, scoreB: null, winner: null 
+          };
+
+          await setDoc(getDocRef('matches', matchId), matchObj);
+          
+          for(const p of playersToMatch) {
+            await deleteDoc(getDocRef('queue', p._docId));
+          }
+
+          const modeStr = teamA.length + "x" + teamB.length;
+          const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: matchObj.tier, text: `🔥 Partida ${matchObj.tier.toUpperCase()} (${modeStr}) formada (Pot Total: ${money(matchObj.pixValue*2)})! Verifiquem a aba Partidas.`, time: Date.now() };
+          await setDoc(getDocRef('chat', chatObj.id), chatObj);
+
+          if(playersToMatch.find(p => p.userId === currentUser?.id)) {
+            window.customAlert("SALA ENCONTRADA E BALANCEADA! Vá para a aba partidas realizar o pagamento.", "Sala Pronta");
+            window.switchView('partidas');
           }
         }
       }
     }
 
-    function createMatchFromQueue(players) {
-      for (let i = players.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [players[i], players[j]] = [players[j], players[i]];
-      }
-      
-      const teamA = players.slice(0, 4).map(p => p.userId);
-      const teamB = players.slice(4, 8).map(p => p.userId);
-      const pix = players[0].pix;
-
-      state.matches.push({
-        id: uid(),
-        createdAt: Date.now(),
-        tier: players[0].tier,
-        pixValue: pix,
-        status: "pending_pix", 
-        teamA: teamA,
-        teamB: teamB,
-        scoreA: null,
-        scoreB: null,
-        winner: null 
-      });
-      
-      // Envia msg automática no chat global
-      state.chat.push({
-        id: uid(), userId: "system", nick: "SISTEMA", tier: players[0].tier,
-        text: `🔥 Nova Sala ${players[0].tier.toUpperCase()} fechada (Pot Total: ${money(pix*2)})! Verifiquem a aba Partidas.`, 
-        time: Date.now()
-      });
-      
-      saveState();
-    }
-
-    /********************
-     * CHAT DA FILA (ESPECÍFICO)
-     ********************/
+    // --- CHAT ---
     function renderChat() {
-      const filteredChat = state.chat.filter(c => c.tier === currentQueueTier);
-
-      if (!window.lastChatCounts) window.lastChatCounts = {};
-      if (window.lastChatCounts[currentQueueTier] === filteredChat.length && filteredChat.length !== 0) return; 
-      
       const box = document.getElementById('chatBox');
+      const filteredChat = state.chat.filter(c => c.tier === currentQueueTier).sort((a,b)=>a.time-b.time);
+      
       box.innerHTML = filteredChat.slice(-50).map(c => {
         const isMe = currentUser && c.userId === currentUser.id;
         const isSys = c.userId === 'system';
         const color = isSys ? 'var(--warning)' : (isMe ? 'var(--accent)' : 'var(--primary)');
+        const safeText = (c.text||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
         return `
           <div class="chat-msg ${isMe ? 'me' : ''}">
-            <div class="author" style="color: ${color}">
-              ${c.nick} <span>${formatTime(c.time)}</span>
-            </div>
-            <div class="text" style="${isSys ? 'font-style: italic; color: #FCD34D;' : ''}">${escapeHtml(c.text)}</div>
+            <div class="author" style="color: ${color}">${c.nick} <span>${formatTime(c.time)}</span></div>
+            <div class="text" style="${isSys ? 'font-style: italic; color: #FCD34D;' : ''}">${safeText}</div>
           </div>
         `;
       }).join('');
-      
       box.scrollTop = box.scrollHeight;
-      window.lastChatCounts[currentQueueTier] = filteredChat.length;
     }
 
-    function sendChatMessage() {
-      if(!currentUser) return customAlert("Faça login para participar do chat.");
+    window.sendChatMessage = async () => {
+      if(!currentUser) return window.customAlert("Faça login para participar do chat.");
       const inp = document.getElementById('chatInput');
       const text = inp.value.trim();
       if(!text) return;
       
-      state.chat.push({
-        id: uid(),
-        userId: currentUser.id,
-        nick: getUserNick(currentUser),
-        tier: currentQueueTier, 
-        text: text,
-        time: Date.now()
-      });
-      saveState();
+      const chatObj = { id: uid(), userId: currentUser.id, nick: getUserNick(currentUser), tier: currentQueueTier, text, time: Date.now() };
       inp.value = '';
-      renderChat();
-    }
+      await setDoc(getDocRef('chat', chatObj.id), chatObj);
+    };
 
-    function escapeHtml(unsafe) {
-      return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    /********************
-     * PARTIDAS & PIX
-     ********************/
+    // --- PARTIDAS E RESULTADOS ---
     function renderPartidas() {
       const list = document.getElementById('matchesList');
-      if(state.matches.length === 0) {
-        list.innerHTML = `<div class="text-center" style="padding: 40px; color: var(--muted);">Nenhuma partida registrada ainda.</div>`;
-        return;
-      }
+      if(state.matches.length === 0) return list.innerHTML = `<div class="text-center" style="padding: 40px; color: var(--muted);">Nenhuma partida registrada ainda.</div>`;
 
       const order = {"pending_pix": 1, "active": 2, "closed": 3};
       const sorted = [...state.matches].sort((a,b) => order[a.status] - order[b.status] || b.createdAt - a.createdAt);
 
       list.innerHTML = sorted.map(m => {
         const pot = m.pixValue * 2; 
+        let statusBadge = m.status === 'pending_pix' ? `<span class="badge badge-orange">Aguardando PIX</span>` : 
+                          m.status === 'active' ? `<span class="badge badge-green">Em Andamento</span>` : `<span class="badge badge-gray">Finalizada</span>`;
         
-        let statusBadge = '';
-        if(m.status === 'pending_pix') statusBadge = `<span class="badge badge-orange">Aguardando Pagamentos</span>`;
-        if(m.status === 'active') statusBadge = `<span class="badge badge-green">Em Andamento</span>`;
-        if(m.status === 'closed') statusBadge = `<span class="badge badge-gray">Finalizada</span>`;
-
-        const getNick = (id) => {
-          const u = state.users.find(x => x.id === id);
-          return getUserNick(u);
+        const getNickFmt = (id) => {
+            const u = state.users.find(x => x.id === id);
+            const rColor = u ? getRankDetails(u.stats.pts || 0).color : '#fff';
+            return `<span style="color:${rColor}">${getUserNick(u)}</span>`;
         };
-
-        const strTeamA = m.teamA.map(getNick).join(', ');
-        const strTeamB = m.teamB.map(getNick).join(', ');
+        const strTeamA = m.teamA.map(getNickFmt).join(', ');
+        const strTeamB = m.teamB.map(getNickFmt).join(', ');
 
         const isUserInMatch = currentUser && (m.teamA.includes(currentUser.id) || m.teamB.includes(currentUser.id));
         const isAdmin = currentUser && currentUser.role === 'admin';
 
         let actions = '';
         if(m.status === 'pending_pix' && isAdmin) {
-          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="adminConfirmPix('${m.id}')">Marcar Pago e Iniciar</button>`;
-        }
-        else if(m.status === 'active' && isAdmin) {
-          actions = `<button class="btn btn-accent" style="padding: 6px 12px; font-size: 12px;" onclick="openFinishMatch('${m.id}')">Registrar Resultado Final</button>`;
-        }
-        else if(m.status === 'pending_pix' && isUserInMatch && !isAdmin) {
-          actions = `<button class="btn btn-success" style="padding: 6px 12px; font-size: 12px; background: var(--success); border:none; color:black; font-weight:800;" onclick="openPixModal()">Pagar PIX (QR Code)</button>`;
+          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminConfirmPix('${m.id}')">Marcar Pago e Iniciar</button>`;
+        } else if(m.status === 'active' && isAdmin) {
+          actions = `<button class="btn btn-accent" style="padding: 6px 12px; font-size: 12px;" onclick="window.openFinishMatch('${m.id}')">Registrar Resultado</button>`;
+        } else if(m.status === 'pending_pix' && isUserInMatch && !isAdmin) {
+          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; color:black;" onclick="window.openPixModal()">Pagar PIX (QR Code)</button>`;
         }
 
         const scoreStr = m.status === 'closed' ? `<div style="font-size: 24px; font-weight: 900; margin: 0 16px;">${m.scoreA} <span style="opacity:.3">-</span> ${m.scoreB}</div>` : `<div class="vs">VS</div>`;
+        const modeStr = m.teamA.length + "x" + m.teamB.length;
+        let tName = m.tier.toUpperCase();
+        if(tName.startsWith("SALA-")) tName = "PRIVADA (" + tName + ")";
 
         return `
-          <div class="match-card" style="${isUserInMatch ? 'border-color: var(--primary); background: rgba(59, 130, 246, 0.05);' : ''}">
+          <div class="match-card" style="${isUserInMatch ? 'border-color: var(--primary); background: rgba(250, 204, 21, 0.05);' : ''}">
             <div class="match-header">
-              <div>
-                <b style="font-size: 14px;">Fila ${m.tier.toUpperCase()}</b> • 
-                <span class="mono">Aposta do Time: ${money(m.pixValue)} (Pot Total: ${money(pot)})</span>
-              </div>
+              <div><b style="font-size: 14px; color: var(--primary);">Fila ${tName} (${modeStr})</b> • <span class="mono">Aposta Time: ${money(m.pixValue)} (Pot: ${money(pot)})</span></div>
               ${statusBadge}
             </div>
             <div class="match-teams">
-              <div class="team">
-                <div class="team-name" style="color: ${m.winner === 'A' ? 'var(--success)' : ''}">Time A</div>
-                <div class="team-players">${strTeamA}</div>
-              </div>
+              <div class="team"><div class="team-name" style="color: ${m.winner === 'A' ? 'var(--success)' : ''}">Time A</div><div class="team-players">${strTeamA}</div></div>
               ${scoreStr}
-              <div class="team">
-                <div class="team-name" style="color: ${m.winner === 'B' ? 'var(--success)' : ''}">Time B</div>
-                <div class="team-players">${strTeamB}</div>
-              </div>
+              <div class="team"><div class="team-name" style="color: ${m.winner === 'B' ? 'var(--success)' : ''}">Time B</div><div class="team-players">${strTeamB}</div></div>
             </div>
             ${actions ? `<div class="match-footer">${actions}</div>` : ''}
           </div>
@@ -1227,201 +1500,178 @@
       }).join('');
     }
 
-    function openPixModal() {
-      document.getElementById('modalPix').classList.add('active');
-    }
-    function closePixModal() {
-      document.getElementById('modalPix').classList.remove('active');
-    }
-    function copyPixKey() {
-      const inp = document.getElementById('pixKeyInput');
-      inp.select();
-      document.execCommand('copy');
-      customAlert("Chave PIX copiada com sucesso!", "Sucesso");
-    }
+    window.openPixModal = () => document.getElementById('modalPix').classList.add('active');
+    window.closePixModal = () => document.getElementById('modalPix').classList.remove('active');
+    window.copyPixKey = () => { document.getElementById('pixKeyMatch').select(); document.execCommand('copy'); window.customAlert("Chave PIX copiada!", "Sucesso"); };
 
-    // RESOLUÇÃO DO BOTÃO: Uso de Confirmação Customizada que não é bloqueada pelo navegador
-    function adminConfirmPix(matchId) {
-      customConfirm("Confirmar o recebimento de todos os PIX? A partida será iniciada!", () => {
+    window.adminConfirmPix = (matchId) => {
+      window.customConfirm("Confirmar recebimento de todos os PIX? A partida será iniciada!", async () => {
         const m = state.matches.find(x => x.id === matchId);
-        if(m) {
-          m.status = 'active';
-          saveState();
-          renderPartidas();
-          customAlert("Sucesso! Partida marcada como 'Em Andamento'.", "Sucesso");
-        }
+        if(m) { m.status = 'active'; await setDoc(getDocRef('matches', m.id), m); window.customAlert("Partida Iniciada!", "Sucesso"); }
       });
-    }
+    };
 
-    function openFinishMatch(matchId) {
-      document.getElementById('finMatchId').value = matchId;
-      document.getElementById('modalMatch').classList.add('active');
-    }
-    function closeMatchModal() {
-      document.getElementById('modalMatch').classList.remove('active');
-    }
-
-    function confirmFinishMatch() {
+    window.openFinishMatch = (matchId) => { document.getElementById('finMatchId').value = matchId; document.getElementById('modalMatch').classList.add('active'); };
+    window.closeMatchModal = () => document.getElementById('modalMatch').classList.remove('active');
+    window.confirmFinishMatch = async () => {
       const matchId = document.getElementById('finMatchId').value;
-      const winner = document.getElementById('finWinner').value; 
-      const scoreA = parseInt(document.getElementById('finScoreA').value);
-      const scoreB = parseInt(document.getElementById('finScoreB').value);
-
       const m = state.matches.find(x => x.id === matchId);
       if(!m) return;
 
-      m.status = 'closed';
-      m.winner = winner;
-      m.scoreA = scoreA;
-      m.scoreB = scoreB;
+      m.status = 'closed'; m.winner = document.getElementById('finWinner').value; 
+      m.scoreA = parseInt(document.getElementById('finScoreA').value); m.scoreB = parseInt(document.getElementById('finScoreB').value);
+      
+      const wIds = m.winner === 'A' ? m.teamA : m.teamB;
+      const lIds = m.winner === 'A' ? m.teamB : m.teamA;
 
-      const wTeamIds = winner === 'A' ? m.teamA : m.teamB;
-      const lTeamIds = winner === 'A' ? m.teamB : m.teamA;
+      await setDoc(getDocRef('matches', m.id), m);
 
-      wTeamIds.forEach(id => {
-        const u = state.users.find(x => x.id === id);
-        if(u) {
-          u.stats.pts += 3;
-          u.stats.w += 1;
-          u.stats.streak = u.stats.streak >= 0 ? u.stats.streak + 1 : 1;
-          u.stats.balance += m.pixValue;
-          u.stats.betTotal += m.pixValue;
-        }
-      });
+      // Calculation of Team ELO Averages to distribute points
+      let ptsA = 0; let ptsB = 0;
+      for(let id of m.teamA){ const u = state.users.find(x => x.id === id); if(u) ptsA += u.stats.pts || 0; }
+      for(let id of m.teamB){ const u = state.users.find(x => x.id === id); if(u) ptsB += u.stats.pts || 0; }
+      const avgA = m.teamA.length > 0 ? ptsA / m.teamA.length : 0;
+      const avgB = m.teamB.length > 0 ? ptsB / m.teamB.length : 0;
+      
+      const avgW = m.winner === 'A' ? avgA : avgB;
+      const avgL = m.winner === 'A' ? avgB : avgA;
 
-      lTeamIds.forEach(id => {
-        const u = state.users.find(x => x.id === id);
-        if(u) {
-          u.stats.l += 1;
-          u.stats.streak = u.stats.streak <= 0 ? u.stats.streak - 1 : -1;
-          u.stats.balance -= m.pixValue;
-          u.stats.betTotal += m.pixValue;
-        }
-      });
+      let gain = 25; let loss = 20;
+      // Underdog WINS (+30)
+      if (avgL > avgW + 50) gain = 30;
+      // Favorite LOSES (-25)
+      if (avgL > avgW + 50) loss = 25;
 
-      state.chat.push({
-        id: uid(), userId: "system", nick: "SISTEMA", tier: m.tier,
-        text: `🏁 Partida Finalizada! O Time ${winner} venceu e levou o saldo da sala.`, 
-        time: Date.now()
-      });
+      for(let id of wIds) {
+        let u = state.users.find(x => x.id === id);
+        if(u) { u.stats.pts = (u.stats.pts||0)+gain; u.stats.w+=1; u.stats.streak=u.stats.streak>=0?u.stats.streak+1:1; u.stats.balance+=m.pixValue; u.stats.betTotal+=m.pixValue; await setDoc(getDocRef('users', u.id), u); }
+      }
+      for(let id of lIds) {
+        let u = state.users.find(x => x.id === id);
+        if(u) { u.stats.pts = Math.max(0, (u.stats.pts||0)-loss); u.stats.l+=1; u.stats.streak=u.stats.streak<=0?u.stats.streak-1:-1; u.stats.balance-=m.pixValue; u.stats.betTotal+=m.pixValue; await setDoc(getDocRef('users', u.id), u); }
+      }
 
-      saveState();
-      closeMatchModal();
-      renderPartidas();
+      const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: m.tier, text: `🏁 Partida Finalizada! Time ${m.winner} vence (+${gain} Pts).`, time: Date.now() };
+      await setDoc(getDocRef('chat', chatObj.id), chatObj);
+      window.closeMatchModal();
+    };
+
+    // --- HOME, RANKING, ADMIN ---
+    function renderHome() {
+      const verified = state.users.filter(u => u.role !== 'admin').length;
+      const closed = state.matches.filter(m => m.status === 'closed').length;
+      const totalPot = state.matches.filter(m => m.status === 'closed').reduce((acc, m) => acc + (m.pixValue * 2), 0);
+      document.getElementById('homeKpis').innerHTML = `
+        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--text);">${verified}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Jogadores</div></div>
+        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--text);">${closed}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Partidas Finalizadas</div></div>
+        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--success);">${money(totalPot)}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Giro de PIX</div></div>
+        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--primary);">Auto</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Matchmaking Elo</div></div>
+      `;
     }
 
-    /********************
-     * RANKING & HOME
-     ********************/
     function renderRanking() {
-      const tbody = document.querySelector('#rankingTable tbody');
-      
-      let players = state.users.filter(u => u.role !== 'admin');
-      
-      players.sort((a,b) => {
-        if(b.stats.pts !== a.stats.pts) return b.stats.pts - a.stats.pts;
+      let players = state.users.filter(u => u.role !== 'admin').sort((a,b) => {
+        if(b.stats.pts !== a.stats.pts) return (b.stats.pts || 0) - (a.stats.pts || 0);
         if(b.stats.balance !== a.stats.balance) return b.stats.balance - a.stats.balance;
-        
         const wrA = (a.stats.w + a.stats.l) > 0 ? (a.stats.w / (a.stats.w + a.stats.l)) : 0;
         const wrB = (b.stats.w + b.stats.l) > 0 ? (b.stats.w / (b.stats.w + b.stats.l)) : 0;
         return wrB - wrA;
       });
 
-      if(players.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center">Nenhum jogador registrado.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = players.map((p, idx) => {
+      document.querySelector('#rankingTable tbody').innerHTML = players.length === 0 ? `<tr><td colspan="8" class="text-center">Nenhum jogador registrado.</td></tr>` : players.map((p, idx) => {
         const wr = (p.stats.w + p.stats.l) > 0 ? (p.stats.w / (p.stats.w + p.stats.l)) : 0;
-        let streakBadge = `<span class="badge badge-gray">0</span>`;
-        if(p.stats.streak > 0) streakBadge = `<span class="badge badge-green">W${p.stats.streak}</span>`;
-        if(p.stats.streak < 0) streakBadge = `<span class="badge badge-red">L${Math.abs(p.stats.streak)}</span>`;
-
+        let streakBadge = p.stats.streak > 0 ? `<span class="badge badge-green">W${p.stats.streak}</span>` : p.stats.streak < 0 ? `<span class="badge badge-red">L${Math.abs(p.stats.streak)}</span>` : `<span class="badge badge-gray">0</span>`;
         let balanceColor = p.stats.balance > 0 ? 'var(--success)' : (p.stats.balance < 0 ? 'var(--danger)' : 'var(--muted)');
+        const r = getRankDetails(p.stats.pts || 0);
 
         return `
           <tr>
             <td class="mono" style="font-weight:bold;">${idx + 1}</td>
-            <td style="display:flex; align-items:center; gap:8px;">
-              <div style="width:24px; height:24px; border-radius:4px; background: url('${getUserAvatar(p)}') center/cover;"></div>
-              <b>${getUserNick(p)}</b>
-            </td>
-            <td><span class="badge badge-gray">${p.isVerified ? p.ffRank : 'Unranked'}</span></td>
-            <td><b style="color:var(--primary);">${p.stats.pts}</b></td>
+            <td style="display:flex; align-items:center; gap:8px;"><div style="width:24px; height:24px; border-radius:4px; background: url('${getUserAvatar(p)}') center/cover;"></div><b>${getUserNick(p)}</b></td>
+            <td><span class="badge ${getPlanClass(p.plan)}">${getPlanName(p.plan)}</span></td>
+            <td><span style="color:${r.color}; font-weight:800; font-size:13px;">${r.name}</span></td>
+            <td><b style="color:var(--primary);">${p.stats.pts||0}</b></td>
             <td class="mono">${p.stats.w}/${p.stats.l}</td>
-            <td class="mono">${pct(wr)}</td>
-            <td class="mono" style="color:${balanceColor}; font-weight:bold;">${money(p.stats.balance)}</td>
-            <td>${streakBadge}</td>
-          </tr>
-        `;
+            <td class="mono" style="color:${balanceColor}; font-weight:bold;">${money(p.stats.balance)}</td><td>${streakBadge}</td>
+          </tr>`;
       }).join('');
-    }
-
-    function renderHome() {
-      const verified = state.users.filter(u => u.role !== 'admin').length;
-      const closed = state.matches.filter(m => m.status === 'closed').length;
-      let totalPot = 0;
-      state.matches.filter(m => m.status === 'closed').forEach(m => {
-        totalPot += (m.pixValue * 2); 
-      });
-
-      document.getElementById('homeKpis').innerHTML = `
-        <div class="panel" style="text-align:center;">
-          <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px;">${verified}</div>
-          <div style="color: var(--muted); font-size: 13px; text-transform: uppercase; font-weight: bold;">Jogadores Registrados</div>
-        </div>
-        <div class="panel" style="text-align:center;">
-          <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px;">${closed}</div>
-          <div style="color: var(--muted); font-size: 13px; text-transform: uppercase; font-weight: bold;">Partidas Finalizadas</div>
-        </div>
-        <div class="panel" style="text-align:center;">
-          <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px; color: var(--success);">${money(totalPot)}</div>
-          <div style="color: var(--muted); font-size: 13px; text-transform: uppercase; font-weight: bold;">Giro de PIX</div>
-        </div>
-        <div class="panel" style="text-align:center;">
-          <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px; color: var(--primary);">Auto</div>
-          <div style="color: var(--muted); font-size: 13px; text-transform: uppercase; font-weight: bold;">Matchmaking</div>
-        </div>
-      `;
     }
 
     function renderAdminQueue() {
       const list = document.getElementById('adminQueueList');
-      if(!list) return;
-      if(state.queue.length === 0) {
-        list.innerHTML = "Nenhum jogador na fila de espera no momento.";
-        return;
+      if(list) {
+          list.innerHTML = state.queue.length === 0 ? "Nenhum jogador na fila de espera." : `<ul style="list-style:none; padding:0; margin:0;">` + state.queue.map(q => {
+            const u = state.users.find(x => x.id === q.userId);
+            return `<li style="padding: 6px 0; border-bottom: 1px solid var(--stroke);">[<span style="color:var(--primary)">${q.tier.toUpperCase()} - R$${q.pix}</span>] ${getUserNick(u)}</li>`;
+          }).join('') + `</ul>`;
       }
-      
-      let html = `<ul style="list-style:none; padding:0; margin:0;">`;
-      state.queue.forEach(q => {
-        const u = state.users.find(x => x.id === q.userId);
-        html += `<li style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">[${q.tier.toUpperCase()} - R$${q.pix}] ${getUserNick(u)}</li>`;
-      });
-      html += `</ul>`;
-      list.innerHTML = html;
+
+      const tableBody = document.querySelector('#adminUsersTable tbody');
+      if(tableBody) {
+          tableBody.innerHTML = state.users.filter(u=>u.role!=='admin').map(u => {
+              const bText = u.isBanned ? "Desbanir" : "Banir (Smurf)";
+              const bCol = u.isBanned ? "var(--success)" : "var(--danger)";
+              return `
+                  <tr>
+                      <td style="font-size:12px;"><b>${u.nick}</b><br><span style="color:var(--muted)">${u.id.substring(0,8)}...</span></td>
+                      <td>
+                          <select class="select" style="padding:4px 8px; font-size:11px;" onchange="window.adminChangePlan('${u.id}', this.value)">
+                              <option value="free" ${u.plan==='free'?'selected':''}>FREE</option>
+                              <option value="vip_basic" ${u.plan==='vip_basic'?'selected':''}>VIP BÁSICO</option>
+                              <option value="vip_pro" ${u.plan==='vip_pro'?'selected':''}>VIP PRO</option>
+                              <option value="vip_premium" ${u.plan==='vip_premium'?'selected':''}>VIP PREMIUM</option>
+                          </select>
+                      </td>
+                      <td><b>${u.stats.pts||0}</b></td>
+                      <td>
+                          <button class="btn" style="padding:4px 8px; font-size:11px; background:${bCol}; color:#fff;" onclick="window.adminToggleBan('${u.id}')">${bText}</button>
+                      </td>
+                  </tr>
+              `;
+          }).join('');
+      }
     }
 
-    function adminClearQueue() {
-      customConfirm("Atenção: Isso removerá TODOS os jogadores da fila de espera atual. Continuar?", () => {
-        state.queue = [];
-        saveState();
-        renderAdminQueue();
-        customAlert("Filas limpas com sucesso.");
+    window.adminClearQueue = () => {
+      window.customConfirm("Esvaziar todas as filas ativas?", async () => {
+        for(let q of state.queue) await deleteDoc(getDocRef('queue', q._docId));
+        window.customAlert("Filas limpas com sucesso.");
       });
-    }
+    };
 
-    function nukeDB() {
-      customConfirm("ATENÇÃO: Isso vai apagar todas as partidas, ranking e usuários (exceto o Admin Master). Tem certeza absoluta?", () => {
-        localStorage.removeItem(LS_KEY);
-        state = defaultState();
-        saveState();
-        logout(); 
+    window.adminChangePlan = async (uId, newPlan) => {
+        const u = state.users.find(x => x.id === uId);
+        if(u) { u.plan = newPlan; await setDoc(getDocRef('users', u.id), u); }
+    };
+
+    window.adminToggleBan = async (uId) => {
+        const u = state.users.find(x => x.id === uId);
+        if(u) { u.isBanned = !u.isBanned; await setDoc(getDocRef('users', u.id), u); }
+    };
+
+    window.adminResetSeason = () => {
+      window.customConfirm("ATENÇÃO: Deseja realizar o Soft Reset? Isso multiplicará os pontos de TODOS os jogadores por 0.75 e iniciará uma nova temporada.", async () => {
+          for(let u of state.users.filter(x=>x.role!=='admin')) {
+              u.stats.pts = Math.floor((u.stats.pts || 0) * 0.75);
+              await setDoc(getDocRef('users', u._docId), u);
+          }
+          window.customAlert("Temporada Resetada. Novos pontos aplicados.");
+      }, "Reset de Temporada");
+    };
+
+    window.nukeDB = () => {
+      window.customConfirm("Apagar TUDO (Partidas, Usuários e Chat)? Isso é irreversível.", async () => {
+        for(let u of state.users.filter(x=>x.role!=='admin')) await deleteDoc(getDocRef('users', u._docId));
+        for(let m of state.matches) await deleteDoc(getDocRef('matches', m._docId));
+        for(let c of state.chat) await deleteDoc(getDocRef('chat', c._docId));
+        for(let q of state.queue) await deleteDoc(getDocRef('queue', q._docId));
+        window.customAlert("Banco de dados resetado com sucesso.");
       }, "Zerar Banco de Dados");
-    }
+    };
 
-    window.onload = init;
+    // BOOT
+    initApp();
+
   </script>
 </body>
 </html>
