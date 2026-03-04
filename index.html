@@ -269,6 +269,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       letter-spacing: 0.5px;
       display: inline-block;
+      color: var(--text); /* Restore color for the pill */
     }
     
     .match-middle {
@@ -317,7 +318,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* Cards */
+    /* Cards Fila */
     .queue-card {
       background: rgba(0,0,0,0.3); border: 1px solid var(--stroke); border-radius: 12px;
       padding: 16px 12px; text-align: center; transition: all 0.2s; cursor: pointer; position: relative;
@@ -329,6 +330,49 @@
     .queue-count { font-size: 11px; font-weight: bold; background: rgba(250, 204, 21, 0.15); padding: 4px 8px; border-radius: 8px; color: var(--primary); display: inline-block; border: 1px solid rgba(250,204,21,0.3); }
     .queue-vip { border-color: var(--vip-premium); background: linear-gradient(180deg, rgba(168,85,247,0.1), rgba(0,0,0,0)); }
     .queue-vip:hover, .queue-vip.selected { border-color: var(--vip-premium); background: rgba(168,85,247,0.15); box-shadow: 0 0 15px rgba(168,85,247,0.3); }
+
+    /* Lobby Cards (NOVO) */
+    .open-lobby-card {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+    }
+    .open-lobby-card:hover {
+      border-color: rgba(250, 204, 21, 0.4);
+      background: rgba(250, 204, 21, 0.02);
+    }
+    .lobby-teams-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .lobby-team-side {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .lobby-team-side h4 {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .lobby-player-pill {
+      display: inline-block;
+      font-size: 11px;
+      background: rgba(0,0,0,0.5);
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin: 2px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
 
     /* Plan Cards */
     .plan-card {
@@ -558,21 +602,36 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
                 </div>
               </div>
               <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;">
-                <button class="btn btn-primary" style="width: 100%; height: 44px;" id="btnEnterQueue" onclick="window.toggleQueue()">Entrar na Fila</button>
                 <button class="btn btn-accent" style="width: 100%; height: 44px; box-shadow: 0 0 10px rgba(250,204,21,0.2);" onclick="window.openPrivateModal()">🔑 Sala Privada (Amigos)</button>
               </div>
             </div>
+            
+            <!-- NOVO: LOBBY BROWSER -->
+            <div id="publicLobbiesContainer" style="margin-top: 24px; padding-top: 24px; border-top: 1px dashed rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <label style="font-weight: bold; color: var(--muted); margin: 0;">3. Filas Abertas (Escolha seu Time)</label>
+                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.createNewPublicLobby()">+ Criar Nova Fila</button>
+                </div>
+                <div id="publicLobbiesList">
+                    <!-- Cards de Lobbies injetados via JS -->
+                </div>
+            </div>
+
             <div id="lblPrivateUsage" style="font-size: 12px; color: var(--muted); text-align: right; margin-top: 12px;">Uso de Salas Privadas: Calculando...</div>
           </div>
           
           <div id="filaWaiting" class="hidden text-center" style="padding: 40px 0;">
+            <!-- UI ATUALIZADA PARA O LOBBY ATIVO -->
             <div class="loading-spinner" style="width: 40px; height: 40px; margin-bottom: 20px;"></div>
-            <h3 style="margin-bottom: 8px;" id="lblWaitTitle">Procurando jogadores...</h3>
-            <p style="color: var(--muted); margin-bottom: 24px;">Fila: <b id="lblWaitTier" style="color:var(--primary)">Médio</b> | Aposta: <b id="lblWaitPix" style="color:var(--primary)">R$ 10</b></p>
-            <p style="color: var(--text); font-weight: bold; margin-bottom: 24px; font-size: 18px;" id="lblWaitCount">Jogadores: 1/8</p>
+            <h3 style="margin-bottom: 8px;" id="lblWaitTitle">Aguardando na Fila...</h3>
+            <p style="color: var(--muted); margin-bottom: 16px;">Fila: <b id="lblWaitTier" style="color:var(--primary)">Médio</b> | Aposta: <b id="lblWaitPix" style="color:var(--primary)">R$ 10</b></p>
+            
+            <div id="activeLobbyVisual" style="margin-bottom: 24px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
+               <!-- Visual do time atual injetado via JS -->
+            </div>
             
             <div class="flex-center">
-              <button class="btn btn-danger" onclick="window.toggleQueue()">Sair da Fila</button>
+              <button class="btn btn-danger" onclick="window.leaveQueue()">Sair da Fila</button>
               <button class="btn" id="btnSimulate" onclick="window.addBotToQueue()" title="Simula entrada de players falsos">Simular +1 Jogador</button>
             </div>
           </div>
@@ -1185,6 +1244,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         window.updateQueueCountsUI();
         updateQueueStateUI();
         updatePrivateUsageLabel();
+        window.renderPublicLobbies(); // NOVO LOBBY BROWSER
       }
     }
 
@@ -1447,6 +1507,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
           cont.classList[val.value === 'livre' ? 'remove' : 'add']('hidden');
       }
       window.updateQueueCountsUI();
+      window.renderPublicLobbies();
     };
 
     function updatePrivateUsageLabel() {
@@ -1486,7 +1547,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     };
 
     window.createPrivateRoom = async () => {
-       // PROTEÇÃO 1: Evitar que alguém crie sala se já estiver em alguma fila (bug de fila dupla)
+       // PROTEÇÃO 1: Evitar que alguém crie sala se já estiver em alguma fila
        const myQueue = state.queue.find(q => q.userId === currentUser.id);
        if(myQueue) {
            window.closePrivateModal();
@@ -1516,24 +1577,23 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
        const qId = uid();
        
        const queueObj = {
-          id: qId, userId: currentUser.id, tier: code, pix, time: Date.now(), maxPlayers: size, isPrivate: true
+          id: qId, userId: currentUser.id, tier: code, pix, time: Date.now(), maxPlayers: size, isPrivate: true,
+          lobbyId: code, team: 'A' // O criador entra direto no time A
        };
        
-       // PROTEÇÃO 2: Atualizar a memória local IMEDIATAMENTE antes do checkMatchmaking funcionar
        state.queue.push(queueObj);
-
        await setDocSupabase('queue', qId, queueObj);
        
        window.closePrivateModal();
        window.customAlert(`Sala Privada criada com sucesso!\n\nEnvie o código para seus amigos: ${code}`, "Código da Sala");
        
        window.selectQueueTier(code);
-       updateQueueStateUI(); // Atualizar visual imediatamente
+       updateQueueStateUI(); 
        checkMatchmaking();
     };
 
     window.joinPrivateRoom = async () => {
-       // PROTEÇÃO 1: Evitar que alguém entre se já estiver em alguma fila (bug de fila dupla)
+       // PROTEÇÃO 1: Evitar que alguém entre se já estiver em alguma fila
        const myQueue = state.queue.find(q => q.userId === currentUser.id);
        if(myQueue) {
            window.closePrivateModal();
@@ -1551,19 +1611,23 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
        const roomInfo = roomPlayers[0];
        if(roomPlayers.length >= roomInfo.maxPlayers) return window.customAlert("Esta sala já está cheia!");
        
+       // Tenta colocar de forma balanceada
+       const teamACount = roomPlayers.filter(q => q.team === 'A').length;
+       const teamBCount = roomPlayers.filter(q => q.team === 'B').length;
+       const assignedTeam = teamACount <= teamBCount ? 'A' : 'B';
+
        const qId = uid();
        const queueObj = {
-          id: qId, userId: currentUser.id, tier: code, pix: roomInfo.pix, time: Date.now(), maxPlayers: roomInfo.maxPlayers, isPrivate: true
+          id: qId, userId: currentUser.id, tier: code, pix: roomInfo.pix, time: Date.now(), maxPlayers: roomInfo.maxPlayers, isPrivate: true,
+          lobbyId: code, team: assignedTeam
        };
        
-       // PROTEÇÃO 2: Atualizar a memória local IMEDIATAMENTE para a sala fechar e virar Partida
        state.queue.push(queueObj);
-
        await setDocSupabase('queue', qId, queueObj);
        
        window.closePrivateModal();
        window.selectQueueTier(code);
-       updateQueueStateUI(); // Atualizar visual imediatamente
+       updateQueueStateUI(); 
        checkMatchmaking();
     };
 
@@ -1581,6 +1645,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
           chatTitle.innerText = '💬 Chat da Fila - ' + title;
       }
       
+      window.renderPublicLobbies();
       renderChat();
     };
 
@@ -1593,6 +1658,146 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       });
     };
 
+    // ====== NOVO: SISTEMA DE LOBBY BROWSER ======
+    window.renderPublicLobbies = () => {
+      const container = document.getElementById('publicLobbiesList');
+      if(!container) return;
+
+      const pixVal = window.getFilaPixValue();
+      // Filtra apenas as filas publicas do Tier e Pix selecionados
+      const openPlayers = state.queue.filter(q => !q.isPrivate && q.tier === currentQueueTier && q.pix === pixVal);
+      
+      const lobbies = {};
+      openPlayers.forEach(p => {
+          if(!p.lobbyId) p.lobbyId = p.tier + "_" + p.pix + "_legacy"; // Fallback para casos antigos
+          if(!lobbies[p.lobbyId]) lobbies[p.lobbyId] = { A: [], B: [] };
+          if(p.team === 'A') lobbies[p.lobbyId].A.push(p);
+          else if(p.team === 'B') lobbies[p.lobbyId].B.push(p);
+      });
+
+      if(Object.keys(lobbies).length === 0) {
+          container.innerHTML = `<div class="text-center" style="padding: 30px 10px; color: var(--muted); background: rgba(0,0,0,0.2); border-radius: 12px; font-size: 13px;">
+              Nenhuma sala aberta para esta configuração no momento.<br>Seja o primeiro a criar e monte seu time!
+          </div>`;
+          return;
+      }
+
+      let html = "";
+      for(const lId in lobbies) {
+          const lobby = lobbies[lId];
+          const total = lobby.A.length + lobby.B.length;
+          const isLobbyFull = total >= 8;
+          
+          const getPill = (qItem) => {
+              const u = state.users.find(x => x.id === qItem.userId);
+              return `<span class="lobby-player-pill">${getUserNick(u)}</span>`;
+          };
+
+          html += `
+          <div class="open-lobby-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: var(--primary); font-weight: 800; text-transform: uppercase;">Sala #${lId.substring(0,5)}</span>
+                  <span class="badge ${isLobbyFull ? 'badge-red' : 'badge-gray'}">Jogadores: ${total}/8</span>
+              </div>
+              <div class="lobby-teams-box">
+                  <div class="lobby-team-side">
+                      <h4>Time A (${lobby.A.length}/4)</h4>
+                      <div style="min-height: 40px; margin-bottom: 12px;">
+                          ${lobby.A.map(getPill).join('')}
+                      </div>
+                      ${lobby.A.length < 4 ? `<button class="btn btn-primary" style="width:100%; font-size:11px; padding: 6px;" onclick="window.joinPublicLobby('${lId}', 'A')">Entrar Time A</button>` : `<span style="font-size:11px; color:var(--danger); font-weight:bold;">LOTADO</span>`}
+                  </div>
+                  <div class="lobby-team-side">
+                      <h4>Time B (${lobby.B.length}/4)</h4>
+                      <div style="min-height: 40px; margin-bottom: 12px;">
+                          ${lobby.B.map(getPill).join('')}
+                      </div>
+                      ${lobby.B.length < 4 ? `<button class="btn btn-primary" style="width:100%; font-size:11px; padding: 6px;" onclick="window.joinPublicLobby('${lId}', 'B')">Entrar Time B</button>` : `<span style="font-size:11px; color:var(--danger); font-weight:bold;">LOTADO</span>`}
+                  </div>
+              </div>
+          </div>`;
+      }
+      container.innerHTML = html;
+    };
+
+    window.createNewPublicLobby = async () => {
+        if(!currentUser) return window.openAuthModal('login');
+        
+        const myQueue = state.queue.find(q => q.userId === currentUser.id);
+        if(myQueue) return window.customAlert("Você já está em uma fila ou sala.");
+
+        const pixVal = window.getFilaPixValue();
+        if (pixVal < 5) return window.customAlert("O valor mínimo é R$ 5,00.");
+        
+        const pts = currentUser.stats.pts || 0;
+        const uPlan = currentUser.plan || 'free';
+
+        if (currentQueueTier === 'vip' && uPlan === 'free') return window.customConfirm("A fila VIP é exclusiva para assinantes.", () => window.switchView('planos'), "Acesso Negado");
+        if (currentQueueTier === 'iniciante' && pts >= 300) return window.customAlert("Você tem pontos demais para a fila Iniciante.");
+        if (currentQueueTier === 'medio' && (pts < 150 || pts > 599)) return window.customAlert("A fila MÉDIA é para jogadores entre 150 e 599 pontos ELO.");
+        if (currentQueueTier === 'dificil' && pts < 450) return window.customAlert("A fila DIFÍCIL requer no mínimo 450 pontos ELO (Platina+).");
+
+        let timeModifier = Date.now();
+        if(uPlan === 'vip_premium') timeModifier -= 100000;
+        if(uPlan === 'vip_pro') timeModifier -= 50000;
+        if(uPlan === 'vip_basic') timeModifier -= 10000;
+
+        const newLobbyId = Math.random().toString(36).substr(2, 6).toUpperCase();
+        const qId = uid();
+        const queueObj = { 
+            id: qId, userId: currentUser.id, tier: currentQueueTier, pix: pixVal, time: timeModifier, 
+            maxPlayers: 8, isPrivate: false, lobbyId: newLobbyId, team: 'A' 
+        };
+        
+        state.queue.push(queueObj);
+        await setDocSupabase('queue', qId, queueObj);
+        updateQueueStateUI();
+        checkMatchmaking();
+    };
+
+    window.joinPublicLobby = async (lobbyId, teamStr) => {
+        if(!currentUser) return window.openAuthModal('login');
+        
+        const myQueue = state.queue.find(q => q.userId === currentUser.id);
+        if(myQueue) return window.customAlert("Você já está em uma fila ou sala.");
+
+        // Validar se o time ainda tem vaga
+        const teamCount = state.queue.filter(q => q.lobbyId === lobbyId && q.team === teamStr).length;
+        if(teamCount >= 4) return window.customAlert("Este time já está lotado!");
+
+        const pixVal = window.getFilaPixValue();
+        const pts = currentUser.stats.pts || 0;
+        const uPlan = currentUser.plan || 'free';
+
+        if (currentQueueTier === 'vip' && uPlan === 'free') return window.customConfirm("A fila VIP é exclusiva para assinantes.", () => window.switchView('planos'), "Acesso Negado");
+        if (currentQueueTier === 'iniciante' && pts >= 300) return window.customAlert("Você tem pontos demais para a fila Iniciante.");
+        if (currentQueueTier === 'medio' && (pts < 150 || pts > 599)) return window.customAlert("A fila MÉDIA é para jogadores entre 150 e 599 pontos ELO.");
+        if (currentQueueTier === 'dificil' && pts < 450) return window.customAlert("A fila DIFÍCIL requer no mínimo 450 pontos ELO (Platina+).");
+
+        const qId = uid();
+        const queueObj = { 
+            id: qId, userId: currentUser.id, tier: currentQueueTier, pix: pixVal, time: Date.now(), 
+            maxPlayers: 8, isPrivate: false, lobbyId: lobbyId, team: teamStr 
+        };
+        
+        state.queue.push(queueObj);
+        await setDocSupabase('queue', qId, queueObj);
+        updateQueueStateUI();
+        checkMatchmaking();
+    };
+
+    window.leaveQueue = async () => {
+        const myQueue = state.queue.find(q => q.userId === currentUser.id);
+        if(myQueue) {
+            await deleteDocSupabase('queue', myQueue.id);
+            window.updateQueueCountsUI();
+            window.renderPublicLobbies();
+        }
+    };
+
+    // Apenas para manter a compatibilidade se o usuário clicar no botão antigo que não existe mais.
+    window.toggleQueue = window.leaveQueue; 
+
     function updateQueueStateUI() {
       const viewFila = document.getElementById('view-fila');
       if(!viewFila || !viewFila.classList.contains('active')) return;
@@ -1601,6 +1806,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       const filaControls = document.getElementById('filaControls');
       const filaWaiting = document.getElementById('filaWaiting');
       const filaStatus = document.getElementById('filaStatus');
+      const visualContainer = document.getElementById('activeLobbyVisual');
 
       if(!myQueue) {
         if(filaControls) filaControls.classList.remove('hidden'); 
@@ -1618,68 +1824,63 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         if (myQueue.isPrivate) {
             if(filaStatus) filaStatus.innerText = "Na Sala Privada";
             if(lblTitle) lblTitle.innerText = "Aguardando Amigos...";
-            if(lblTier) lblTier.innerText = myQueue.tier.toUpperCase();
             if(btnSim) btnSim.classList.add('hidden');
         } else {
-            if(filaStatus) filaStatus.innerText = "Buscando Partida...";
-            if(lblTitle) lblTitle.innerText = "Procurando jogadores...";
-            if(lblTier) lblTier.innerText = myQueue.tier.toUpperCase();
+            if(filaStatus) filaStatus.innerText = "Na Fila Pública";
+            if(lblTitle) lblTitle.innerText = "Aguardando Oponentes...";
             if(btnSim) btnSim.classList.remove('hidden');
         }
+        
+        let tName = myQueue.tier.toUpperCase();
+        if(tName.startsWith("SALA-")) tName = "PRIVADA (" + tName + ")";
+        if(lblTier) lblTier.innerText = tName;
         
         const lblPix = document.getElementById('lblWaitPix');
         if(lblPix) lblPix.innerText = money(myQueue.pix);
         
-        const sameQueue = state.queue.filter(q => q.tier === myQueue.tier && q.pix === myQueue.pix);
-        const lblCount = document.getElementById('lblWaitCount');
-        if(lblCount) lblCount.innerText = `Jogadores: ${sameQueue.length}/${myQueue.maxPlayers || 8}`;
+        // Renderizar a visão gráfica da sala de espera
+        const sameQueue = state.queue.filter(q => q.lobbyId === myQueue.lobbyId);
+        const teamA = sameQueue.filter(q => q.team === 'A');
+        const teamB = sameQueue.filter(q => q.team === 'B');
+        
+        const getPill = (qItem) => {
+            const u = state.users.find(x => x.id === qItem.userId);
+            const isMe = qItem.userId === currentUser.id;
+            return `<span class="lobby-player-pill" style="${isMe ? 'border-color:var(--primary); color:var(--primary);' : ''}">${getUserNick(u)}</span>`;
+        };
+
+        if(visualContainer) {
+            visualContainer.innerHTML = `
+            <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--stroke); border-radius: 12px; padding: 16px;">
+                <div style="text-align: center; margin-bottom: 12px; font-weight: bold; color: var(--muted); font-size: 13px;">Sala #${myQueue.lobbyId ? myQueue.lobbyId.substring(0,5) : '...'} - Jogadores: ${sameQueue.length}/8</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="text-align: center;">
+                        <h4 style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Time A</h4>
+                        <div style="min-height: 50px;">${teamA.map(getPill).join('')}</div>
+                    </div>
+                    <div style="text-align: center; border-left: 1px dashed rgba(255,255,255,0.1);">
+                        <h4 style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Time B</h4>
+                        <div style="min-height: 50px;">${teamB.map(getPill).join('')}</div>
+                    </div>
+                </div>
+            </div>`;
+        }
       }
     }
-
-    window.toggleQueue = async () => {
-      const pixVal = window.getFilaPixValue();
-      if (pixVal < 5) return window.customAlert("O valor mínimo é R$ 5,00.");
-      
-      const myQueue = state.queue.find(q => q.userId === currentUser.id);
-      
-      if(myQueue) {
-        // Sair
-        await deleteDocSupabase('queue', myQueue.id);
-        window.selectQueueTier('iniciante'); 
-      } else {
-        const pts = currentUser.stats.pts || 0;
-        const uPlan = currentUser.plan || 'free';
-
-        if (currentQueueTier === 'vip' && uPlan === 'free') {
-            return window.customConfirm("A fila VIP é exclusiva para assinantes. O ambiente é mais sério e balanceado. Deseja ver os planos?", () => { window.switchView('planos'); }, "Acesso Negado");
-        }
-        if (currentQueueTier === 'iniciante' && pts >= 300) return window.customAlert("Você tem pontos demais para a fila Iniciante. Vá para a fila Média ou Difícil.");
-        if (currentQueueTier === 'medio' && (pts < 150 || pts > 599)) return window.customAlert("A fila MÉDIA é para jogadores entre 150 e 599 pontos ELO.");
-        if (currentQueueTier === 'dificil' && pts < 450) return window.customAlert("A fila DIFÍCIL requer no mínimo 450 pontos ELO (Platina+).");
-
-        // Prioridade baseada no plano: Injeta timestamp mais antigo pra ser escolhido primeiro
-        let timeModifier = Date.now();
-        if(uPlan === 'vip_premium') timeModifier -= 100000;
-        if(uPlan === 'vip_pro') timeModifier -= 50000;
-        if(uPlan === 'vip_basic') timeModifier -= 10000;
-
-        const qId = uid();
-        const queueObj = { 
-            id: qId, userId: currentUser.id, tier: currentQueueTier, pix: pixVal, time: timeModifier, maxPlayers: 8, isPrivate: false 
-        };
-        
-        // PROTEÇÃO: Para matchmaking não falhar se for o ultimo a entrar
-        state.queue.push(queueObj);
-
-        await setDocSupabase('queue', qId, queueObj);
-        updateQueueStateUI();
-        checkMatchmaking();
-      }
-    };
 
     window.addBotToQueue = async () => {
       const myQueue = state.queue.find(q => q.userId === currentUser.id);
       if(!myQueue) return;
+
+      const sameQueue = state.queue.filter(q => q.lobbyId === myQueue.lobbyId);
+      const teamACount = sameQueue.filter(q => q.team === 'A').length;
+      const teamBCount = sameQueue.filter(q => q.team === 'B').length;
+      
+      let botTeam = 'A';
+      if(teamACount >= 4 && teamBCount >= 4) return; // Lotado
+      if(teamACount >= 4) botTeam = 'B';
+      else if (teamBCount >= 4) botTeam = 'A';
+      else botTeam = teamACount <= teamBCount ? 'A' : 'B'; // Entra no time com menos gente
 
       const fakeId = uid();
       const botPts = currentQueueTier === 'dificil' ? 600 : (currentQueueTier === 'medio' ? 300 : 50);
@@ -1691,66 +1892,67 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       
       const qId = uid();
       const queueObj = { 
-        id: qId, userId: fakeId, tier: myQueue.tier, pix: myQueue.pix, time: Date.now(), maxPlayers: myQueue.maxPlayers || 8, isPrivate: myQueue.isPrivate || false
+        id: qId, userId: fakeId, tier: myQueue.tier, pix: myQueue.pix, time: Date.now(), 
+        maxPlayers: myQueue.maxPlayers || 8, isPrivate: myQueue.isPrivate || false, 
+        lobbyId: myQueue.lobbyId, team: botTeam
       };
       
       state.queue.push(queueObj);
-      
       await setDocSupabase('queue', qId, queueObj);
+      
       window.updateQueueCountsUI();
+      window.renderPublicLobbies();
       checkMatchmaking();
     };
 
     async function checkMatchmaking() {
       const groups = {};
-      // Ordenar a fila pelo timestamp modificado garante que VIPs entrem primeiro
-      const sortedQueue = [...state.queue].sort((a,b) => a.time - b.time);
       
-      sortedQueue.forEach(q => {
-        const key = q.isPrivate ? q.tier : `${q.tier}_${q.pix}`;
-        if(!groups[key]) groups[key] = [];
-        groups[key].push(q);
+      // Agrupa os jogadores exatamente pelos lobbies (salas) criadas
+      state.queue.forEach(q => {
+        const key = q.lobbyId || (q.isPrivate ? q.tier : `${q.tier}_${q.pix}_legacy`);
+        if(!groups[key]) groups[key] = { A: [], B: [], unassigned: [], all: [], sample: q };
+        
+        groups[key].all.push(q);
+        if(q.team === 'A') groups[key].A.push(q);
+        else if(q.team === 'B') groups[key].B.push(q);
+        else groups[key].unassigned.push(q); // Legacy support
       });
 
       for(const key in groups) {
-        const sample = groups[key][0];
-        const maxPlayers = sample.maxPlayers || 8;
+        const group = groups[key];
+        const maxPlayers = group.sample.maxPlayers || 8;
+        const requiredPerTeam = maxPlayers / 2;
         
-        if(groups[key].length >= maxPlayers) {
-          const playersToMatch = groups[key].slice(0, maxPlayers);
+        if(group.all.length >= maxPlayers) {
           
-          // ELO Balance System - Sort players by ELO then distribute like a snake draft to balance teams
-          const mapped = playersToMatch.map(p => {
-              const u = state.users.find(x => x.id === p.userId);
-              return { pData: p, pts: u ? u.stats.pts || 0 : 0 };
-          });
-          mapped.sort((a,b) => b.pts - a.pts);
+          // Se tiver alguém "unassigned" (filas antigas), divide eles para equilibrar 4x4
+          let teamA_ids = group.A.map(x => x.userId);
+          let teamB_ids = group.B.map(x => x.userId);
           
-          const teamA = []; const teamB = [];
-          mapped.forEach((m, idx) => {
-              // Snake draft: 1st -> A, 2nd -> B, 3rd -> B, 4th -> A...
-              if(idx % 4 === 0 || idx % 4 === 3) teamA.push(m.pData.userId);
-              else teamB.push(m.pData.userId);
+          group.unassigned.forEach(p => {
+              if(teamA_ids.length < requiredPerTeam) teamA_ids.push(p.userId);
+              else teamB_ids.push(p.userId);
           });
           
           const matchId = uid();
           const matchObj = {
-            id: matchId, createdAt: Date.now(), tier: sample.tier, pixValue: sample.pix,
-            status: "pending_pix", teamA: teamA, teamB: teamB,
+            id: matchId, createdAt: Date.now(), tier: group.sample.tier, pixValue: group.sample.pix,
+            status: "pending_pix", teamA: teamA_ids, teamB: teamB_ids,
             scoreA: null, scoreB: null, winner: null 
           };
 
           await setDocSupabase('matches', matchId, matchObj);
           
-          for(const p of playersToMatch) {
+          for(const p of group.all) {
             await deleteDocSupabase('queue', p.id);
           }
 
-          const modeStr = teamA.length + "x" + teamB.length;
+          const modeStr = teamA_ids.length + "x" + teamB_ids.length;
           const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: matchObj.tier, text: `🔥 Partida ${matchObj.tier.toUpperCase()} (${modeStr}) formada (Pot Total: ${money(matchObj.pixValue*2)})! Verifiquem a aba Partidas.`, time: Date.now() };
           await setDocSupabase('chat', chatObj.id, chatObj);
 
-          if(playersToMatch.find(p => p.userId === currentUser?.id)) {
+          if(group.all.find(p => p.userId === currentUser?.id)) {
             window.customAlert("SALA ENCONTRADA E BALANCEADA! Vá para a aba partidas realizar o pagamento.", "Sala Pronta");
             window.switchView('partidas');
           }
@@ -1810,10 +2012,10 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         const getNickFmt = (id) => {
             const u = state.users.find(x => x.id === id);
             const rColor = u ? getRankDetails(u.stats.pts || 0).color : '#fff';
-            return `<span style="color:${rColor}">${getUserNick(u)}</span>`;
+            return `<span><span style="color:${rColor}">${getUserNick(u)}</span></span>`; // Wrap in extra span for Pill CSS
         };
-        const strTeamA = m.teamA.map(getNickFmt).join(', ');
-        const strTeamB = m.teamB.map(getNickFmt).join(', ');
+        const strTeamA = m.teamA.map(getNickFmt).join('');
+        const strTeamB = m.teamB.map(getNickFmt).join('');
 
         const isUserInMatch = currentUser && (m.teamA.includes(currentUser.id) || m.teamB.includes(currentUser.id));
         const isAdmin = currentUser && currentUser.role === 'admin';
