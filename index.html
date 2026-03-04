@@ -1339,6 +1339,13 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     };
 
     window.createPrivateRoom = async () => {
+       // PROTEÇÃO 1: Evitar que alguém crie sala se já estiver em alguma fila (bug de fila dupla)
+       const myQueue = state.queue.find(q => q.userId === currentUser.id);
+       if(myQueue) {
+           window.closePrivateModal();
+           return window.customAlert("Você já está em uma fila! Saia dela antes de criar uma sala privada.");
+       }
+
        const limit = getPlanLimits(currentUser.plan);
        const used = getPrivateRoomsUsage(currentUser);
        if(used >= limit) {
@@ -1360,18 +1367,32 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
 
        const code = "SALA-" + Math.random().toString(36).substr(2, 4).toUpperCase();
        const qId = uid();
-       await setDocSupabase('queue', qId, {
+       
+       const queueObj = {
           id: qId, userId: currentUser.id, tier: code, pix, time: Date.now(), maxPlayers: size, isPrivate: true
-       });
+       };
+       
+       // PROTEÇÃO 2: Atualizar a memória local IMEDIATAMENTE antes do checkMatchmaking funcionar
+       state.queue.push(queueObj);
+
+       await setDocSupabase('queue', qId, queueObj);
        
        window.closePrivateModal();
        window.customAlert(`Sala Privada criada com sucesso!\n\nEnvie o código para seus amigos: ${code}`, "Código da Sala");
        
        window.selectQueueTier(code);
+       updateQueueStateUI(); // Atualizar visual imediatamente
        checkMatchmaking();
     };
 
     window.joinPrivateRoom = async () => {
+       // PROTEÇÃO 1: Evitar que alguém entre se já estiver em alguma fila (bug de fila dupla)
+       const myQueue = state.queue.find(q => q.userId === currentUser.id);
+       if(myQueue) {
+           window.closePrivateModal();
+           return window.customAlert("Você já está em uma fila! Saia dela antes de entrar em uma sala privada.");
+       }
+
        const codeEl = document.getElementById('privCode');
        if(!codeEl) return;
        const code = codeEl.value.trim().toUpperCase();
@@ -1384,12 +1405,18 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
        if(roomPlayers.length >= roomInfo.maxPlayers) return window.customAlert("Esta sala já está cheia!");
        
        const qId = uid();
-       await setDocSupabase('queue', qId, {
+       const queueObj = {
           id: qId, userId: currentUser.id, tier: code, pix: roomInfo.pix, time: Date.now(), maxPlayers: roomInfo.maxPlayers, isPrivate: true
-       });
+       };
+       
+       // PROTEÇÃO 2: Atualizar a memória local IMEDIATAMENTE para a sala fechar e virar Partida
+       state.queue.push(queueObj);
+
+       await setDocSupabase('queue', qId, queueObj);
        
        window.closePrivateModal();
        window.selectQueueTier(code);
+       updateQueueStateUI(); // Atualizar visual imediatamente
        checkMatchmaking();
     };
 
@@ -1490,9 +1517,15 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         if(uPlan === 'vip_basic') timeModifier -= 10000;
 
         const qId = uid();
-        await setDocSupabase('queue', qId, { 
+        const queueObj = { 
             id: qId, userId: currentUser.id, tier: currentQueueTier, pix: pixVal, time: timeModifier, maxPlayers: 8, isPrivate: false 
-        });
+        };
+        
+        // PROTEÇÃO: Para matchmaking não falhar se for o ultimo a entrar
+        state.queue.push(queueObj);
+
+        await setDocSupabase('queue', qId, queueObj);
+        updateQueueStateUI();
         checkMatchmaking();
       }
     };
@@ -1510,9 +1543,14 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       await setDocSupabase('users', fakeId, botUser);
       
       const qId = uid();
-      await setDocSupabase('queue', qId, { 
+      const queueObj = { 
         id: qId, userId: fakeId, tier: myQueue.tier, pix: myQueue.pix, time: Date.now(), maxPlayers: myQueue.maxPlayers || 8, isPrivate: myQueue.isPrivate || false
-      });
+      };
+      
+      state.queue.push(queueObj);
+      
+      await setDocSupabase('queue', qId, queueObj);
+      window.updateQueueCountsUI();
       checkMatchmaking();
     };
 
