@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CPR APOSTAS • FF 4x4</title>
   <meta name="description" content="A maior plataforma de 4x4 apostado de Free Fire." />
-  
-  <!-- SDK do Mercado Pago -->
-  <script src="https://sdk.mercadopago.com/js/v2"></script>
 
   <style>
     /* Design Tokens - Premium Gold/Dark Theme */
@@ -337,7 +334,7 @@
     .queue-vip { border-color: var(--vip-premium); background: linear-gradient(180deg, rgba(168,85,247,0.1), rgba(0,0,0,0)); }
     .queue-vip:hover, .queue-vip.selected { border-color: var(--vip-premium); background: rgba(168,85,247,0.15); box-shadow: 0 0 15px rgba(168,85,247,0.3); }
 
-    /* Lobby Cards (NOVO) */
+    /* Lobby Cards */
     .open-lobby-card {
       background: rgba(0,0,0,0.3);
       border: 1px solid var(--stroke);
@@ -426,23 +423,18 @@
     </div>
     <div class="flex-center" id="loadingText" style="color: var(--muted); font-size: 14px;">
       <div class="loading-spinner" style="width: 18px; height: 18px; margin: 0; border-width: 2px;"></div>
-      Conectando ao Supabase...
+      Conectando ao Firebase...
     </div>
     
     <div id="setupInstructions">
         <h3 style="color: var(--danger); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">⚠️ Banco de Dados Não Configurado</h3>
-        <p style="color: var(--text); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">Para fazer o seu site funcionar 100% grátis e sem cartão de crédito, precisa configurar a sua conta no <b>Supabase</b>.</p>
+        <p style="color: var(--text); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">Para fazer o seu site funcionar, precisa configurar as suas chaves do <b>Firebase</b> no código-fonte.</p>
         <ol style="color: var(--muted); font-size: 13px; line-height: 1.6; margin-left: 20px; margin-bottom: 16px;">
-            <li>Vá a <b>supabase.com</b> e crie um projeto novo.</li>
-            <li>No menu esquerdo, vá a <b>Project Settings > API</b> e copie a sua <b>URL</b> e <b>anon key</b>.</li>
-            <li>Cole essas chaves no código-fonte deste ficheiro <span class="mono">(linha ~520)</span>.</li>
-            <li>Vá a <b>SQL Editor</b>, crie uma "New Query", cole o código abaixo e clique em Run:</li>
+            <li>Vá à <a href="https://console.firebase.google.com/" target="_blank" style="color: var(--primary);">Firebase Console</a> e crie um projeto.</li>
+            <li>Adicione uma aplicação Web (ícone `</>`) e copie a variável `firebaseConfig`.</li>
+            <li>No Firebase, ative o <b>Firestore Database</b> e o <b>Authentication</b> (Modo Anónimo).</li>
+            <li>No código-fonte deste ficheiro (perto da linha ~630), substitua o objeto `firebaseConfig` com as suas chaves reais.</li>
         </ol>
-        <code style="background: #000; padding: 12px; border-radius: 8px; display: block; font-size: 12px; color: var(--success); overflow-x: auto; white-space: pre;">create table cpr_users (id text primary key, data jsonb);
-create table cpr_matches (id text primary key, data jsonb);
-create table cpr_queue (id text primary key, data jsonb);
-create table cpr_chat (id text primary key, data jsonb);
-alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue, cpr_chat;</code>
     </div>
   </div>
 
@@ -754,7 +746,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         <div style="line-height: 1.6; color: var(--muted);">
           <p><b>1. Dificuldade e Pontos:</b> Acesso às filas depende da sua pontuação no Ranking. Bronze/Prata (0-299), Médio (150-599), Difícil (450+).</p><br>
           <p><b>2. Salas Privadas (X1, 2x2, 4x4):</b> O limite mensal depende do seu plano VIP. O Free possui 3 salas mensais.</p><br>
-          <p><b>3. Pagamento:</b> O PIX é gerado automaticamente pelo Mercado Pago. As partidas só iniciam quando todos pagarem a sua parte.</p><br>
+          <p><b>3. Pagamento:</b> O PIX deve ser realizado utilizando o botão "Pagar PIX (QR Code)" na aba Partidas. O Admin irá confirmar.</p><br>
           <p><b>4. Resultados e ELO:</b> Apenas Admins lançam resultados. Você ganha de +25 a +30 pontos por vitória, e perde -20 a -25 por derrota. Ao fim da temporada ocorre Soft Reset (25% a menos de pontos).</p><br>
           <p><b>5. Anti-Smurf / Toxidade:</b> Tolerância zero. Contas suspeitas de Smurf ou comportamento tóxico serão banidas permanentemente pelos Masters.</p>
         </div>
@@ -810,6 +802,37 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       <div style="color: var(--danger); font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Proibido a Venda, Para Utilização Gratuita</div>
     </div>
 
+  </div>
+
+  <!-- MODAL COMPRAR VIP (PIX MANUAL) -->
+  <div class="modal-overlay" id="modalBuyVip">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Assinar Plano VIP</h3>
+        <button class="close-btn" onclick="window.closeBuyVipModal()">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <input type="hidden" id="buyVipPlanId">
+        <p style="color: var(--muted); margin-bottom: 10px; font-size: 14px;">
+          Você está prestes a assinar o plano <b id="buyVipPlanName" style="color:var(--primary)">...</b>
+        </p>
+        <p style="font-size: 24px; font-weight: 900; margin-bottom: 20px; color: var(--text);" id="buyVipPrice">R$ 0,00</p>
+
+        <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=contato.coparyan@gmail.com" alt="QR Code PIX VIP" style="display: block; width: 150px; height: 150px;">
+        </div>
+        <div class="input-group">
+          <label style="text-align: left;">Chave PIX (E-mail)</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" class="input text-center" id="pixKeyVip" value="contato.coparyan@gmail.com" readonly>
+            <button class="btn btn-primary" onclick="document.getElementById('pixKeyVip').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: var(--warning); margin-top: 16px; margin-bottom: 16px;">
+          ⚠️ Faça o PIX e envie o comprovante para a administração para liberação do seu plano.
+        </p>
+      </div>
+    </div>
   </div>
 
   <!-- MODALS AUTH -->
@@ -898,6 +921,34 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     </div>
   </div>
 
+  <!-- MODAL PAGAR PIX MANUAL (USUARIO COMUM) -->
+  <div class="modal-overlay" id="modalPix">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Pagamento PIX</h3>
+        <button class="close-btn" onclick="window.closePixModal()">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <p style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">
+          Escaneie o QR Code ou copie a chave PIX abaixo para confirmar sua entrada na partida.
+        </p>
+        <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=contato.coparyan@gmail.com" alt="QR Code PIX" style="display: block; width: 180px; height: 180px;">
+        </div>
+        <div class="input-group">
+          <label style="text-align: left;">PIX Copia e Cola / Chave E-mail</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" class="input text-center" id="pixKeyMatch" value="contato.coparyan@gmail.com" readonly>
+            <button class="btn btn-primary" onclick="document.getElementById('pixKeyMatch').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: var(--warning); margin-top: 16px;">
+          ⚠️ Após realizar o pagamento, envie o comprovante no chat da Fila ou aguarde o Admin aprovar.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL PARTIDA (FINALIZAR - APENAS ADMIN) -->
   <div class="modal-overlay" id="modalMatch">
     <div class="modal">
@@ -960,29 +1011,52 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     </div>
   </div>
 
-  <!-- SUPABASE & LOGIC SCRIPT -->
+  <!-- FIREBASE & LOGIC SCRIPT -->
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/+esm';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-    // --- SUPABASE CONFIG ---
-    const SUPABASE_URL = "https://limngioreodlzaqjnuyl.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbW5naW9yZW9kbHphcWpudXlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NDcxMjksImV4cCI6MjA4ODIyMzEyOX0.AJMFUyCjqL1ZwZUiK4woOb9RBuso9mwHh0Hn9cNiywg";
-
-    let supabase;
-    try {
-        supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } catch(e) {
-        console.error("Supabase Error:", e);
+    // =========================================================================
+    // CONFIGURAÇÃO DO FIREBASE (Substitua pelos seus dados no futuro)
+    // =========================================================================
+    let firebaseConfig;
+    if (typeof __firebase_config !== 'undefined') {
+        firebaseConfig = JSON.parse(__firebase_config);
+    } else {
+        firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_DOMINIO.firebaseapp.com",
+            projectId: "SEU_PROJECT_ID",
+            storageBucket: "SEU_BUCKET.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
     }
 
-    // =========================================================================
-    // Chave Publica do Mercado Pago vinculada
-    // =========================================================================
-    const mp = new MercadoPago('f2c18319-f039-4613-b9a2-798ff4fcfb0d', { locale: 'pt-BR' });
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Sistema de coleções dinâmicas para suportar testes em tela isolada e produção
+    const getColl = (name) => {
+        if (typeof __app_id !== 'undefined') {
+            return collection(db, 'artifacts', __app_id, 'public', 'data', name);
+        }
+        return collection(db, name);
+    };
+
+    const getDocRef = (collName, id) => {
+        if (typeof __app_id !== 'undefined') {
+            return doc(db, 'artifacts', __app_id, 'public', 'data', collName, id);
+        }
+        return doc(db, collName, id);
+    };
 
     // --- State Global ---
     const state = { users: [], matches: [], queue: [], chat: [] };
     let currentUser = null; 
+    let firebaseUser = null;
     let currentQueueTier = 'iniciante';
     let initialized = false;
 
@@ -1043,81 +1117,73 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       }
     };
 
-    // --- DB Wrappers Supabase ---
-    async function setDocSupabase(coll, docId, docData) {
-        if(!SUPABASE_URL || SUPABASE_URL === "COLE_SUA_URL_AQUI") return;
-        const { error } = await supabase.from('cpr_' + coll).upsert({ id: docId, data: docData });
-        if(error) console.error("Upsert Error:", error);
+    // --- DB Wrappers Firebase ---
+    async function setDocFirebase(coll, docId, docData) {
+        if(!firebaseUser) return;
+        try {
+            await setDoc(getDocRef(coll, docId), { id: docId, data: docData });
+        } catch(e) { console.error("Upsert Error:", e); }
     }
     
-    async function deleteDocSupabase(coll, docId) {
-        if(!SUPABASE_URL || SUPABASE_URL === "COLE_SUA_URL_AQUI") return;
-        const { error } = await supabase.from('cpr_' + coll).delete().eq('id', docId);
-        if(error) console.error("Delete Error:", error);
+    async function deleteDocFirebase(coll, docId) {
+        if(!firebaseUser) return;
+        try {
+            await deleteDoc(getDocRef(coll, docId));
+        } catch(e) { console.error("Delete Error:", e); }
     }
 
     // --- App Init ---
-    function initApp() {
-        if (!SUPABASE_URL || SUPABASE_URL === "COLE_SUA_URL_AQUI" || !SUPABASE_URL.startsWith('http')) {
-            const loaderText = document.getElementById('loadingText');
-            if(loaderText) loaderText.classList.add('hidden');
-            const instructions = document.getElementById('setupInstructions');
-            if(instructions) instructions.style.display = 'block';
-            return;
+    async function initApp() {
+        try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    firebaseUser = user;
+                    setupFirebaseListeners();
+                }
+            });
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+            document.getElementById('loadingText').classList.add('hidden');
+            document.getElementById('setupInstructions').style.display = 'block';
         }
-        setupSupabaseListeners();
     }
 
-    function setupSupabaseListeners() {
+    function setupFirebaseListeners() {
       const collections = ['users', 'matches', 'queue', 'chat'];
-      let loadedCount = 0;
+      let loadedFlags = { users: false, matches: false, queue: false, chat: false };
 
-      collections.forEach(async (coll) => {
-        const tableName = 'cpr_' + coll;
-        
-        // 1. Initial Fetch
-        const { data, error } = await supabase.from(tableName).select('data');
-        if(!error && data) {
-            state[coll] = data.map(d => d.data);
-        } else {
-            console.error(`Erro ao carregar ${tableName}:`, error);
-        }
-
-        loadedCount++;
-        if(loadedCount === collections.length && !initialized) {
-            initialized = true;
-            const loader = document.getElementById('globalLoader');
-            if(loader) loader.classList.add('hidden');
-            const navbar = document.getElementById('mainNavbar');
-            if(navbar) navbar.classList.remove('hidden');
-            const mainCont = document.getElementById('mainContainer');
-            if(mainCont) mainCont.classList.remove('hidden');
+      collections.forEach((coll) => {
+        onSnapshot(getColl(coll), (snapshot) => {
+            state[coll] = snapshot.docs.map(doc => doc.data().data);
+            loadedFlags[coll] = true;
             
-            checkAdminExists();
-            syncCurrentUser();
-            
-            const initialHash = window.location.hash.replace('#', '') || 'home';
-            window.switchView(initialHash);
-        }
-
-        // 2. Realtime Subscription
-        supabase.channel('public:' + tableName)
-        .on('postgres_changes', { event: '*', schema: 'public', table: tableName }, payload => {
-            if(payload.eventType === 'INSERT') {
-                const exists = state[coll].find(x => x.id === payload.new.data.id);
-                if(!exists) state[coll].push(payload.new.data);
-            } else if (payload.eventType === 'UPDATE') {
-                const idx = state[coll].findIndex(x => x.id === payload.new.data.id);
-                if(idx !== -1) state[coll][idx] = payload.new.data;
-                else state[coll].push(payload.new.data);
-            } else if (payload.eventType === 'DELETE') {
-                state[coll] = state[coll].filter(x => x.id !== payload.old.id);
-            }
-            if(initialized) {
+            // Verifica se todos já carregaram a 1ª vez
+            if(!initialized && Object.values(loadedFlags).every(v => v)) {
+                initialized = true;
+                const loader = document.getElementById('globalLoader');
+                if(loader) loader.classList.add('hidden');
+                const navbar = document.getElementById('mainNavbar');
+                if(navbar) navbar.classList.remove('hidden');
+                const mainCont = document.getElementById('mainContainer');
+                if(mainCont) mainCont.classList.remove('hidden');
+                
+                checkAdminExists();
+                syncCurrentUser();
+                
+                const initialHash = window.location.hash.replace('#', '') || 'home';
+                window.switchView(initialHash);
+            } else if(initialized) {
                 syncCurrentUser();
                 renderApp();
             }
-        }).subscribe();
+        }, (error) => {
+            console.error(`Erro ao ouvir ${coll}:`, error);
+        });
       });
     }
 
@@ -1134,7 +1200,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
               id: newId, nick: "Master " + i, email: admEmail, pass: admPass, role: "admin", plan: "vip_premium",
               ffid: null, isVerified: false, isBanned: false, stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0 }
             };
-            await setDocSupabase('users', newId, adminData);
+            await setDocFirebase('users', newId, adminData);
           }
       }
     }
@@ -1164,7 +1230,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
             currentUser.stats.privUsage = { month: currentMonth, count: 0 };
         }
         currentUser.stats.privUsage.count++;
-        await setDocSupabase('users', currentUser.id, currentUser);
+        await setDocFirebase('users', currentUser.id, currentUser);
         return true;
     }
 
@@ -1300,7 +1366,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
             stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0, privUsage: { month: new Date().toISOString().slice(0,7), count: 0 } }
           };
           
-          await setDocSupabase('users', newId, newUser);
+          await setDocFirebase('users', newId, newUser);
           sessionStorage.setItem("loggedUserId", newId);
           syncCurrentUser();
           window.closeAuthModal();
@@ -1308,7 +1374,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
           window.customAlert("Conta criada com sucesso! Bem-vindo.", "Sucesso");
       } catch (err) {
           console.error("Erro no registro:", err);
-          window.customAlert("Não foi possível criar sua conta. Verifique se o SQL Editor foi executado corretamente no Supabase.", "Erro de Registro");
+          window.customAlert("Não foi possível criar sua conta. Verifique o banco de dados.", "Erro de Registro");
       }
     };
 
@@ -1321,57 +1387,25 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     // --- PLANOS VIP & PAGAMENTOS ---
     function renderPlanos() { /* static */ }
     
+    // COMO ERA ANTES: Fluxo manual de PIX porque as Edge Functions do Mercado Pago e Discord foram removidas do HTML.
     window.openBuyVipModal = async (planId, price) => {
         if(!currentUser) return window.openAuthModal('login');
         if(currentUser.plan === planId) return window.customAlert("Você já possui este plano ativo!");
         
-        window.customAlert("A gerar ambiente seguro de pagamento...", "Aguarde Mercado Pago");
-
-        try {
-            const res = await supabase.functions.invoke('mp-checkout', {
-                body: { title: getPlanName(planId), price: price, userId: currentUser.id, planId: planId, type: 'vip' }
-            });
-
-            if (res.error) throw res.error;
-            const preferenceId = res.data.preferenceId;
-
-            document.getElementById('modalCustomAlert').classList.remove('active');
-            
-            mp.checkout({
-                preference: { id: preferenceId },
-                autoOpen: true
-            });
-        } catch (err) {
-            console.error(err);
-            document.getElementById('modalCustomAlert').classList.remove('active');
-            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago no Supabase.", "Erro");
-        }
+        const inputId = document.getElementById('buyVipPlanId');
+        const nameEl = document.getElementById('buyVipPlanName');
+        const priceEl = document.getElementById('buyVipPrice');
+        const modal = document.getElementById('modalBuyVip');
+        
+        if(inputId) inputId.value = planId;
+        if(nameEl) nameEl.innerText = getPlanName(planId);
+        if(priceEl) priceEl.innerText = money(price);
+        if(modal) modal.classList.add('active');
     };
 
-    window.payMatch = async (matchId, price, tierName) => {
-        if(!currentUser) return window.openAuthModal('login');
-        
-        window.customAlert("A gerar ambiente seguro de pagamento da partida...", "Aguarde Mercado Pago");
-
-        try {
-            const res = await supabase.functions.invoke('mp-checkout', {
-                body: { title: `Entrada Partida ${tierName}`, price: price, userId: currentUser.id, planId: matchId, type: 'match' }
-            });
-
-            if (res.error) throw res.error;
-            const preferenceId = res.data.preferenceId;
-
-            document.getElementById('modalCustomAlert').classList.remove('active');
-            
-            mp.checkout({
-                preference: { id: preferenceId },
-                autoOpen: true
-            });
-        } catch (err) {
-            console.error(err);
-            document.getElementById('modalCustomAlert').classList.remove('active');
-            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago no Supabase.", "Erro");
-        }
+    window.closeBuyVipModal = () => {
+        const m = document.getElementById('modalBuyVip');
+        if(m) m.classList.remove('active');
     };
 
     // --- PERFIL ---
@@ -1457,7 +1491,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         currentUser.ffAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${ffid}&backgroundColor=eab308`;
         currentUser.isVerified = true;
         
-        await setDocSupabase('users', currentUser.id, currentUser);
+        await setDocFirebase('users', currentUser.id, currentUser);
         if(btn) { btn.innerText = "Buscar Conta"; btn.disabled = false; }
         window.customAlert("Conta vinculada com sucesso!", "Sucesso");
       }, 1000);
@@ -1556,7 +1590,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
        };
        
        state.queue.push(queueObj);
-       await setDocSupabase('queue', qId, queueObj);
+       await setDocFirebase('queue', qId, queueObj);
        
        window.closePrivateModal();
        window.customAlert(`Sala Privada criada com sucesso!\n\nEnvie o código para seus amigos: ${code}`, "Código da Sala");
@@ -1595,7 +1629,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
        };
        
        state.queue.push(queueObj);
-       await setDocSupabase('queue', qId, queueObj);
+       await setDocFirebase('queue', qId, queueObj);
        
        window.closePrivateModal();
        window.selectQueueTier(code);
@@ -1721,7 +1755,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         };
         
         state.queue.push(queueObj);
-        await setDocSupabase('queue', qId, queueObj);
+        await setDocFirebase('queue', qId, queueObj);
         updateQueueStateUI();
         checkMatchmaking();
     };
@@ -1751,7 +1785,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         };
         
         state.queue.push(queueObj);
-        await setDocSupabase('queue', qId, queueObj);
+        await setDocFirebase('queue', qId, queueObj);
         updateQueueStateUI();
         checkMatchmaking();
     };
@@ -1759,7 +1793,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     window.leaveQueue = async () => {
         const myQueue = state.queue.find(q => q.userId === currentUser.id);
         if(myQueue) {
-            await deleteDocSupabase('queue', myQueue.id);
+            await deleteDocFirebase('queue', myQueue.id);
             window.updateQueueCountsUI();
             window.renderPublicLobbies();
         }
@@ -1856,7 +1890,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         id: fakeId, nick: "Bot_" + Math.floor(Math.random()*100), email: "bot@bot", role: "user", plan: "free", ffid: null, isVerified: false, isBanned: false,
         stats: { pts: botPts, w:0, l:0, streak:0, balance:0, betTotal:0 }
       };
-      await setDocSupabase('users', fakeId, botUser);
+      await setDocFirebase('users', fakeId, botUser);
       
       const qId = uid();
       const queueObj = { 
@@ -1866,7 +1900,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       };
       
       state.queue.push(queueObj);
-      await setDocSupabase('queue', qId, queueObj);
+      await setDocFirebase('queue', qId, queueObj);
       
       window.updateQueueCountsUI();
       window.renderPublicLobbies();
@@ -1902,40 +1936,24 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
           
           const matchId = uid();
           
-          // INTEGRAÇÃO DISCORD: Chama a função para criar os canais de voz
-          let discordData = null;
-          try {
-              const discordRes = await supabase.functions.invoke('discord-bot', {
-                  body: { action: 'create', matchId: matchId, tier: group.sample.tier }
-              });
-              if (!discordRes.error && discordRes.data) discordData = discordRes.data;
-          } catch(e) { console.error("Erro no bot do Discord:", e); }
-          
           const matchObj = {
             id: matchId, createdAt: Date.now(), tier: group.sample.tier, pixValue: group.sample.pix,
             status: "pending_pix", teamA: teamA_ids, teamB: teamB_ids,
-            discord: discordData ? {
-                channelA: discordData.teamA?.channelId,
-                inviteA: discordData.teamA?.invite,
-                channelB: discordData.teamB?.channelId,
-                inviteB: discordData.teamB?.invite
-            } : null,
-            scoreA: null, scoreB: null, winner: null,
-            paidPlayers: [] // Array para controlar quem já pagou via Mercado Pago
+            scoreA: null, scoreB: null, winner: null 
           };
 
-          await setDocSupabase('matches', matchId, matchObj);
+          await setDocFirebase('matches', matchId, matchObj);
           
           for(const p of group.all) {
-            await deleteDocSupabase('queue', p.id);
+            await deleteDocFirebase('queue', p.id);
           }
 
           const modeStr = teamA_ids.length + "x" + teamB_ids.length;
-          const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: matchObj.tier, text: `🔥 Partida ${matchObj.tier.toUpperCase()} (${modeStr}) formada (Pot Total: ${money(matchObj.pixValue*2)})! Verifiquem a aba Partidas.`, time: Date.now() };
-          await setDocSupabase('chat', chatObj.id, chatObj);
+          const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: matchObj.tier, text: `🔥 Partida ${matchObj.tier.toUpperCase()} (${modeStr}) formada! Verifiquem a aba Partidas.`, time: Date.now() };
+          await setDocFirebase('chat', chatObj.id, chatObj);
 
           if(group.all.find(p => p.userId === currentUser?.id)) {
-            window.customAlert("SALA ENCONTRADA! Realize o pagamento da sua aposta na aba Partidas.", "Sala Pronta");
+            window.customAlert("SALA ENCONTRADA E BALANCEADA! Vá para a aba partidas realizar o pagamento com a Administração.", "Sala Pronta");
             window.switchView('partidas');
           }
         }
@@ -1973,7 +1991,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       
       const chatObj = { id: uid(), userId: currentUser.id, nick: getUserNick(currentUser), tier: currentQueueTier, text, time: Date.now() };
       inp.value = '';
-      await setDocSupabase('chat', chatObj.id, chatObj);
+      await setDocFirebase('chat', chatObj.id, chatObj);
     };
 
     // --- PARTIDAS E RESULTADOS ---
@@ -2005,28 +2023,14 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         let tName = m.tier.toUpperCase();
         if(tName.startsWith("SALA-")) tName = "PRIVADA (" + tName + ")";
 
+        // COMO ERA ANTES: Fluxo manual em que os jogadores copiam a chave PIX no botão e o admin Inicia.
         let actions = '';
         if(m.status === 'pending_pix' && isAdmin) {
-          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminConfirmPix('${m.id}')">Forçar Início (Admin)</button>`;
+          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminConfirmPix('${m.id}')">Marcar Pago e Iniciar</button>`;
         } else if(m.status === 'active' && isAdmin) {
           actions = `<button class="btn btn-accent" style="padding: 6px 12px; font-size: 12px;" onclick="window.openFinishMatch('${m.id}')">Registrar Resultado</button>`;
         } else if(m.status === 'pending_pix' && isUserInMatch && !isAdmin) {
-          // VERIFICA SE O USUARIO JÁ PAGOU A APOSTA
-          const hasPaid = m.paidPlayers && m.paidPlayers.includes(currentUser.id);
-          if (hasPaid) {
-              actions = `<span class="badge badge-green" style="padding: 8px;">Pagamento Confirmado ✓ Aguardando outros...</span>`;
-          } else {
-              actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; color:black;" onclick="window.payMatch('${m.id}', ${m.pixValue}, '${tName}')">Pagar Entrada (R$ ${m.pixValue})</button>`;
-          }
-        }
-        
-        // BOTÃO DO DISCORD
-        if (m.status === 'active' && isUserInMatch && m.discord) {
-            const isTeamA = m.teamA.includes(currentUser.id);
-            const inviteLink = isTeamA ? m.discord.inviteA : m.discord.inviteB;
-            if (inviteLink) {
-                actions += `<a href="${inviteLink}" target="_blank" class="btn" style="background: #5865F2; color: white; border: none; padding: 6px 12px; font-size: 12px; margin-left: ${actions ? '8px' : '0'};"><svg width="16" height="16" viewBox="0 0 24 24" fill="white" style="margin-right:4px"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg> Entrar na Call do Time</a>`;
-            }
+          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; color:black;" onclick="window.openPixModal()">Pagar PIX (QR Code)</button>`;
         }
 
         const scoreStr = m.status === 'closed' ? `<div class="match-score">${m.scoreA} <span>-</span> ${m.scoreB}</div>` : `<div class="vs">VS</div>`;
@@ -2064,10 +2068,17 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       }).join('');
     }
 
+    window.openPixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.add('active'); };
+    window.closePixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.remove('active'); };
+    window.copyPixKey = () => { 
+        const el = document.getElementById('pixKeyMatch'); 
+        if(el) { el.select(); document.execCommand('copy'); window.customAlert("Chave PIX copiada!", "Sucesso"); }
+    };
+
     window.adminConfirmPix = (matchId) => {
       window.customConfirm("Confirmar recebimento de todos os PIX? A partida será iniciada!", async () => {
         const m = state.matches.find(x => x.id === matchId);
-        if(m) { m.status = 'active'; await setDocSupabase('matches', m.id, m); window.customAlert("Partida Iniciada!", "Sucesso"); }
+        if(m) { m.status = 'active'; await setDocFirebase('matches', m.id, m); window.customAlert("Partida Iniciada!", "Sucesso"); }
       });
     };
 
@@ -2095,15 +2106,8 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       const wIds = m.winner === 'A' ? m.teamA : m.teamB;
       const lIds = m.winner === 'A' ? m.teamB : m.teamA;
 
-      await setDocSupabase('matches', m.id, m);
+      await setDocFirebase('matches', m.id, m);
       
-      // APAGA OS CANAIS DO DISCORD QUANDO A PARTIDA ACABA
-      if (m.discord) {
-          supabase.functions.invoke('discord-bot', {
-              body: { action: 'delete', channelIdA: m.discord.channelA, channelIdB: m.discord.channelB }
-          }).catch(e => console.error("Erro ao deletar calls do discord:", e));
-      }
-
       // Calculation of Team ELO Averages to distribute points
       let ptsA = 0; let ptsB = 0;
       for(let id of m.teamA){ const u = state.users.find(x => x.id === id); if(u) ptsA += u.stats.pts || 0; }
@@ -2120,15 +2124,15 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
 
       for(let id of wIds) {
         let u = state.users.find(x => x.id === id);
-        if(u) { u.stats.pts = (u.stats.pts||0)+gain; u.stats.w+=1; u.stats.streak=u.stats.streak>=0?u.stats.streak+1:1; u.stats.balance+=m.pixValue; u.stats.betTotal+=m.pixValue; await setDocSupabase('users', u.id, u); }
+        if(u) { u.stats.pts = (u.stats.pts||0)+gain; u.stats.w+=1; u.stats.streak=u.stats.streak>=0?u.stats.streak+1:1; u.stats.balance+=m.pixValue; u.stats.betTotal+=m.pixValue; await setDocFirebase('users', u.id, u); }
       }
       for(let id of lIds) {
         let u = state.users.find(x => x.id === id);
-        if(u) { u.stats.pts = Math.max(0, (u.stats.pts||0)-loss); u.stats.l+=1; u.stats.streak=u.stats.streak<=0?u.stats.streak-1:-1; u.stats.balance-=m.pixValue; u.stats.betTotal+=m.pixValue; await setDocSupabase('users', u.id, u); }
+        if(u) { u.stats.pts = Math.max(0, (u.stats.pts||0)-loss); u.stats.l+=1; u.stats.streak=u.stats.streak<=0?u.stats.streak-1:-1; u.stats.balance-=m.pixValue; u.stats.betTotal+=m.pixValue; await setDocFirebase('users', u.id, u); }
       }
 
       const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: m.tier, text: `🏁 Partida Finalizada! Time ${m.winner} vence (+${gain} Pts).`, time: Date.now() };
-      await setDocSupabase('chat', chatObj.id, chatObj);
+      await setDocFirebase('chat', chatObj.id, chatObj);
       window.closeMatchModal();
     };
 
@@ -2217,26 +2221,26 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
 
     window.adminClearQueue = () => {
       window.customConfirm("Esvaziar todas as filas ativas?", async () => {
-        for(let q of state.queue) await deleteDocSupabase('queue', q.id);
+        for(let q of state.queue) await deleteDocFirebase('queue', q.id);
         window.customAlert("Filas limpas com sucesso.");
       });
     };
 
     window.adminChangePlan = async (uId, newPlan) => {
         const u = state.users.find(x => x.id === uId);
-        if(u) { u.plan = newPlan; await setDocSupabase('users', u.id, u); }
+        if(u) { u.plan = newPlan; await setDocFirebase('users', u.id, u); }
     };
 
     window.adminToggleBan = async (uId) => {
         const u = state.users.find(x => x.id === uId);
-        if(u) { u.isBanned = !u.isBanned; await setDocSupabase('users', u.id, u); }
+        if(u) { u.isBanned = !u.isBanned; await setDocFirebase('users', u.id, u); }
     };
 
     window.adminResetSeason = () => {
       window.customConfirm("ATENÇÃO: Deseja realizar o Soft Reset? Isso multiplicará os pontos de TODOS os jogadores por 0.75 e iniciará uma nova temporada.", async () => {
           for(let u of state.users.filter(x=>x.role!=='admin')) {
               u.stats.pts = Math.floor((u.stats.pts || 0) * 0.75);
-              await setDocSupabase('users', u.id, u);
+              await setDocFirebase('users', u.id, u);
           }
           window.customAlert("Temporada Resetada. Novos pontos aplicados.");
       }, "Reset de Temporada");
@@ -2244,10 +2248,10 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
 
     window.nukeDB = () => {
       window.customConfirm("Apagar TUDO (Partidas, Usuários e Chat)? Isso é irreversível.", async () => {
-        for(let u of state.users.filter(x=>x.role!=='admin')) await deleteDocSupabase('users', u.id);
-        for(let m of state.matches) await deleteDocSupabase('matches', m.id);
-        for(let c of state.chat) await deleteDocSupabase('chat', c.id);
-        for(let q of state.queue) await deleteDocSupabase('queue', q.id);
+        for(let u of state.users.filter(x=>x.role!=='admin')) await deleteDocFirebase('users', u.id);
+        for(let m of state.matches) await deleteDocFirebase('matches', m.id);
+        for(let c of state.chat) await deleteDocFirebase('chat', c.id);
+        for(let q of state.queue) await deleteDocFirebase('queue', q.id);
         window.customAlert("Banco de dados resetado com sucesso.");
       }, "Zerar Banco de Dados");
     };
