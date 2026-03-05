@@ -6,7 +6,7 @@
   <title>CPR APOSTAS • FF 4x4</title>
   <meta name="description" content="A maior plataforma de 4x4 apostado de Free Fire." />
   
-  <!-- SDK do Mercado Pago (Já preparado para quando você ativar o backend) -->
+  <!-- SDK do Mercado Pago -->
   <script src="https://sdk.mercadopago.com/js/v2"></script>
 
   <style>
@@ -315,6 +315,7 @@
       padding-top: 16px;
       border-top: 1px dashed rgba(255,255,255,0.1);
       gap: 12px;
+      flex-wrap: wrap;
     }
     .match-footer .btn {
       padding: 12px 24px;
@@ -753,7 +754,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         <div style="line-height: 1.6; color: var(--muted);">
           <p><b>1. Dificuldade e Pontos:</b> Acesso às filas depende da sua pontuação no Ranking. Bronze/Prata (0-299), Médio (150-599), Difícil (450+).</p><br>
           <p><b>2. Salas Privadas (X1, 2x2, 4x4):</b> O limite mensal depende do seu plano VIP. O Free possui 3 salas mensais.</p><br>
-          <p><b>3. Pagamento:</b> O PIX deve ser realizado utilizando o botão "PIX Copia e Cola" na aba Partidas. Chave: <b style="color:var(--text);">contato.coparyan@gmail.com</b>.</p><br>
+          <p><b>3. Pagamento:</b> O PIX é gerado automaticamente pelo Mercado Pago. As partidas só iniciam quando todos pagarem a sua parte.</p><br>
           <p><b>4. Resultados e ELO:</b> Apenas Admins lançam resultados. Você ganha de +25 a +30 pontos por vitória, e perde -20 a -25 por derrota. Ao fim da temporada ocorre Soft Reset (25% a menos de pontos).</p><br>
           <p><b>5. Anti-Smurf / Toxidade:</b> Tolerância zero. Contas suspeitas de Smurf ou comportamento tóxico serão banidas permanentemente pelos Masters.</p>
         </div>
@@ -811,79 +812,6 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
 
   </div>
 
-  <!-- MODAL COMPRAR VIP (PIX) -->
-  <div class="modal-overlay" id="modalBuyVip">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Assinar Plano VIP</h3>
-        <button class="close-btn" onclick="window.closeBuyVipModal()">&times;</button>
-      </div>
-      <div class="modal-body text-center">
-        <input type="hidden" id="buyVipPlanId">
-        <p style="color: var(--muted); margin-bottom: 10px; font-size: 14px;">
-          Você está prestes a assinar o plano <b id="buyVipPlanName" style="color:var(--primary)">...</b>
-        </p>
-        <p style="font-size: 24px; font-weight: 900; margin-bottom: 20px; color: var(--text);" id="buyVipPrice">R$ 0,00</p>
-
-        <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=contato.coparyan@gmail.com" alt="QR Code PIX VIP" style="display: block; width: 150px; height: 150px;">
-        </div>
-        <div class="input-group">
-          <label style="text-align: left;">Chave PIX (E-mail)</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="text" class="input text-center" id="pixKeyVip" value="contato.coparyan@gmail.com" readonly>
-            <button class="btn btn-primary" onclick="document.getElementById('pixKeyVip').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
-          </div>
-        </div>
-        <p style="font-size: 12px; color: var(--warning); margin-top: 16px; margin-bottom: 16px;">
-          ⚠️ Faça o PIX e envie o comprovante para a administração para liberação do seu plano.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL SALA PRIVADA (CRIAR E ENTRAR) -->
-  <div class="modal-overlay" id="modalPrivate">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>⚔️ Sala Privada</h3>
-        <button class="close-btn" onclick="window.closePrivateModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-         <div style="display:flex; gap:8px; margin-bottom: 20px;">
-            <button class="btn btn-primary" id="tabPrivCreate" style="flex:1" onclick="window.switchPrivTab('create')">Criar Sala</button>
-            <button class="btn" id="tabPrivJoin" style="flex:1" onclick="window.switchPrivTab('join')">Entrar na Sala</button>
-         </div>
-
-         <!-- Painel de Criação -->
-         <div id="privCreate">
-            <div class="input-group">
-               <label>Modo de Jogo</label>
-               <select id="privMode" class="select">
-                  <option value="2">1x1 (2 Jogadores)</option>
-                  <option value="4">2x2 (4 Jogadores)</option>
-                  <option value="8" selected>4x4 (8 Jogadores)</option>
-               </select>
-            </div>
-            <div class="input-group">
-               <label>Aposta por Time (R$)</label>
-               <input type="number" id="privAposta" class="input" min="5" value="10">
-            </div>
-            <button class="btn btn-accent" style="width: 100%; margin-top: 8px;" onclick="window.createPrivateRoom()">Gerar Sala Privada</button>
-         </div>
-
-         <!-- Painel de Entrada -->
-         <div id="privJoin" class="hidden">
-            <div class="input-group">
-               <label>Código da Sala</label>
-               <input type="text" id="privCode" class="input text-center" placeholder="Ex: SALA-XXXX" style="text-transform: uppercase; font-weight: 800; font-size: 16px; letter-spacing: 2px;">
-            </div>
-            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.joinPrivateRoom()">Entrar na Sala</button>
-         </div>
-      </div>
-    </div>
-  </div>
-
   <!-- MODALS AUTH -->
   <div class="modal-overlay" id="modalAuth">
     <div class="modal">
@@ -928,30 +856,44 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     </div>
   </div>
 
-  <!-- MODAL PAGAR PIX (USUARIO COMUM) -->
-  <div class="modal-overlay" id="modalPix">
+  <!-- MODAL SALA PRIVADA (CRIAR E ENTRAR) -->
+  <div class="modal-overlay" id="modalPrivate">
     <div class="modal">
       <div class="modal-header">
-        <h3>Pagamento PIX</h3>
-        <button class="close-btn" onclick="window.closePixModal()">&times;</button>
+        <h3>⚔️ Sala Privada</h3>
+        <button class="close-btn" onclick="window.closePrivateModal()">&times;</button>
       </div>
-      <div class="modal-body text-center">
-        <p style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">
-          Escaneie o QR Code ou copie a chave PIX abaixo para confirmar sua entrada na partida.
-        </p>
-        <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=contato.coparyan@gmail.com" alt="QR Code PIX" style="display: block; width: 180px; height: 180px;">
-        </div>
-        <div class="input-group">
-          <label style="text-align: left;">PIX Copia e Cola / Chave E-mail</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="text" class="input text-center" id="pixKeyMatch" value="contato.coparyan@gmail.com" readonly>
-            <button class="btn btn-primary" onclick="document.getElementById('pixKeyMatch').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
-          </div>
-        </div>
-        <p style="font-size: 12px; color: var(--warning); margin-top: 16px;">
-          ⚠️ Após realizar o pagamento, envie o comprovante no chat da Fila ou aguarde o Admin aprovar.
-        </p>
+      <div class="modal-body">
+         <div style="display:flex; gap:8px; margin-bottom: 20px;">
+            <button class="btn btn-primary" id="tabPrivCreate" style="flex:1" onclick="window.switchPrivTab('create')">Criar Sala</button>
+            <button class="btn" id="tabPrivJoin" style="flex:1" onclick="window.switchPrivTab('join')">Entrar na Sala</button>
+         </div>
+
+         <!-- Painel de Criação -->
+         <div id="privCreate">
+            <div class="input-group">
+               <label>Modo de Jogo</label>
+               <select id="privMode" class="select">
+                  <option value="2">1x1 (2 Jogadores)</option>
+                  <option value="4">2x2 (4 Jogadores)</option>
+                  <option value="8" selected>4x4 (8 Jogadores)</option>
+               </select>
+            </div>
+            <div class="input-group">
+               <label>Aposta por Time (R$)</label>
+               <input type="number" id="privAposta" class="input" min="5" value="10">
+            </div>
+            <button class="btn btn-accent" style="width: 100%; margin-top: 8px;" onclick="window.createPrivateRoom()">Gerar Sala Privada</button>
+         </div>
+
+         <!-- Painel de Entrada -->
+         <div id="privJoin" class="hidden">
+            <div class="input-group">
+               <label>Código da Sala</label>
+               <input type="text" id="privCode" class="input text-center" placeholder="Ex: SALA-XXXX" style="text-transform: uppercase; font-weight: 800; font-size: 16px; letter-spacing: 2px;">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.joinPrivateRoom()">Entrar na Sala</button>
+         </div>
       </div>
     </div>
   </div>
@@ -1032,6 +974,12 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     } catch(e) {
         console.error("Supabase Error:", e);
     }
+
+    // =========================================================================
+    // ATENÇÃO: COLOQUE A SUA PUBLIC KEY DO MERCADO PAGO NA LINHA ABAIXO
+    // Ela começa com "APP_USR-" (Você pega na tela de Credenciais de Produção)
+    // =========================================================================
+    const mp = new MercadoPago('APP_USR-COLOQUE-SUA-CHAVE-AQUI', { locale: 'pt-BR' });
 
     // --- State Global ---
     const state = { users: [], matches: [], queue: [], chat: [] };
@@ -1371,25 +1319,60 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       window.switchView('home');
     };
 
-    // --- PLANOS VIP ---
+    // --- PLANOS VIP & PAGAMENTOS ---
     function renderPlanos() { /* static */ }
-    window.openBuyVipModal = (planId, price) => {
+    
+    window.openBuyVipModal = async (planId, price) => {
         if(!currentUser) return window.openAuthModal('login');
         if(currentUser.plan === planId) return window.customAlert("Você já possui este plano ativo!");
         
-        const inputId = document.getElementById('buyVipPlanId');
-        const nameEl = document.getElementById('buyVipPlanName');
-        const priceEl = document.getElementById('buyVipPrice');
-        const modal = document.getElementById('modalBuyVip');
-        
-        if(inputId) inputId.value = planId;
-        if(nameEl) nameEl.innerText = getPlanName(planId);
-        if(priceEl) priceEl.innerText = money(price);
-        if(modal) modal.classList.add('active');
+        window.customAlert("A gerar ambiente seguro de pagamento...", "Aguarde Mercado Pago");
+
+        try {
+            const res = await supabase.functions.invoke('mp-checkout', {
+                body: { title: getPlanName(planId), price: price, userId: currentUser.id, planId: planId, type: 'vip' }
+            });
+
+            if (res.error) throw res.error;
+            const preferenceId = res.data.preferenceId;
+
+            document.getElementById('modalCustomAlert').classList.remove('active');
+            
+            mp.checkout({
+                preference: { id: preferenceId },
+                autoOpen: true
+            });
+        } catch (err) {
+            console.error(err);
+            document.getElementById('modalCustomAlert').classList.remove('active');
+            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago.", "Erro");
+        }
     };
-    window.closeBuyVipModal = () => {
-        const m = document.getElementById('modalBuyVip');
-        if(m) m.classList.remove('active');
+
+    window.payMatch = async (matchId, price, tierName) => {
+        if(!currentUser) return window.openAuthModal('login');
+        
+        window.customAlert("A gerar ambiente seguro de pagamento da partida...", "Aguarde Mercado Pago");
+
+        try {
+            const res = await supabase.functions.invoke('mp-checkout', {
+                body: { title: `Entrada Partida ${tierName}`, price: price, userId: currentUser.id, planId: matchId, type: 'match' }
+            });
+
+            if (res.error) throw res.error;
+            const preferenceId = res.data.preferenceId;
+
+            document.getElementById('modalCustomAlert').classList.remove('active');
+            
+            mp.checkout({
+                preference: { id: preferenceId },
+                autoOpen: true
+            });
+        } catch (err) {
+            console.error(err);
+            document.getElementById('modalCustomAlert').classList.remove('active');
+            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago.", "Erro");
+        }
     };
 
     // --- PERFIL ---
@@ -1920,10 +1903,26 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
           
           const matchId = uid();
           
+          // INTEGRAÇÃO DISCORD: Chama a função para criar os canais de voz
+          let discordData = null;
+          try {
+              const discordRes = await supabase.functions.invoke('discord-bot', {
+                  body: { action: 'create', matchId: matchId, tier: group.sample.tier }
+              });
+              if (!discordRes.error && discordRes.data) discordData = discordRes.data;
+          } catch(e) { console.error("Erro no bot do Discord:", e); }
+          
           const matchObj = {
             id: matchId, createdAt: Date.now(), tier: group.sample.tier, pixValue: group.sample.pix,
             status: "pending_pix", teamA: teamA_ids, teamB: teamB_ids,
-            scoreA: null, scoreB: null, winner: null 
+            discord: discordData ? {
+                channelA: discordData.teamA?.channelId,
+                inviteA: discordData.teamA?.invite,
+                channelB: discordData.teamB?.channelId,
+                inviteB: discordData.teamB?.invite
+            } : null,
+            scoreA: null, scoreB: null, winner: null,
+            paidPlayers: [] // Array para controlar quem já pagou via Mercado Pago
           };
 
           await setDocSupabase('matches', matchId, matchObj);
@@ -1937,7 +1936,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
           await setDocSupabase('chat', chatObj.id, chatObj);
 
           if(group.all.find(p => p.userId === currentUser?.id)) {
-            window.customAlert("SALA ENCONTRADA E BALANCEADA! Vá para a aba partidas realizar o pagamento.", "Sala Pronta");
+            window.customAlert("SALA ENCONTRADA! Realize o pagamento da sua aposta na aba Partidas.", "Sala Pronta");
             window.switchView('partidas');
           }
         }
@@ -2004,19 +2003,35 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         const isUserInMatch = currentUser && (m.teamA.includes(currentUser.id) || m.teamB.includes(currentUser.id));
         const isAdmin = currentUser && currentUser.role === 'admin';
 
+        let tName = m.tier.toUpperCase();
+        if(tName.startsWith("SALA-")) tName = "PRIVADA (" + tName + ")";
+
         let actions = '';
         if(m.status === 'pending_pix' && isAdmin) {
-          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminConfirmPix('${m.id}')">Marcar Pago e Iniciar</button>`;
+          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminConfirmPix('${m.id}')">Forçar Início (Admin)</button>`;
         } else if(m.status === 'active' && isAdmin) {
           actions = `<button class="btn btn-accent" style="padding: 6px 12px; font-size: 12px;" onclick="window.openFinishMatch('${m.id}')">Registrar Resultado</button>`;
         } else if(m.status === 'pending_pix' && isUserInMatch && !isAdmin) {
-          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; color:black;" onclick="window.openPixModal()">Pagar PIX (QR Code)</button>`;
+          // VERIFICA SE O USUARIO JÁ PAGOU A APOSTA
+          const hasPaid = m.paidPlayers && m.paidPlayers.includes(currentUser.id);
+          if (hasPaid) {
+              actions = `<span class="badge badge-green" style="padding: 8px;">Pagamento Confirmado ✓ Aguardando outros...</span>`;
+          } else {
+              actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; color:black;" onclick="window.payMatch('${m.id}', ${m.pixValue}, '${tName}')">Pagar Entrada (R$ ${m.pixValue})</button>`;
+          }
+        }
+        
+        // BOTÃO DO DISCORD
+        if (m.status === 'active' && isUserInMatch && m.discord) {
+            const isTeamA = m.teamA.includes(currentUser.id);
+            const inviteLink = isTeamA ? m.discord.inviteA : m.discord.inviteB;
+            if (inviteLink) {
+                actions += `<a href="${inviteLink}" target="_blank" class="btn" style="background: #5865F2; color: white; border: none; padding: 6px 12px; font-size: 12px; margin-left: ${actions ? '8px' : '0'};"><svg width="16" height="16" viewBox="0 0 24 24" fill="white" style="margin-right:4px"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg> Entrar na Call do Time</a>`;
+            }
         }
 
         const scoreStr = m.status === 'closed' ? `<div class="match-score">${m.scoreA} <span>-</span> ${m.scoreB}</div>` : `<div class="vs">VS</div>`;
         const modeStr = m.teamA.length + "x" + m.teamB.length;
-        let tName = m.tier.toUpperCase();
-        if(tName.startsWith("SALA-")) tName = "PRIVADA (" + tName + ")";
 
         return `
           <div class="match-card ${isUserInMatch ? 'my-match' : ''}">
@@ -2050,13 +2065,6 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       }).join('');
     }
 
-    window.openPixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.add('active'); };
-    window.closePixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.remove('active'); };
-    window.copyPixKey = () => { 
-        const el = document.getElementById('pixKeyMatch'); 
-        if(el) { el.select(); document.execCommand('copy'); window.customAlert("Chave PIX copiada!", "Sucesso"); }
-    };
-
     window.adminConfirmPix = (matchId) => {
       window.customConfirm("Confirmar recebimento de todos os PIX? A partida será iniciada!", async () => {
         const m = state.matches.find(x => x.id === matchId);
@@ -2089,6 +2097,13 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
       const lIds = m.winner === 'A' ? m.teamB : m.teamA;
 
       await setDocSupabase('matches', m.id, m);
+      
+      // APAGA OS CANAIS DO DISCORD QUANDO A PARTIDA ACABA
+      if (m.discord) {
+          supabase.functions.invoke('discord-bot', {
+              body: { action: 'delete', channelIdA: m.discord.channelA, channelIdB: m.discord.channelB }
+          }).catch(e => console.error("Erro ao deletar calls do discord:", e));
+      }
 
       // Calculation of Team ELO Averages to distribute points
       let ptsA = 0; let ptsB = 0;
