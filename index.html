@@ -976,8 +976,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     }
 
     // =========================================================================
-    // ATENÇÃO: COLOQUE A SUA PUBLIC KEY DO MERCADO PAGO NA LINHA ABAIXO
-    // Ela começa com "APP_USR-" (Você pega na tela de Credenciais de Produção)
+    // Chave Publica do Mercado Pago vinculada
     // =========================================================================
     const mp = new MercadoPago('f2c18319-f039-4613-b9a2-798ff4fcfb0d', { locale: 'pt-BR' });
 
@@ -1345,7 +1344,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         } catch (err) {
             console.error(err);
             document.getElementById('modalCustomAlert').classList.remove('active');
-            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago.", "Erro");
+            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago no Supabase.", "Erro");
         }
     };
 
@@ -1371,7 +1370,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
         } catch (err) {
             console.error(err);
             document.getElementById('modalCustomAlert').classList.remove('active');
-            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago.", "Erro");
+            window.customAlert("Erro ao gerar pagamento. Verifique as chaves do Mercado Pago no Supabase.", "Erro");
         }
     };
 
@@ -2259,4 +2258,3 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
   </script>
 </body>
 </html>
-
