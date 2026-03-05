@@ -979,7 +979,7 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
     // ATENÇÃO: COLOQUE A SUA PUBLIC KEY DO MERCADO PAGO NA LINHA ABAIXO
     // Ela começa com "APP_USR-" (Você pega na tela de Credenciais de Produção)
     // =========================================================================
-    const mp = new MercadoPago('APP_USR-COLOQUE-SUA-CHAVE-AQUI', { locale: 'pt-BR' });
+    const mp = new MercadoPago('f2c18319-f039-4613-b9a2-798ff4fcfb0d', { locale: 'pt-BR' });
 
     // --- State Global ---
     const state = { users: [], matches: [], queue: [], chat: [] };
@@ -2259,3 +2259,4 @@ alter publication supabase_realtime add table cpr_users, cpr_matches, cpr_queue,
   </script>
 </body>
 </html>
+
