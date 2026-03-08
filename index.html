@@ -1,2265 +1,675 @@
-<!doctype html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-PT">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CPR APOSTAS • FF 4x4</title>
-  <meta name="description" content="A maior plataforma de 4x4 apostado de Free Fire." />
-
-  <style>
-    /* Design Tokens - Premium Gold/Dark Theme */
-    :root {
-      --bg: #09090b; /* zinc-950 */
-      --panel: #18181b; /* zinc-900 */
-      --panel-hover: #27272a; /* zinc-800 */
-      --stroke: rgba(250, 204, 21, 0.15); /* gold subtle */
-      --stroke-glow: rgba(250, 204, 21, 0.4);
-      --text: #fafafa;
-      --muted: #a1a1aa;
-      --primary: #eab308; /* yellow-500 (Gold) */
-      --primary-hover: #ca8a04;
-      --accent: #f59e0b; /* amber-500 */
-      --success: #22c55e;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      
-      /* Novos Tokens VIP */
-      --vip-basic: #10b981;
-      --vip-pro: #3b82f6;
-      --vip-premium: #a855f7;
-      
-      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-      --font-mono: ui-monospace, SFMono-Regular, monospace;
-      --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.5);
-      --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.8);
-      --radius: 12px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Casamento | Emily & João Vitor</title>
     
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--font-sans); background: var(--bg); color: var(--text);
-      background-image: 
-        radial-gradient(circle at 15% 50%, rgba(250, 204, 21, 0.03), transparent 30%),
-        radial-gradient(circle at 85% 30%, rgba(245, 158, 11, 0.03), transparent 30%);
-      background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column;
-    }
-    a { color: inherit; text-decoration: none; }
-    button, input, select, textarea { font: inherit; color: inherit; border: none; outline: none; background: none; }
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
     
-    /* Layout */
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; display: flex; flex-direction: column; }
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    /* Navbar */
-    .navbar {
-      background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--stroke); position: sticky; top: 0; z-index: 50;
-    }
-    .nav-inner {
-      max-width: 1200px; margin: 0 auto; padding: 16px 20px;
-      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
-    }
-    
-    /* === LOGO PREMIUM CPR === */
-    .brand {
-      display: flex; align-items: center; gap: 14px; text-decoration: none; user-select: none;
-      transition: transform 0.2s; cursor: pointer;
-    }
-    .brand:hover { transform: scale(1.02); }
-    .brand-icon {
-      width: 42px; height: 42px; border-radius: 12px;
-      background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #a16207 100%);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6);
-      border: 1px solid #fef08a; position: relative;
-    }
-    .brand-icon::after {
-      content: ''; position: absolute; inset: 0; border-radius: inherit;
-      background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 50%);
-    }
-    .brand-icon svg {
-      width: 24px; height: 24px; fill: #422006; z-index: 1; filter: drop-shadow(0 1px 0px rgba(255,255,255,0.4));
-    }
-    .brand-text { display: flex; flex-direction: column; justify-content: center; line-height: 1; }
-    .brand-text-main {
-      font-size: 22px; font-weight: 900; letter-spacing: 1px;
-      background: linear-gradient(to right, #fef08a, #eab308, #d97706);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase;
-    }
-    .brand-text-sub { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 4px; text-transform: uppercase; margin-top: 4px; }
-
-    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
-    .nav-tab {
-      padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--muted);
-      cursor: pointer; transition: all 0.2s;
-    }
-    .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-    .nav-tab.active { color: var(--primary); background: rgba(250, 204, 21, 0.1); }
-    
-    .user-menu { display: flex; align-items: center; gap: 12px; }
-    
-    /* UI Components */
-    .btn {
-      padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 700;
-      cursor: pointer; transition: all 0.2s; border: 1px solid var(--stroke);
-      background: rgba(255,255,255,0.03); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
-    .btn-primary { background: var(--primary); border-color: var(--primary); color: #000; }
-    .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); transform: translateY(-1px); }
-    .btn-accent { background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; color: #000; }
-    .btn-accent:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3); }
-    .btn-danger { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #FCA5A5; }
-    .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
-    
-    .panel {
-      background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius);
-      padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 20px;
-    }
-    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .panel-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; color: var(--text); }
-    .panel-desc { color: var(--muted); font-size: 14px; margin-top: 4px; }
-    
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
-    .input, .select {
-      width: 100%; padding: 12px 16px; background: rgba(0,0,0,0.3); border: 1px solid var(--stroke);
-      border-radius: 8px; font-size: 14px; transition: all 0.2s; color: var(--text);
-    }
-    .input:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15); }
-    
-    .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-gray { background: rgba(255,255,255,0.1); color: #E2E8F0; }
-    .badge-gold { background: rgba(250, 204, 21, 0.15); color: var(--primary); border: 1px solid rgba(250,204,21,0.3); }
-    .badge-green { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
-    .badge-orange { background: rgba(245, 158, 11, 0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
-    .badge-red { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.3); }
-    
-    /* Plan Badges */
-    .badge-vip-basic { background: rgba(16, 185, 129, 0.15); color: var(--vip-basic); border: 1px solid var(--vip-basic); }
-    .badge-vip-pro { background: rgba(59, 130, 246, 0.15); color: var(--vip-pro); border: 1px solid var(--vip-pro); }
-    .badge-vip-premium { background: rgba(168, 85, 247, 0.15); color: var(--vip-premium); border: 1px solid var(--vip-premium); }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-    .grid-5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
-    @media (max-width: 768px) { .grid-2, .grid-4, .grid-5 { grid-template-columns: 1fr; } }
-    
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--stroke); }
-    th { font-size: 12px; text-transform: uppercase; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; }
-    tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: rgba(255,255,255,0.02); }
-
-    /* Modals */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-      display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal {
-      background: var(--panel); border: 1px solid var(--stroke); border-radius: 16px;
-      width: 100%; max-width: 450px; box-shadow: var(--shadow-lg); overflow: hidden; max-height: 90vh; overflow-y: auto;
-      animation: modalIn 0.2s ease-out forwards;
-    }
-    @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--stroke); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; background: var(--panel); z-index: 10; }
-    .modal-body { padding: 24px; }
-    .close-btn { background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer; }
-
-    /* Specific Views */
-    .view { display: none; animation: fadeIn 0.3s; }
-    .view.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* Match Card Premium UI */
-    .match-card {
-      background: linear-gradient(to bottom right, var(--panel), var(--panel-hover));
-      border: 1px solid var(--stroke);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .match-card.my-match {
-      border-color: var(--primary);
-      box-shadow: 0 0 20px rgba(250, 204, 21, 0.15);
-    }
-    .match-card.my-match::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 4px; height: 100%;
-      background: var(--primary);
-      box-shadow: 0 0 15px var(--primary);
-    }
-    .match-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 16px;
-      border-bottom: 1px dashed rgba(255,255,255,0.1);
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .match-tier-title {
-      font-size: 16px;
-      font-weight: 900;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .match-pot-info {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    .match-pot-info span { color: var(--text); font-weight: 600; }
-    .match-pot-info span.pot-green { color: var(--success); }
-    
-    .match-teams {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 24px;
-    }
-    @media (max-width: 600px) {
-      .match-teams { grid-template-columns: 1fr; gap: 16px; text-align: center; }
-      .match-middle { padding: 10px 0; }
-    }
-    .team {
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      transition: all 0.3s;
-    }
-    .team.winner {
-      background: rgba(34, 197, 94, 0.08);
-      border-color: rgba(34, 197, 94, 0.3);
-      box-shadow: inset 0 0 20px rgba(34, 197, 94, 0.05);
-    }
-    .team-name {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-    .team.winner .team-name {
-      color: var(--success);
-    }
-    .team-players {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0; 
-      color: transparent; 
-    }
-    .team-players span {
-      font-size: 13px;
-      background: rgba(0,0,0,0.5);
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.05);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      letter-spacing: 0.5px;
-      display: inline-block;
-      color: var(--text);
-    }
-    
-    .match-middle {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .vs {
-      font-size: 20px;
-      font-weight: 900;
-      font-style: italic;
-      color: var(--stroke-glow);
-      text-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
-      background: rgba(250, 204, 21, 0.1);
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 50%;
-      border: 1px solid rgba(250, 204, 21, 0.3);
-    }
-    .match-score {
-      font-size: 36px;
-      font-weight: 900;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .match-score span {
-      color: var(--muted);
-      font-size: 20px;
-      font-weight: 400;
-    }
-    .match-footer {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px dashed rgba(255,255,255,0.1);
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .match-footer .btn {
-      padding: 12px 24px;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Cards Fila */
-    .queue-card {
-      background: rgba(0,0,0,0.3); border: 1px solid var(--stroke); border-radius: 12px;
-      padding: 16px 12px; text-align: center; transition: all 0.2s; cursor: pointer; position: relative;
-    }
-    .queue-card:hover, .queue-card.selected { border-color: var(--primary); background: rgba(250, 204, 21, 0.05); transform: translateY(-2px); }
-    .queue-icon { font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 0 8px rgba(250,204,21,0.2)); }
-    .queue-title { font-weight: 800; font-size: 14px; margin-bottom: 4px; text-transform: uppercase; }
-    .queue-desc { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
-    .queue-count { font-size: 11px; font-weight: bold; background: rgba(250, 204, 21, 0.15); padding: 4px 8px; border-radius: 8px; color: var(--primary); display: inline-block; border: 1px solid rgba(250,204,21,0.3); }
-    .queue-vip { border-color: var(--vip-premium); background: linear-gradient(180deg, rgba(168,85,247,0.1), rgba(0,0,0,0)); }
-    .queue-vip:hover, .queue-vip.selected { border-color: var(--vip-premium); background: rgba(168,85,247,0.15); box-shadow: 0 0 15px rgba(168,85,247,0.3); }
-
-    /* Lobby Cards */
-    .open-lobby-card {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid var(--stroke);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-      transition: all 0.2s;
-    }
-    .open-lobby-card:hover {
-      border-color: rgba(250, 204, 21, 0.4);
-      background: rgba(250, 204, 21, 0.02);
-    }
-    .lobby-teams-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 12px;
-    }
-    .lobby-team-side {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 8px;
-      padding: 12px;
-      text-align: center;
-    }
-    .lobby-team-side h4 {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .lobby-player-pill {
-      display: inline-block;
-      font-size: 11px;
-      background: rgba(0,0,0,0.5);
-      padding: 4px 10px;
-      border-radius: 12px;
-      margin: 2px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    /* Plan Cards */
-    .plan-card {
-      background: var(--panel-hover); border: 1px solid var(--stroke); border-radius: 16px;
-      padding: 24px; display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden;
-    }
-    .plan-card.pro { border-color: var(--vip-pro); box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15); }
-    .plan-card.premium { border-color: var(--vip-premium); box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15); }
-    .plan-name { font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
-    .plan-price { font-size: 28px; font-weight: 900; margin-bottom: 16px; color: var(--text); }
-    .plan-price span { font-size: 14px; color: var(--muted); font-weight: 600; }
-    .plan-features { list-style: none; padding: 0; margin: 0 0 24px 0; flex: 1; }
-    .plan-features li { font-size: 13px; color: var(--muted); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px; }
-    .plan-features li::before { content: '✓'; color: var(--success); font-weight: bold; }
-    .plan-features li.cross::before { content: '✕'; color: var(--danger); }
-
-    /* Utils */
-    .hidden { display: none !important; }
-    .text-center { text-align: center; }
-    .mt-4 { margin-top: 16px; }
-    .mt-2 { margin-top: 8px; }
-    .flex-center { display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .mono { font-family: var(--font-mono); }
-    .loading-spinner {
-      width: 24px; height: 24px; border: 3px solid rgba(250,204,21,0.1); border-top-color: var(--primary);
-      border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #globalLoader { position: fixed; inset: 0; background: var(--bg); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    #setupInstructions { max-width: 500px; margin-top: 20px; text-align: left; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; border: 1px solid var(--danger); display: none; }
-  </style>
-</head>
-<body>
-
-  <!-- Loading Initial -->
-  <div id="globalLoader">
-    <div class="brand" style="flex-direction: column; gap: 16px; margin-bottom: 30px;">
-      <div class="brand-icon" style="width: 70px; height: 70px; border-radius: 20px; box-shadow: 0 10px 30px rgba(234, 179, 8, 0.4);">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 38px; height: 38px;"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z"></path></svg>
-      </div>
-      <div class="brand-text" style="align-items: center; gap: 6px;">
-        <div class="brand-text-main" style="font-size: 32px;">CPR</div>
-        <div class="brand-text-sub" style="font-size: 14px; letter-spacing: 8px;">Apostas</div>
-      </div>
-    </div>
-    <div class="flex-center" id="loadingText" style="color: var(--muted); font-size: 14px;">
-      <div class="loading-spinner" style="width: 18px; height: 18px; margin: 0; border-width: 2px;"></div>
-      Conectando ao Firebase...
-    </div>
-    
-    <div id="setupInstructions">
-        <h3 style="color: var(--danger); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">⚠️ Banco de Dados Não Configurado</h3>
-        <p style="color: var(--text); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">Para fazer o seu site funcionar, precisa configurar as suas chaves do <b>Firebase</b> no código-fonte.</p>
-        <ol style="color: var(--muted); font-size: 13px; line-height: 1.6; margin-left: 20px; margin-bottom: 16px;">
-            <li>Vá à <a href="https://console.firebase.google.com/" target="_blank" style="color: var(--primary);">Firebase Console</a> e crie um projeto.</li>
-            <li>Adicione uma aplicação Web (ícone `</>`) e copie a variável `firebaseConfig`.</li>
-            <li>No Firebase, ative o <b>Firestore Database</b> e o <b>Authentication</b> (Modo Anónimo).</li>
-            <li>No código-fonte deste ficheiro (perto da linha ~630), substitua o objeto `firebaseConfig` com as suas chaves reais.</li>
-        </ol>
-    </div>
-  </div>
-
-  <!-- Navbar -->
-  <nav class="navbar hidden" id="mainNavbar">
-    <div class="nav-inner">
-      <div class="brand" onclick="window.switchView('home')">
-        <div class="brand-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z"></path></svg></div>
-        <div class="brand-text"><div class="brand-text-main">CPR</div><div class="brand-text-sub">Apostas</div></div>
-      </div>
-      <div class="nav-links" id="navLinks"></div>
-      <div class="user-menu" id="userMenu"></div>
-    </div>
-  </nav>
-
-  <!-- Container Principal -->
-  <div class="container hidden" id="mainContainer">
-    
-    <!-- VIEW: INÍCIO -->
-    <div id="view-home" class="view">
-      <div class="panel" style="text-align: center; padding: 60px 20px; background: linear-gradient(180deg, rgba(250, 204, 21, 0.05), rgba(0,0,0,0.5)); border-color: var(--stroke-glow);">
-        <h1 style="font-size: 38px; margin-bottom: 16px; font-weight: 900; text-transform: uppercase; color: var(--primary);">O Maior Hub de Apostas</h1>
-        <p style="color: var(--muted); font-size: 18px; max-width: 600px; margin: 0 auto 32px auto;">
-          Temporadas Oficiais, Matchmaking por Elo, Salas Privadas com amigos e Planos VIP exclusivos.
-        </p>
-        <div class="flex-center">
-          <button class="btn btn-accent" style="padding: 14px 32px; font-size: 16px;" onclick="window.goToFilaOrLogin()">Jogar Agora</button>
-          <button class="btn" style="padding: 14px 32px; font-size: 16px; border-color: var(--vip-premium); color: var(--vip-premium);" onclick="window.switchView('planos')">👑 Ver Planos VIP</button>
-        </div>
-      </div>
-      <div class="grid-4" id="homeKpis"></div>
-    </div>
-
-    <!-- VIEW: PLANOS VIP -->
-    <div id="view-planos" class="view">
-      <div class="panel text-center" style="border: none; background: transparent; padding-top: 0;">
-        <h2 style="font-size: 28px; font-weight: 900; color: var(--primary); text-transform: uppercase; margin-bottom: 8px;">Seja um VIP CPR</h2>
-        <p style="color: var(--muted); margin-bottom: 30px;">Aumente seu limite de salas privadas, ganhe destaque no ranking e acesso à fila exclusiva.</p>
-        
-        <div class="grid-4" style="text-align: left;">
-          <!-- FREE -->
-          <div class="plan-card">
-            <div class="plan-name" style="color: var(--muted);">Free</div>
-            <div class="plan-price">R$ 0,00 <span>/mês</span></div>
-            <ul class="plan-features">
-              <li>Acesso a filas normais por Elo</li>
-              <li>Acesso ao Ranking</li>
-              <li>3 filas privadas por mês</li>
-              <li class="cross">Acesso à Fila VIP Exclusiva</li>
-              <li class="cross">Destaque no Ranking</li>
-            </ul>
-            <button class="btn" disabled style="opacity: 0.5;">Plano Atual</button>
-          </div>
-          <!-- VIP BASIC -->
-          <div class="plan-card" style="border-color: var(--vip-basic);">
-            <div class="plan-name" style="color: var(--vip-basic);">VIP Básico</div>
-            <div class="plan-price">R$ 9,90 <span>/mês</span></div>
-            <ul class="plan-features">
-              <li>Tudo do plano FREE</li>
-              <li>10 filas privadas por mês</li>
-              <li>Acesso à Fila VIP Exclusiva</li>
-              <li>Badge "VIP Básico"</li>
-            </ul>
-            <button class="btn" style="background: var(--vip-basic); color: #000;" onclick="window.openBuyVipModal('vip_basic', 9.90)">Assinar VIP Básico</button>
-          </div>
-          <!-- VIP PRO -->
-          <div class="plan-card pro">
-            <div class="plan-name" style="color: var(--vip-pro);">VIP PRO</div>
-            <div class="plan-price">R$ 19,90 <span>/mês</span></div>
-            <ul class="plan-features">
-              <li>Tudo do VIP Básico</li>
-              <li>30 filas privadas por mês</li>
-              <li>Prioridade leve nas filas</li>
-              <li>Badge "VIP PRO"</li>
-              <li>Destaque moderado no Ranking</li>
-            </ul>
-            <button class="btn" style="background: var(--vip-pro); color: #fff;" onclick="window.openBuyVipModal('vip_pro', 19.90)">Assinar VIP PRO</button>
-          </div>
-          <!-- VIP PREMIUM -->
-          <div class="plan-card premium">
-            <div class="plan-name" style="color: var(--vip-premium);">VIP PREMIUM</div>
-            <div class="plan-price">R$ 39,90 <span>/mês</span></div>
-            <ul class="plan-features">
-              <li>Tudo do VIP PRO</li>
-              <li>Filas privadas ILIMITADAS</li>
-              <li>Prioridade máxima nas filas</li>
-              <li>Badge "VIP PREMIUM"</li>
-              <li>Destaque absoluto no Ranking</li>
-            </ul>
-            <button class="btn" style="background: var(--vip-premium); color: #fff;" onclick="window.openBuyVipModal('vip_premium', 39.90)">Assinar PREMIUM</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: FILA (MATCHMAKING) -->
-    <div id="view-fila" class="view">
-      <div class="grid-2" style="grid-template-columns: 1.8fr 1fr;">
-        <!-- Left: Fila Controls -->
-        <div class="panel" style="margin-bottom: 0;">
-          <div class="panel-header">
-            <div>
-              <div class="panel-title">Fila de Partidas Competitivas</div>
-              <div class="panel-desc">Sua dificuldade é baseada nos seus pontos do Ranking.</div>
-            </div>
-            <div id="filaStatus" class="badge badge-gray">Não está na fila</div>
-          </div>
-
-          <div id="filaControls">
-            <label style="font-weight: bold; color: var(--muted); display: block; margin-bottom: 12px;">1. Escolha a Fila (Limitada por seu Elo)</label>
-            <div class="grid-5" style="margin-bottom: 24px;">
-              <div class="queue-card" data-tier="iniciante" onclick="window.selectQueueTier('iniciante')">
-                <div class="queue-icon">🥉</div>
-                <div class="queue-title">Iniciante</div>
-                <div class="queue-desc">0 a 299 Pts</div>
-                <div class="queue-count" id="count-iniciante">0/8</div>
-              </div>
-              <div class="queue-card" data-tier="medio" onclick="window.selectQueueTier('medio')">
-                <div class="queue-icon">🥈</div>
-                <div class="queue-title">Médio</div>
-                <div class="queue-desc">150 a 599 Pts</div>
-                <div class="queue-count" id="count-medio">0/8</div>
-              </div>
-              <div class="queue-card" data-tier="dificil" onclick="window.selectQueueTier('dificil')">
-                <div class="queue-icon">🏆</div>
-                <div class="queue-title">Difícil</div>
-                <div class="queue-desc">450+ Pts</div>
-                <div class="queue-count" id="count-dificil">0/8</div>
-              </div>
-              <div class="queue-card" data-tier="mix" onclick="window.selectQueueTier('mix')">
-                <div class="queue-icon">🎲</div>
-                <div class="queue-title">Mix Geral</div>
-                <div class="queue-desc">Aberto</div>
-                <div class="queue-count" id="count-mix">0/8</div>
-              </div>
-              <div class="queue-card queue-vip" data-tier="vip" onclick="window.selectQueueTier('vip')">
-                <div class="queue-icon">👑</div>
-                <div class="queue-title" style="color:var(--vip-premium);">Fila VIP</div>
-                <div class="queue-desc">Exclusiva</div>
-                <div class="queue-count" id="count-vip">0/8</div>
-              </div>
-            </div>
-
-            <div class="grid-2">
-              <div>
-                <label style="display: block; font-weight: bold; margin-bottom: 12px; color: var(--muted);">2. Valor da Aposta por Time (PIX)</label>
-                <select class="select" id="filaPixValue" onchange="window.handlePixChange()">
-                  <option value="5">AP R$ 5,00 (Pot: R$ 10)</option>
-                  <option value="10" selected>AP R$ 10,00 (Pot: R$ 20)</option>
-                  <option value="20">AP R$ 20,00 (Pot: R$ 40)</option>
-                  <option value="50">AP R$ 50,00 (Pot: R$ 100)</option>
-                  <option value="100">AP R$ 100,00 (Pot: R$ 200)</option>
-                  <option value="livre">AP VALOR LIVRE (Min R$ 5)</option>
-                </select>
-                <div id="customPixContainer" class="hidden" style="margin-top: 8px;">
-                  <input type="number" id="customPixValue" class="input" placeholder="Digite o valor (Min 5)" min="5" onchange="window.updateQueueCountsUI()" onkeyup="window.updateQueueCountsUI()">
-                </div>
-              </div>
-              <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;">
-                <button class="btn btn-accent" style="width: 100%; height: 44px; box-shadow: 0 0 10px rgba(250,204,21,0.2);" onclick="window.openPrivateModal()">🔑 Sala Privada (Amigos)</button>
-              </div>
-            </div>
-            
-            <!-- LOBBY BROWSER -->
-            <div id="publicLobbiesContainer" style="margin-top: 24px; padding-top: 24px; border-top: 1px dashed rgba(255,255,255,0.1);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <label style="font-weight: bold; color: var(--muted); margin: 0;">3. Filas Abertas (Escolha seu Time)</label>
-                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.createNewPublicLobby()">+ Criar Nova Fila</button>
-                </div>
-                <div id="publicLobbiesList"></div>
-            </div>
-
-            <div id="lblPrivateUsage" style="font-size: 12px; color: var(--muted); text-align: right; margin-top: 12px;">Uso de Salas Privadas: Calculando...</div>
-          </div>
-          
-          <div id="filaWaiting" class="hidden text-center" style="padding: 40px 0;">
-            <div class="loading-spinner" style="width: 40px; height: 40px; margin-bottom: 20px;"></div>
-            <h3 style="margin-bottom: 8px;" id="lblWaitTitle">Aguardando na Fila...</h3>
-            <p style="color: var(--muted); margin-bottom: 16px;">Fila: <b id="lblWaitTier" style="color:var(--primary)">Médio</b> | Aposta: <b id="lblWaitPix" style="color:var(--primary)">R$ 10</b></p>
-            
-            <div id="activeLobbyVisual" style="margin-bottom: 24px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;"></div>
-            
-            <div class="flex-center">
-              <button class="btn btn-danger" onclick="window.leaveQueue()">Sair da Fila</button>
-              <button class="btn" id="btnSimulate" onclick="window.addBotToQueue()" title="Simula entrada de players falsos">Simular +1 Jogador</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Chat da Fila -->
-        <div class="panel" style="margin-bottom: 0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; min-height: 450px;">
-          <div class="panel-header" style="padding: 16px 20px; margin: 0; border-bottom: 1px solid var(--stroke);">
-            <div class="panel-title" id="chatTitle" style="font-size: 15px;">💬 Chat da Fila</div>
-          </div>
-          <div class="chat-container">
-            <div class="chat-messages" id="chatBox"></div>
-            <div style="padding: 16px; border-top: 1px solid var(--stroke); display: flex; gap: 8px;">
-              <input type="text" id="chatInput" class="input" placeholder="Mande uma mensagem..." onkeypress="if(event.key==='Enter') window.sendChatMessage()">
-              <button class="btn btn-primary" onclick="window.sendChatMessage()">Enviar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: PARTIDAS -->
-    <div id="view-partidas" class="view">
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Partidas</div>
-            <div class="panel-desc">Acompanhe as partidas em aberto, pendentes de PIX e finalizadas.</div>
-          </div>
-        </div>
-        <div id="matchesList"></div>
-      </div>
-    </div>
-
-    <!-- VIEW: RANKING -->
-    <div id="view-ranking" class="view">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">Ranking da Temporada</div>
-          <div class="panel-desc">Ganhe +25 a +30 pontos por vitória, perca -20 a -25 por derrota!</div>
-        </div>
-        <div style="overflow-x: auto;">
-          <table id="rankingTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Jogador (Nick)</th>
-                <th>Plano</th>
-                <th>Elo (Faixa)</th>
-                <th>Pts</th>
-                <th>W/L</th>
-                <th>Saldo PIX</th>
-                <th>Streak</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: PERFIL -->
-    <div id="view-perfil" class="view">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">Meu Perfil</div>
-          <button class="btn btn-danger" onclick="window.logout()">Sair da Conta</button>
-        </div>
-
-        <div class="ff-card">
-          <div class="ff-avatar" id="pfAvatar" style="background-size: cover;"></div>
-          <div class="ff-info" style="width: 100%;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-              <div>
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                    <h2 id="pfNick" style="margin:0;">Nick</h2>
-                    <span id="pfPlanBadge" class="badge badge-gray">FREE</span>
-                </div>
-                <div id="pfVerifiedBadge" class="badge badge-gray" style="margin-bottom: 8px; display: inline-block;">Não Vinculado</div>
-              </div>
-              <button class="btn btn-primary" id="btnToggleLink" onclick="window.toggleIdLinkSection()">Vincular ID FF</button>
-            </div>
-            <div class="ff-stats">
-              <span>ID: <b id="pfId" class="mono">Opcional</b></span>
-              <span class="hidden">Nível: <b id="pfLevel">-</b></span>
-              <span>Elo Sistema: <b id="pfRankPts">Unranked</b></span>
-              <span>Patente FF: <b id="pfRank">Unranked</b></span>
-            </div>
-          </div>
-        </div>
-
-        <div id="linkFfSection" class="hidden mt-4" style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; border: 1px solid var(--stroke);">
-          <label style="display: block; font-size: 13px; margin-bottom: 8px; color: var(--muted);">Vincule seu ID do Free Fire (Opcional)</label>
-          <div style="display: flex; gap: 8px; max-width: 400px;">
-            <input type="text" class="input" id="inpFfId" placeholder="Ex: 12345678" />
-            <button class="btn btn-accent" onclick="window.verifyFfId()" id="btnVerifyFF">Buscar Conta</button>
-          </div>
-        </div>
-
-        <div class="grid-4 mt-4">
-          <div class="panel" style="margin-bottom: 0; padding: 16px; text-align: center;">
-            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Pontos ELO</div>
-            <div style="font-size: 24px; font-weight: 900;" id="pfPts">0</div>
-          </div>
-          <div class="panel" style="margin-bottom: 0; padding: 16px; text-align: center;">
-            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Saldo PIX</div>
-            <div style="font-size: 24px; font-weight: 900; color: var(--success);" id="pfBalance">R$ 0,00</div>
-          </div>
-          <div class="panel" style="margin-bottom: 0; padding: 16px; text-align: center;">
-            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Vitórias / Derrotas</div>
-            <div style="font-size: 24px; font-weight: 900;" id="pfWL">0 / 0</div>
-          </div>
-          <div class="panel" style="margin-bottom: 0; padding: 16px; text-align: center;">
-            <div style="color: var(--muted); font-size: 12px; font-weight: bold; text-transform: uppercase;">Salas Privadas</div>
-            <div style="font-size: 24px; font-weight: 900;" id="pfPrivs">0/3</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: REGRAS -->
-    <div id="view-regras" class="view">
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title">Regras do CPR APOSTAS</div></div>
-        <div style="line-height: 1.6; color: var(--muted);">
-          <p><b>1. Dificuldade e Pontos:</b> Acesso às filas depende da sua pontuação no Ranking. Bronze/Prata (0-299), Médio (150-599), Difícil (450+).</p><br>
-          <p><b>2. Salas Privadas (X1, 2x2, 4x4):</b> O limite mensal depende do seu plano VIP. O Free possui 3 salas mensais.</p><br>
-          <p><b>3. Pagamento:</b> O PIX deve ser realizado utilizando o botão "Pagar PIX (QR Code)" na aba Partidas. O Admin irá confirmar.</p><br>
-          <p><b>4. Resultados e ELO:</b> Apenas Admins lançam resultados. Você ganha de +25 a +30 pontos por vitória, e perde -20 a -25 por derrota. Ao fim da temporada ocorre Soft Reset (25% a menos de pontos).</p><br>
-          <p><b>5. Anti-Smurf / Toxidade:</b> Tolerância zero. Contas suspeitas de Smurf ou comportamento tóxico serão banidas permanentemente pelos Masters.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: ADMIN -->
-    <div id="view-admin" class="view">
-      <div class="panel" style="border-color: var(--danger); box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);">
-        <div class="panel-header">
-          <div class="panel-title" style="color: #fca5a5;">Painel MASTER (Admin)</div>
-          <div class="badge badge-red">Acesso Restrito</div>
-        </div>
-        <p style="color: var(--muted); margin-bottom: 20px;">Ferramentas exclusivas para gerenciamento total da plataforma.</p>
-        
-        <div class="grid-2">
-          <!-- Monitor de Filas -->
-          <div class="panel" style="background: rgba(0,0,0,0.3); margin: 0;">
-            <h3 style="margin-bottom: 12px; font-size: 15px;">Monitor de Filas Ativas</h3>
-            <div id="adminQueueList" style="font-size: 13px; color: var(--muted); margin-bottom: 16px; max-height: 150px; overflow-y: auto;"></div>
-            <button class="btn btn-danger" style="width: 100%;" onclick="window.adminClearQueue()">Esvaziar Todas as Filas</button>
-          </div>
-          
-          <div class="panel" style="background: rgba(0,0,0,0.3); margin: 0;">
-            <h3 style="margin-bottom: 12px; font-size: 15px;">Gerenciamento de Temporada</h3>
-            <p style="font-size: 12px; color: var(--muted); margin-bottom: 16px;">O Reset de Temporada aplica o cálculo "EloAtual x 0.75" para todos os usuários.</p>
-            <button class="btn btn-accent" style="width: 100%; margin-bottom: 8px;" onclick="window.adminResetSeason()">Resetar Temporada (0.75x)</button>
-            <button class="btn btn-danger" style="width: 100%; margin-top: 16px;" onclick="window.nukeDB()">Apagar TUDO (Reset DB)</button>
-          </div>
-        </div>
-
-        <div class="panel mt-4" style="background: rgba(0,0,0,0.3); margin-bottom: 0;">
-          <h3 style="margin-bottom: 12px; font-size: 15px;">Gerenciamento de Jogadores (Anti-Smurf & VIP)</h3>
-          <div style="overflow-x: auto; max-height: 300px; overflow-y: auto;">
-             <table id="adminUsersTable">
-                <thead><tr><th>ID / Nick</th><th>Plano</th><th>Pts</th><th>Ações</th></tr></thead>
-                <tbody></tbody>
-             </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer Copyright -->
-    <div style="text-align: center; padding: 40px 20px 20px; color: var(--muted); font-size: 13px; margin-top: auto;">
-      <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; font-size: 14px;">
-        Desenvolvido por <strong style="color: var(--text);">RyanZ</strong> 
-        <!-- Selo de verificado -->
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="fill: var(--primary); color: #000; filter: drop-shadow(0 0 4px rgba(250,204,21,0.5));"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
-        2026
-      </div>
-      <div style="margin-bottom: 4px;">Todos os direitos reservados</div>
-      <div style="color: var(--danger); font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Proibido a Venda, Para Utilização Gratuita</div>
-    </div>
-
-  </div>
-
-  <!-- MODAL COMPRAR VIP (PIX MANUAL) -->
-  <div class="modal-overlay" id="modalBuyVip">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Assinar Plano VIP</h3>
-        <button class="close-btn" onclick="window.closeBuyVipModal()">&times;</button>
-      </div>
-      <div class="modal-body text-center">
-        <input type="hidden" id="buyVipPlanId">
-        <p style="color: var(--muted); margin-bottom: 10px; font-size: 14px;">
-          Você está prestes a assinar o plano <b id="buyVipPlanName" style="color:var(--primary)">...</b>
-        </p>
-        <p style="font-size: 24px; font-weight: 900; margin-bottom: 20px; color: var(--text);" id="buyVipPrice">R$ 0,00</p>
-
-        <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=contato.coparyan@gmail.com" alt="QR Code PIX VIP" style="display: block; width: 150px; height: 150px;">
-        </div>
-        <div class="input-group">
-          <label style="text-align: left;">Chave PIX (E-mail)</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="text" class="input text-center" id="pixKeyVip" value="contato.coparyan@gmail.com" readonly>
-            <button class="btn btn-primary" onclick="document.getElementById('pixKeyVip').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
-          </div>
-        </div>
-        <p style="font-size: 12px; color: var(--warning); margin-top: 16px; margin-bottom: 16px;">
-          ⚠️ Faça o PIX e envie o comprovante para a administração para liberação do seu plano.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODALS AUTH -->
-  <div class="modal-overlay" id="modalAuth">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="authTitle">Entrar no Hub</h3>
-        <button class="close-btn" onclick="window.closeAuthModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div id="formLogin">
-          <div class="input-group">
-            <label>Login / Email</label>
-            <input type="text" id="logEmail" class="input" placeholder="seu@email.com">
-          </div>
-          <div class="input-group">
-            <label>Senha</label>
-            <input type="password" id="logPass" class="input" placeholder="••••••••">
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.doLogin()">Entrar</button>
-          <p class="text-center mt-4" style="font-size: 13px; color: var(--muted);">
-            Não tem conta? <a href="#" style="color: var(--primary);" onclick="window.switchAuth('register')">Criar agora</a>
-          </p>
-        </div>
-        <div id="formRegister" class="hidden">
-          <div class="input-group">
-            <label>Nome de Usuário (Nick no Hub)</label>
-            <input type="text" id="regNick" class="input" placeholder="Ex: LendaX">
-          </div>
-          <div class="input-group">
-            <label>Email de Acesso (Login)</label>
-            <input type="email" id="regEmail" class="input" placeholder="seu@email.com">
-          </div>
-          <div class="input-group">
-            <label>Senha</label>
-            <input type="password" id="regPass" class="input" placeholder="Crie uma senha forte">
-          </div>
-          <button class="btn btn-accent" style="width: 100%; margin-top: 8px;" onclick="window.doRegister()">Criar Conta</button>
-          <p class="text-center mt-4" style="font-size: 13px; color: var(--muted);">
-            Já tem conta? <a href="#" style="color: var(--primary);" onclick="window.switchAuth('login')">Fazer Login</a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL SALA PRIVADA (CRIAR E ENTRAR) -->
-  <div class="modal-overlay" id="modalPrivate">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>⚔️ Sala Privada</h3>
-        <button class="close-btn" onclick="window.closePrivateModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-         <div style="display:flex; gap:8px; margin-bottom: 20px;">
-            <button class="btn btn-primary" id="tabPrivCreate" style="flex:1" onclick="window.switchPrivTab('create')">Criar Sala</button>
-            <button class="btn" id="tabPrivJoin" style="flex:1" onclick="window.switchPrivTab('join')">Entrar na Sala</button>
-         </div>
-
-         <!-- Painel de Criação -->
-         <div id="privCreate">
-            <div class="input-group">
-               <label>Modo de Jogo</label>
-               <select id="privMode" class="select">
-                  <option value="2">1x1 (2 Jogadores)</option>
-                  <option value="4">2x2 (4 Jogadores)</option>
-                  <option value="8" selected>4x4 (8 Jogadores)</option>
-               </select>
-            </div>
-            <div class="input-group">
-               <label>Aposta por Time (R$)</label>
-               <input type="number" id="privAposta" class="input" min="5" value="10">
-            </div>
-            <button class="btn btn-accent" style="width: 100%; margin-top: 8px;" onclick="window.createPrivateRoom()">Gerar Sala Privada</button>
-         </div>
-
-         <!-- Painel de Entrada -->
-         <div id="privJoin" class="hidden">
-            <div class="input-group">
-               <label>Código da Sala</label>
-               <input type="text" id="privCode" class="input text-center" placeholder="Ex: SALA-XXXX" style="text-transform: uppercase; font-weight: 800; font-size: 16px; letter-spacing: 2px;">
-            </div>
-            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.joinPrivateRoom()">Entrar na Sala</button>
-         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL PAGAR PIX MANUAL (USUARIO COMUM) -->
-  <div class="modal-overlay" id="modalPix">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Pagamento PIX</h3>
-        <button class="close-btn" onclick="window.closePixModal()">&times;</button>
-      </div>
-      <div class="modal-body text-center">
-        <p style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">
-          Escaneie o QR Code ou copie a chave PIX abaixo para confirmar sua entrada na partida.
-        </p>
-        <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=contato.coparyan@gmail.com" alt="QR Code PIX" style="display: block; width: 180px; height: 180px;">
-        </div>
-        <div class="input-group">
-          <label style="text-align: left;">PIX Copia e Cola / Chave E-mail</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="text" class="input text-center" id="pixKeyMatch" value="contato.coparyan@gmail.com" readonly>
-            <button class="btn btn-primary" onclick="document.getElementById('pixKeyMatch').select(); document.execCommand('copy'); window.customAlert('Chave PIX copiada!', 'Sucesso');">Copiar</button>
-          </div>
-        </div>
-        <p style="font-size: 12px; color: var(--warning); margin-top: 16px;">
-          ⚠️ Após realizar o pagamento, envie o comprovante no chat da Fila ou aguarde o Admin aprovar.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL PARTIDA (FINALIZAR - APENAS ADMIN) -->
-  <div class="modal-overlay" id="modalMatch">
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Finalizar Partida</h3>
-        <button class="close-btn" onclick="window.closeMatchModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="finMatchId">
-        <p style="color: var(--muted); margin-bottom: 16px; font-size: 14px;">O ELO será distribuído (+25 a +30 Win / -20 a -25 Loss) baseado no desequilíbrio das equipes.</p>
-        <div class="input-group">
-          <label>Vencedor</label>
-          <select class="select" id="finWinner">
-            <option value="A">Time A</option>
-            <option value="B">Time B</option>
-          </select>
-        </div>
-        <div class="grid-2">
-          <div class="input-group">
-            <label>Placar Time A</label>
-            <input type="number" id="finScoreA" class="input" value="0" min="0">
-          </div>
-          <div class="input-group">
-            <label>Placar Time B</label>
-            <input type="number" id="finScoreB" class="input" value="0" min="0">
-          </div>
-        </div>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.confirmFinishMatch()">Confirmar Resultado</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SISTEMA DE AVISOS E CONFIRMAÇÕES CUSTOMIZADOS -->
-  <div class="modal-overlay" id="modalCustomAlert" style="z-index: 9999;">
-    <div class="modal" style="max-width: 350px;">
-      <div class="modal-header">
-        <h3 id="customAlertTitle">Aviso</h3>
-        <button class="close-btn" onclick="document.getElementById('modalCustomAlert').classList.remove('active')">&times;</button>
-      </div>
-      <div class="modal-body text-center">
-        <p id="customAlertMsg" style="color: var(--muted); margin-bottom: 20px; font-size: 14px;"></p>
-        <button class="btn btn-primary" style="width: 100%;" onclick="document.getElementById('modalCustomAlert').classList.remove('active')">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="modalCustomConfirm" style="z-index: 9999;">
-    <div class="modal" style="max-width: 350px;">
-      <div class="modal-header">
-        <h3 id="customConfirmTitle">Confirmação</h3>
-        <button class="close-btn" onclick="document.getElementById('modalCustomConfirm').classList.remove('active')">&times;</button>
-      </div>
-      <div class="modal-body text-center">
-        <p id="customConfirmMsg" style="color: var(--muted); margin-bottom: 20px; font-size: 14px;"></p>
-        <div class="grid-2">
-          <button class="btn btn-danger" onclick="document.getElementById('modalCustomConfirm').classList.remove('active')">Cancelar</button>
-          <button class="btn btn-primary" id="btnCustomConfirmOk">Confirmar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FIREBASE & LOGIC SCRIPT -->
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-
-    // =========================================================================
-    // CONFIGURAÇÃO DO FIREBASE
-    // =========================================================================
-    let firebaseConfig;
-    if (typeof __firebase_config !== 'undefined') {
-        firebaseConfig = JSON.parse(__firebase_config);
-    } else {
-        firebaseConfig = {
-            apiKey: "AIzaSyAaOhkVnUTT74psS9V59xTirBopJIL_PNY",
-            authDomain: "cpr-apostas-91030.firebaseapp.com",
-            projectId: "cpr-apostas-91030",
-            storageBucket: "cpr-apostas-91030.firebasestorage.app",
-            messagingSenderId: "552136172644",
-            appId: "1:552136172644:web:a3657eaf4f5e9ad8562b71",
-            measurementId: "G-3D3089RPPG"
-        };
-    }
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Sistema de coleções dinâmicas para suportar testes em tela isolada e produção
-    const getColl = (name) => {
-        if (typeof __app_id !== 'undefined') {
-            return collection(db, 'artifacts', __app_id, 'public', 'data', name);
-        }
-        return collection(db, name);
-    };
-
-    const getDocRef = (collName, id) => {
-        if (typeof __app_id !== 'undefined') {
-            return doc(db, 'artifacts', __app_id, 'public', 'data', collName, id);
-        }
-        return doc(db, collName, id);
-    };
-
-    // --- State Global ---
-    const state = { users: [], matches: [], queue: [], chat: [] };
-    let currentUser = null; 
-    let firebaseUser = null;
-    let currentQueueTier = 'iniciante';
-    let initialized = false;
-
-    // --- Utils Basicos ---
-    const uid = () => 'id_' + Math.random().toString(36).substr(2, 9);
-    const money = (v) => Number(v||0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-    const pct = (x) => isFinite(x) ? (x*100).toFixed(1) + '%' : '0.0%';
-    const getUserNick = (u) => !u ? "Desconhecido" : (u.isVerified && u.ffNick ? u.ffNick : u.nick);
-    const getUserAvatar = (u) => !u ? "" : (u.isVerified && u.ffAvatar ? u.ffAvatar : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}&backgroundColor=eab308`);
-    const formatTime = (ts) => { const d = new Date(ts); return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0'); };
-    const getPlanName = (p) => { if(p==='vip_premium') return 'VIP PREMIUM'; if(p==='vip_pro') return 'VIP PRO'; if(p==='vip_basic') return 'VIP BÁSICO'; return 'FREE'; };
-    const getPlanClass = (p) => { if(p==='vip_premium') return 'badge-vip-premium'; if(p==='vip_pro') return 'badge-vip-pro'; if(p==='vip_basic') return 'badge-vip-basic'; return 'badge-gray'; };
-    const getPlanLimits = (p) => { if(p==='vip_premium') return 999999; if(p==='vip_pro') return 30; if(p==='vip_basic') return 10; return 3; };
-
-    // --- Utils: Rank (ELO) ---
-    function getRankDetails(pts) {
-      if (pts < 50) return { name: "Bronze III", color: "#cd7f32" };
-      if (pts < 100) return { name: "Bronze II", color: "#cd7f32" };
-      if (pts < 150) return { name: "Bronze I", color: "#cd7f32" };
-      if (pts < 200) return { name: "Prata III", color: "#c0c0c0" };
-      if (pts < 250) return { name: "Prata II", color: "#c0c0c0" };
-      if (pts < 300) return { name: "Prata I", color: "#c0c0c0" };
-      if (pts < 350) return { name: "Ouro III", color: "#ffd700" };
-      if (pts < 400) return { name: "Ouro II", color: "#ffd700" };
-      if (pts < 450) return { name: "Ouro I", color: "#ffd700" };
-      if (pts < 500) return { name: "Platina III", color: "#00ced1" };
-      if (pts < 550) return { name: "Platina II", color: "#00ced1" };
-      if (pts < 600) return { name: "Platina I", color: "#00ced1" };
-      if (pts < 650) return { name: "Diamante III", color: "#b9f2ff" };
-      if (pts < 700) return { name: "Diamante II", color: "#b9f2ff" };
-      if (pts < 750) return { name: "Diamante I", color: "#b9f2ff" };
-      if (pts < 850) return { name: "Mestre", color: "#ff4500" };
-      return { name: "Desafiante", color: "#ff0000" };
-    }
-
-    window.customAlert = (msg, title="Aviso") => {
-      const elTitle = document.getElementById('customAlertTitle');
-      const elMsg = document.getElementById('customAlertMsg');
-      const modal = document.getElementById('modalCustomAlert');
-      if (elTitle) elTitle.innerText = title;
-      if (elMsg) elMsg.innerText = msg;
-      if (modal) modal.classList.add('active');
-    };
-
-    window.customConfirm = (msg, onConfirm, title="Confirmação") => {
-      const elTitle = document.getElementById('customConfirmTitle');
-      const elMsg = document.getElementById('customConfirmMsg');
-      if (elTitle) elTitle.innerText = title;
-      if (elMsg) elMsg.innerText = msg;
-      
-      const modal = document.getElementById('modalCustomConfirm');
-      const btnOk = document.getElementById('btnCustomConfirmOk');
-      if (btnOk && modal) {
-          const newBtnOk = btnOk.cloneNode(true);
-          btnOk.parentNode.replaceChild(newBtnOk, btnOk);
-          newBtnOk.addEventListener('click', () => { modal.classList.remove('active'); if(onConfirm) onConfirm(); });
-          modal.classList.add('active');
-      }
-    };
-
-    // --- DB Wrappers Firebase ---
-    async function setDocFirebase(coll, docId, docData) {
-        if(!firebaseUser) return;
-        try {
-            await setDoc(getDocRef(coll, docId), { id: docId, data: docData });
-        } catch(e) { console.error("Upsert Error:", e); }
-    }
-    
-    async function deleteDocFirebase(coll, docId) {
-        if(!firebaseUser) return;
-        try {
-            await deleteDoc(getDocRef(coll, docId));
-        } catch(e) { console.error("Delete Error:", e); }
-    }
-
-    // --- App Init ---
-    async function initApp() {
-        try {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    firebaseUser = user;
-                    setupFirebaseListeners();
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rose-gold': '#B76E79',
+                        'rose-dark': '#9d5b65',
+                        'off-white': '#FAF9F6',
+                        'gold': '#D4AF37',
+                        'text-main': '#4A4A4A',
+                        'text-light': '#7A7A7A'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
                 }
-            });
-        } catch (e) {
-            console.error("Firebase Init Error:", e);
-            document.getElementById('loadingText').classList.add('hidden');
-            document.getElementById('setupInstructions').style.display = 'block';
-        }
-    }
-
-    function setupFirebaseListeners() {
-      const collections = ['users', 'matches', 'queue', 'chat'];
-      let loadedFlags = { users: false, matches: false, queue: false, chat: false };
-
-      collections.forEach((coll) => {
-        onSnapshot(getColl(coll), (snapshot) => {
-            state[coll] = snapshot.docs.map(doc => doc.data().data);
-            loadedFlags[coll] = true;
-            
-            // Verifica se todos já carregaram a 1ª vez
-            if(!initialized && Object.values(loadedFlags).every(v => v)) {
-                initialized = true;
-                const loader = document.getElementById('globalLoader');
-                if(loader) loader.classList.add('hidden');
-                const navbar = document.getElementById('mainNavbar');
-                if(navbar) navbar.classList.remove('hidden');
-                const mainCont = document.getElementById('mainContainer');
-                if(mainCont) mainCont.classList.remove('hidden');
-                
-                checkAdminExists();
-                syncCurrentUser();
-                
-                const initialHash = window.location.hash.replace('#', '') || 'home';
-                window.switchView(initialHash);
-            } else if(initialized) {
-                syncCurrentUser();
-                renderApp();
             }
-        }, (error) => {
-            console.error(`Erro ao ouvir ${coll}:`, error);
-        });
-      });
-    }
-
-    async function checkAdminExists() {
-      // Create ADM01 to ADM10 with specific passwords
-      for(let i=1; i<=10; i++){
-          let suffix = i.toString().padStart(2, '0');
-          let admEmail = `ADM${suffix}`;
-          let admPass = `@Master${suffix}`;
-          
-          if(!state.users.some(u => u.email === admEmail)) {
-            const newId = "u_admin_" + i;
-            const adminData = {
-              id: newId, nick: "Master " + i, email: admEmail, pass: admPass, role: "admin", plan: "vip_premium",
-              ffid: null, isVerified: false, isBanned: false, stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0 }
-            };
-            await setDocFirebase('users', newId, adminData);
-          }
-      }
-    }
-
-    function syncCurrentUser() {
-      const sid = sessionStorage.getItem("loggedUserId");
-      currentUser = sid ? (state.users.find(u => u.id === sid) || null) : null;
-      if(currentUser && currentUser.isBanned) {
-          window.customAlert("Sua conta foi suspensa pelos administradores.");
-          sessionStorage.removeItem("loggedUserId");
-          currentUser = null;
-      }
-      renderNav();
-    }
-
-    function getPrivateRoomsUsage(user) {
-        if(!user || user.role === 'admin') return 0;
-        const currentMonth = new Date().toISOString().slice(0,7);
-        if(!user.stats.privUsage || user.stats.privUsage.month !== currentMonth) return 0;
-        return user.stats.privUsage.count || 0;
-    }
-
-    async function incrementPrivateRoomUsage() {
-        if(!currentUser || currentUser.role === 'admin') return true;
-        const currentMonth = new Date().toISOString().slice(0,7);
-        if(!currentUser.stats.privUsage || currentUser.stats.privUsage.month !== currentMonth) {
-            currentUser.stats.privUsage = { month: currentMonth, count: 0 };
         }
-        currentUser.stats.privUsage.count++;
-        await setDocFirebase('users', currentUser.id, currentUser);
-        return true;
-    }
+    </script>
 
-    // --- Rendering Core ---
-    function renderApp() {
-      const hash = window.location.hash.replace('#', '') || 'home';
-      
-      renderHome();
-      renderPlanos();
-      renderPerfil();
-      renderRanking();
-      renderPartidas();
-      renderAdminQueue();
-      
-      if(hash === 'fila') {
-        renderChat();
-        window.updateQueueCountsUI();
-        updateQueueStateUI();
-        updatePrivateUsageLabel();
-        window.renderPublicLobbies(); 
-      }
-    }
-
-    window.switchView = (viewId) => {
-      if((viewId === 'perfil' || viewId === 'fila') && !currentUser) return window.openAuthModal('login');
-      if(viewId === 'admin' && (!currentUser || currentUser.role !== 'admin')) return window.customAlert('Acesso negado.');
-
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      
-      const el = document.getElementById(`view-${viewId}`);
-      if(el) el.classList.add('active');
-      const tab = document.querySelector(`.nav-tab[data-target="${viewId}"]`);
-      if(tab) tab.classList.add('active');
-
-      window.location.hash = viewId;
-      renderApp();
-    };
-
-    function renderNav() {
-      const navLinks = document.getElementById("navLinks");
-      const userMenu = document.getElementById("userMenu");
-      if(!navLinks || !userMenu) return;
-
-      let linksHTML = `
-        <div class="nav-tab" data-target="home" onclick="window.switchView('home')">Início</div>
-        <div class="nav-tab" data-target="planos" onclick="window.switchView('planos')">Planos VIP</div>
-        <div class="nav-tab" data-target="fila" onclick="window.switchView('fila')">Fila</div>
-        <div class="nav-tab" data-target="partidas" onclick="window.switchView('partidas')">Partidas</div>
-        <div class="nav-tab" data-target="ranking" onclick="window.switchView('ranking')">Ranking</div>
-        <div class="nav-tab" data-target="regras" onclick="window.switchView('regras')">Regras</div>
-      `;
-      if(currentUser && currentUser.role === 'admin') {
-        linksHTML += `<div class="nav-tab" data-target="admin" onclick="window.switchView('admin')" style="color: var(--danger);">Admin</div>`;
-      }
-      navLinks.innerHTML = linksHTML;
-
-      if(currentUser) {
-        userMenu.innerHTML = `
-          <div class="badge ${getPlanClass(currentUser.plan)}">${getPlanName(currentUser.plan)}</div>
-          <div class="badge badge-gold" style="font-size:13px;">R$ ${currentUser.stats.balance.toFixed(2)}</div>
-          <button class="btn btn-accent" onclick="window.switchView('perfil')" style="padding: 8px 12px;">Meu Perfil</button>
-        `;
-      } else {
-        userMenu.innerHTML = `
-          <button class="btn" onclick="window.openAuthModal('login')">Entrar</button>
-          <button class="btn btn-primary" onclick="window.openAuthModal('register')">Criar Conta</button>
-        `;
-      }
-    }
-
-    // --- AUTH FLOW ---
-    window.openAuthModal = (type) => { 
-        const modal = document.getElementById('modalAuth');
-        if(modal) { modal.classList.add('active'); window.switchAuth(type); }
-    };
-    window.closeAuthModal = () => {
-        const modal = document.getElementById('modalAuth');
-        if(modal) modal.classList.remove('active');
-    };
-    window.switchAuth = (type) => {
-      const loginForm = document.getElementById('formLogin');
-      const regForm = document.getElementById('formRegister');
-      const title = document.getElementById('authTitle');
-      if(!loginForm || !regForm || !title) return;
-
-      if(type === 'login') {
-        loginForm.classList.remove('hidden'); regForm.classList.add('hidden');
-        title.innerText = 'Entrar no Hub';
-      } else {
-        loginForm.classList.add('hidden'); regForm.classList.remove('hidden');
-        title.innerText = 'Criar Conta';
-      }
-    };
-    window.goToFilaOrLogin = () => currentUser ? window.switchView('fila') : window.openAuthModal('login');
-
-    window.doLogin = () => {
-      const emailEl = document.getElementById('logEmail');
-      const passEl = document.getElementById('logPass');
-      if(!emailEl || !passEl) return;
-
-      const email = emailEl.value.trim();
-      const pass = passEl.value;
-      const user = state.users.find(u => u.email === email && u.pass === pass);
-      if(user) {
-        if(user.isBanned) return window.customAlert("Conta Suspensa.");
-        sessionStorage.setItem("loggedUserId", user.id);
-        syncCurrentUser();
-        window.closeAuthModal();
-        window.switchView('home');
-      } else {
-        window.customAlert("Credenciais inválidas.");
-      }
-    };
-
-    window.doRegister = async () => {
-      const nickEl = document.getElementById('regNick');
-      const emailEl = document.getElementById('regEmail');
-      const passEl = document.getElementById('regPass');
-      if(!nickEl || !emailEl || !passEl) return;
-
-      const nick = nickEl.value.trim();
-      const email = emailEl.value.trim();
-      const pass = passEl.value;
-      
-      if(!nick || !email || !pass) return window.customAlert("Preencha todos os campos.");
-      if(state.users.some(u => u.email === email)) return window.customAlert("Email já cadastrado.");
-
-      try {
-          const newId = uid();
-          const newUser = {
-            id: newId, nick, email, pass, role: "user", plan: "free", ffid: null, isVerified: false, isBanned: false,
-            stats: { pts: 0, w: 0, l: 0, streak: 0, balance: 0, betTotal: 0, privUsage: { month: new Date().toISOString().slice(0,7), count: 0 } }
-          };
-          
-          await setDocFirebase('users', newId, newUser);
-          sessionStorage.setItem("loggedUserId", newId);
-          syncCurrentUser();
-          window.closeAuthModal();
-          window.switchView('home');
-          window.customAlert("Conta criada com sucesso! Bem-vindo.", "Sucesso");
-      } catch (err) {
-          console.error("Erro no registro:", err);
-          window.customAlert("Não foi possível criar sua conta. Verifique o banco de dados.", "Erro de Registro");
-      }
-    };
-
-    window.logout = () => {
-      sessionStorage.removeItem("loggedUserId");
-      syncCurrentUser();
-      window.switchView('home');
-    };
-
-    // --- PLANOS VIP & PAGAMENTOS ---
-    function renderPlanos() { /* static */ }
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
-    // COMO ERA ANTES: Fluxo manual de PIX porque as Edge Functions do Mercado Pago e Discord foram removidas do HTML.
-    window.openBuyVipModal = async (planId, price) => {
-        if(!currentUser) return window.openAuthModal('login');
-        if(currentUser.plan === planId) return window.customAlert("Você já possui este plano ativo!");
-        
-        const inputId = document.getElementById('buyVipPlanId');
-        const nameEl = document.getElementById('buyVipPlanName');
-        const priceEl = document.getElementById('buyVipPrice');
-        const modal = document.getElementById('modalBuyVip');
-        
-        if(inputId) inputId.value = planId;
-        if(nameEl) nameEl.innerText = getPlanName(planId);
-        if(priceEl) priceEl.innerText = money(price);
-        if(modal) modal.classList.add('active');
-    };
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    window.closeBuyVipModal = () => {
-        const m = document.getElementById('modalBuyVip');
-        if(m) m.classList.remove('active');
-    };
-
-    // --- PERFIL ---
-    function renderPerfil() {
-      if(!currentUser) return;
-      const u = currentUser;
-      
-      const elNick = document.getElementById('pfNick');
-      if(elNick) elNick.innerText = getUserNick(u);
-      
-      const elAvatar = document.getElementById('pfAvatar');
-      if(elAvatar) elAvatar.style.backgroundImage = `url('${getUserAvatar(u)}')`;
-      
-      const badgePlan = document.getElementById('pfPlanBadge');
-      if(badgePlan) {
-          badgePlan.innerText = getPlanName(u.plan);
-          badgePlan.className = `badge ${getPlanClass(u.plan)}`;
-      }
-
-      const elVerifiedBadge = document.getElementById('pfVerifiedBadge');
-      const elId = document.getElementById('pfId');
-      const lvlEl = document.getElementById('pfLevel');
-      const elRank = document.getElementById('pfRank');
-      const btnToggle = document.getElementById('btnToggleLink');
-      const linkSection = document.getElementById('linkFfSection');
-
-      if(u.isVerified) {
-        if(elVerifiedBadge) { elVerifiedBadge.innerText = "Conta FF Verificada ✓"; elVerifiedBadge.className = "badge badge-green"; }
-        if(elId) elId.innerText = u.ffid;
-        if(lvlEl) lvlEl.innerText = u.ffLevel;
-        if(elRank) elRank.innerText = u.ffRank;
-        if(btnToggle) btnToggle.innerText = "Atualizar ID";
-        if(linkSection) linkSection.classList.add('hidden');
-      } else {
-        if(elVerifiedBadge) { elVerifiedBadge.innerText = "FF Não Vinculado"; elVerifiedBadge.className = "badge badge-gray"; }
-        if(elId) elId.innerText = "Opcional";
-        if(lvlEl) lvlEl.innerText = "-";
-        if(elRank) elRank.innerText = "Unranked";
-        if(btnToggle) btnToggle.innerText = "Vincular ID FF";
-      }
-
-      const r = getRankDetails(u.stats.pts || 0);
-      const elRankPts = document.getElementById('pfRankPts');
-      if(elRankPts) elRankPts.innerHTML = `<span style="color:${r.color}">${r.name}</span>`;
-      
-      const elPts = document.getElementById('pfPts');
-      if(elPts) elPts.innerText = u.stats.pts || 0;
-      
-      const elBalance = document.getElementById('pfBalance');
-      if(elBalance) elBalance.innerText = money(u.stats.balance);
-      
-      const elWL = document.getElementById('pfWL');
-      if(elWL) elWL.innerText = `${u.stats.w} / ${u.stats.l}`;
-      
-      const elWr = document.getElementById('pfWr');
-      if(elWr) elWr.innerText = pct((u.stats.w + u.stats.l)>0 ? (u.stats.w/(u.stats.w+u.stats.l)) : 0);
-      
-      const used = getPrivateRoomsUsage(u);
-      const limit = getPlanLimits(u.plan);
-      const elPrivs = document.getElementById('pfPrivs');
-      if(elPrivs) elPrivs.innerText = limit >= 999999 ? 'Ilimitado' : `${used}/${limit}`;
-    }
-
-    window.toggleIdLinkSection = () => {
-        const el = document.getElementById('linkFfSection');
-        if(el) el.classList.toggle('hidden');
-    };
-    
-    window.verifyFfId = () => {
-      const inp = document.getElementById('inpFfId');
-      if(!inp) return;
-      const ffid = inp.value.trim();
-      if(!ffid || ffid.length < 5) return window.customAlert("Digite um ID válido.");
-      const btn = document.getElementById('btnVerifyFF');
-      if(btn) { btn.innerText = "Buscando..."; btn.disabled = true; }
-
-      setTimeout(async () => {
-        const ranks = ["Prata II", "Ouro III", "Platina I", "Diamante IV", "Mestre", "Desafiante"];
-        currentUser.ffid = ffid;
-        currentUser.ffNick = "LB_" + Math.random().toString(36).substr(2, 5).toUpperCase();
-        currentUser.ffLevel = Math.floor(Math.random() * 50) + 20;
-        currentUser.ffRank = ranks[parseInt(ffid.slice(-2) || "0") % ranks.length];
-        currentUser.ffAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${ffid}&backgroundColor=eab308`;
-        currentUser.isVerified = true;
-        
-        await setDocFirebase('users', currentUser.id, currentUser);
-        if(btn) { btn.innerText = "Buscar Conta"; btn.disabled = false; }
-        window.customAlert("Conta vinculada com sucesso!", "Sucesso");
-      }, 1000);
-    };
-
-    // --- SALAS PRIVADAS E FILAS PÚBLICAS ---
-    window.getFilaPixValue = () => {
-      const valEl = document.getElementById('filaPixValue');
-      if(!valEl) return 10;
-      const val = valEl.value;
-      if (val === 'livre') {
-          const cust = document.getElementById('customPixValue');
-          return cust ? (parseFloat(cust.value) || 0) : 0;
-      }
-      return parseFloat(val);
-    };
-
-    window.handlePixChange = () => {
-      const cont = document.getElementById('customPixContainer');
-      const val = document.getElementById('filaPixValue');
-      if(cont && val) {
-          cont.classList[val.value === 'livre' ? 'remove' : 'add']('hidden');
-      }
-      window.updateQueueCountsUI();
-      window.renderPublicLobbies();
-    };
-
-    function updatePrivateUsageLabel() {
-        if(!currentUser) return;
-        const used = getPrivateRoomsUsage(currentUser);
-        const limit = getPlanLimits(currentUser.plan);
-        const txt = limit >= 999999 ? 'Ilimitado' : `${used} de ${limit}`;
-        const el = document.getElementById('lblPrivateUsage');
-        if(el) el.innerText = `Salas Privadas Criadas neste Mês: ${txt}`;
-    }
-
-    // Modais Sala Privada
-    window.openPrivateModal = () => {
-        const m = document.getElementById('modalPrivate');
-        if(m) m.classList.add('active');
-    };
-    window.closePrivateModal = () => {
-        const m = document.getElementById('modalPrivate');
-        if(m) m.classList.remove('active');
-    };
-    window.switchPrivTab = (tab) => {
-        const createBtn = document.getElementById('tabPrivCreate');
-        const joinBtn = document.getElementById('tabPrivJoin');
-        const createPnl = document.getElementById('privCreate');
-        const joinPnl = document.getElementById('privJoin');
-        if(!createBtn || !joinBtn || !createPnl || !joinPnl) return;
-
-        if(tab === 'create') {
-            createPnl.classList.remove('hidden');
-            joinPnl.classList.add('hidden');
-            createBtn.classList.add('btn-primary'); joinBtn.classList.remove('btn-primary');
-        } else {
-            createPnl.classList.add('hidden');
-            joinPnl.classList.remove('hidden');
-            joinBtn.classList.add('btn-primary'); createBtn.classList.remove('btn-primary');
-        }
-    };
-
-    window.createPrivateRoom = async () => {
-       const myQueue = state.queue.find(q => q.userId === currentUser.id);
-       if(myQueue) {
-           window.closePrivateModal();
-           return window.customAlert("Você já está em uma fila! Saia dela antes de criar uma sala privada.");
-       }
-
-       const limit = getPlanLimits(currentUser.plan);
-       const used = getPrivateRoomsUsage(currentUser);
-       if(used >= limit) {
-           window.closePrivateModal();
-           return window.customConfirm("Você atingiu o limite mensal de filas privadas para o seu plano atual. Faça upgrade para continuar criando partidas privadas.", () => {
-               window.switchView('planos');
-           }, "Limite Atingido");
-       }
-
-       const modeEl = document.getElementById('privMode');
-       const apostaEl = document.getElementById('privAposta');
-       if(!modeEl || !apostaEl) return;
-
-       const size = parseInt(modeEl.value);
-       const pix = parseFloat(apostaEl.value);
-       if(!pix || pix < 5) return window.customAlert("O valor mínimo é R$ 5,00.");
-       
-       await incrementPrivateRoomUsage();
-
-       const code = "SALA-" + Math.random().toString(36).substr(2, 4).toUpperCase();
-       const qId = uid();
-       
-       const queueObj = {
-          id: qId, userId: currentUser.id, tier: code, pix, time: Date.now(), maxPlayers: size, isPrivate: true,
-          lobbyId: code, team: 'A' 
-       };
-       
-       state.queue.push(queueObj);
-       await setDocFirebase('queue', qId, queueObj);
-       
-       window.closePrivateModal();
-       window.customAlert(`Sala Privada criada com sucesso!\n\nEnvie o código para seus amigos: ${code}`, "Código da Sala");
-       
-       window.selectQueueTier(code);
-       updateQueueStateUI(); 
-       checkMatchmaking();
-    };
-
-    window.joinPrivateRoom = async () => {
-       const myQueue = state.queue.find(q => q.userId === currentUser.id);
-       if(myQueue) {
-           window.closePrivateModal();
-           return window.customAlert("Você já está em uma fila! Saia dela antes de entrar em uma sala privada.");
-       }
-
-       const codeEl = document.getElementById('privCode');
-       if(!codeEl) return;
-       const code = codeEl.value.trim().toUpperCase();
-       if(!code) return window.customAlert("Digite o código da sala.");
-       
-       const roomPlayers = state.queue.filter(q => q.tier === code && q.isPrivate);
-       if(roomPlayers.length === 0) return window.customAlert("Sala não encontrada. Verifique o código ou veja se a sala já iniciou.");
-       
-       const roomInfo = roomPlayers[0];
-       if(roomPlayers.length >= roomInfo.maxPlayers) return window.customAlert("Esta sala já está cheia!");
-       
-       const teamACount = roomPlayers.filter(q => q.team === 'A').length;
-       const teamBCount = roomPlayers.filter(q => q.team === 'B').length;
-       const assignedTeam = teamACount <= teamBCount ? 'A' : 'B';
-
-       const qId = uid();
-       const queueObj = {
-          id: qId, userId: currentUser.id, tier: code, pix: roomInfo.pix, time: Date.now(), maxPlayers: roomInfo.maxPlayers, isPrivate: true,
-          lobbyId: code, team: assignedTeam
-       };
-       
-       state.queue.push(queueObj);
-       await setDocFirebase('queue', qId, queueObj);
-       
-       window.closePrivateModal();
-       window.selectQueueTier(code);
-       updateQueueStateUI(); 
-       checkMatchmaking();
-    };
-
-    window.selectQueueTier = (tier) => {
-      currentQueueTier = tier;
-      document.querySelectorAll('.queue-card').forEach(c => c.classList.remove('selected'));
-      
-      const card = document.querySelector(`.queue-card[data-tier="${tier}"]`);
-      if(card) card.classList.add('selected');
-      
-      const chatTitle = document.getElementById('chatTitle');
-      if(chatTitle) {
-          let title = tier.toUpperCase();
-          if(tier.startsWith("SALA-")) title = "SALA PRIVADA (" + tier + ")";
-          chatTitle.innerText = '💬 Chat da Fila - ' + title;
-      }
-      
-      window.renderPublicLobbies();
-      renderChat();
-    };
-
-    window.updateQueueCountsUI = () => {
-      const pixVal = window.getFilaPixValue();
-      ['iniciante', 'medio', 'dificil', 'mix', 'vip'].forEach(tier => {
-        const count = state.queue.filter(q => q.tier === tier && q.pix === pixVal).length;
-        const el = document.getElementById(`count-${tier}`);
-        if(el) el.innerText = `${count}/8`;
-      });
-    };
-
-    // ====== LOBBY BROWSER ======
-    window.renderPublicLobbies = () => {
-      const container = document.getElementById('publicLobbiesList');
-      if(!container) return;
-
-      const pixVal = window.getFilaPixValue();
-      const openPlayers = state.queue.filter(q => !q.isPrivate && q.tier === currentQueueTier && q.pix === pixVal);
-      
-      const lobbies = {};
-      openPlayers.forEach(p => {
-          if(!p.lobbyId) p.lobbyId = p.tier + "_" + p.pix + "_legacy"; 
-          if(!lobbies[p.lobbyId]) lobbies[p.lobbyId] = { A: [], B: [] };
-          if(p.team === 'A') lobbies[p.lobbyId].A.push(p);
-          else if(p.team === 'B') lobbies[p.lobbyId].B.push(p);
-      });
-
-      if(Object.keys(lobbies).length === 0) {
-          container.innerHTML = `<div class="text-center" style="padding: 30px 10px; color: var(--muted); background: rgba(0,0,0,0.2); border-radius: 12px; font-size: 13px;">
-              Nenhuma sala aberta para esta configuração no momento.<br>Seja o primeiro a criar e monte seu time!
-          </div>`;
-          return;
-      }
-
-      let html = "";
-      for(const lId in lobbies) {
-          const lobby = lobbies[lId];
-          const total = lobby.A.length + lobby.B.length;
-          const isLobbyFull = total >= 8;
-          
-          const getPill = (qItem) => {
-              const u = state.users.find(x => x.id === qItem.userId);
-              return `<span class="lobby-player-pill">${getUserNick(u)}</span>`;
-          };
-
-          html += `
-          <div class="open-lobby-card">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="color: var(--primary); font-weight: 800; text-transform: uppercase;">Sala #${lId.substring(0,5)}</span>
-                  <span class="badge ${isLobbyFull ? 'badge-red' : 'badge-gray'}">Jogadores: ${total}/8</span>
-              </div>
-              <div class="lobby-teams-box">
-                  <div class="lobby-team-side">
-                      <h4>Time A (${lobby.A.length}/4)</h4>
-                      <div style="min-height: 40px; margin-bottom: 12px;">
-                          ${lobby.A.map(getPill).join('')}
-                      </div>
-                      ${lobby.A.length < 4 ? `<button class="btn btn-primary" style="width:100%; font-size:11px; padding: 6px;" onclick="window.joinPublicLobby('${lId}', 'A')">Entrar Time A</button>` : `<span style="font-size:11px; color:var(--danger); font-weight:bold;">LOTADO</span>`}
-                  </div>
-                  <div class="lobby-team-side">
-                      <h4>Time B (${lobby.B.length}/4)</h4>
-                      <div style="min-height: 40px; margin-bottom: 12px;">
-                          ${lobby.B.map(getPill).join('')}
-                      </div>
-                      ${lobby.B.length < 4 ? `<button class="btn btn-primary" style="width:100%; font-size:11px; padding: 6px;" onclick="window.joinPublicLobby('${lId}', 'B')">Entrar Time B</button>` : `<span style="font-size:11px; color:var(--danger); font-weight:bold;">LOTADO</span>`}
-                  </div>
-              </div>
-          </div>`;
-      }
-      container.innerHTML = html;
-    };
-
-    window.createNewPublicLobby = async () => {
-        if(!currentUser) return window.openAuthModal('login');
-        
-        const myQueue = state.queue.find(q => q.userId === currentUser.id);
-        if(myQueue) return window.customAlert("Você já está em uma fila ou sala.");
-
-        const pixVal = window.getFilaPixValue();
-        if (pixVal < 5) return window.customAlert("O valor mínimo é R$ 5,00.");
-        
-        const pts = currentUser.stats.pts || 0;
-        const uPlan = currentUser.plan || 'free';
-
-        if (currentQueueTier === 'vip' && uPlan === 'free') return window.customConfirm("A fila VIP é exclusiva para assinantes.", () => window.switchView('planos'), "Acesso Negado");
-        if (currentQueueTier === 'iniciante' && pts >= 300) return window.customAlert("Você tem pontos demais para a fila Iniciante.");
-        if (currentQueueTier === 'medio' && (pts < 150 || pts > 599)) return window.customAlert("A fila MÉDIA é para jogadores entre 150 e 599 pontos ELO.");
-        if (currentQueueTier === 'dificil' && pts < 450) return window.customAlert("A fila DIFÍCIL requer no mínimo 450 pontos ELO (Platina+).");
-
-        let timeModifier = Date.now();
-        if(uPlan === 'vip_premium') timeModifier -= 100000;
-        if(uPlan === 'vip_pro') timeModifier -= 50000;
-        if(uPlan === 'vip_basic') timeModifier -= 10000;
-
-        const newLobbyId = Math.random().toString(36).substr(2, 6).toUpperCase();
-        const qId = uid();
-        const queueObj = { 
-            id: qId, userId: currentUser.id, tier: currentQueueTier, pix: pixVal, time: timeModifier, 
-            maxPlayers: 8, isPrivate: false, lobbyId: newLobbyId, team: 'A' 
-        };
-        
-        state.queue.push(queueObj);
-        await setDocFirebase('queue', qId, queueObj);
-        updateQueueStateUI();
-        checkMatchmaking();
-    };
-
-    window.joinPublicLobby = async (lobbyId, teamStr) => {
-        if(!currentUser) return window.openAuthModal('login');
-        
-        const myQueue = state.queue.find(q => q.userId === currentUser.id);
-        if(myQueue) return window.customAlert("Você já está em uma fila ou sala.");
-
-        const teamCount = state.queue.filter(q => q.lobbyId === lobbyId && q.team === teamStr).length;
-        if(teamCount >= 4) return window.customAlert("Este time já está lotado!");
-
-        const pixVal = window.getFilaPixValue();
-        const pts = currentUser.stats.pts || 0;
-        const uPlan = currentUser.plan || 'free';
-
-        if (currentQueueTier === 'vip' && uPlan === 'free') return window.customConfirm("A fila VIP é exclusiva para assinantes.", () => window.switchView('planos'), "Acesso Negado");
-        if (currentQueueTier === 'iniciante' && pts >= 300) return window.customAlert("Você tem pontos demais para a fila Iniciante.");
-        if (currentQueueTier === 'medio' && (pts < 150 || pts > 599)) return window.customAlert("A fila MÉDIA é para jogadores entre 150 e 599 pontos ELO.");
-        if (currentQueueTier === 'dificil' && pts < 450) return window.customAlert("A fila DIFÍCIL requer no mínimo 450 pontos ELO (Platina+).");
-
-        const qId = uid();
-        const queueObj = { 
-            id: qId, userId: currentUser.id, tier: currentQueueTier, pix: pixVal, time: Date.now(), 
-            maxPlayers: 8, isPrivate: false, lobbyId: lobbyId, team: teamStr 
-        };
-        
-        state.queue.push(queueObj);
-        await setDocFirebase('queue', qId, queueObj);
-        updateQueueStateUI();
-        checkMatchmaking();
-    };
-
-    window.leaveQueue = async () => {
-        const myQueue = state.queue.find(q => q.userId === currentUser.id);
-        if(myQueue) {
-            await deleteDocFirebase('queue', myQueue.id);
-            window.updateQueueCountsUI();
-            window.renderPublicLobbies();
-        }
-    };
-
-    window.toggleQueue = window.leaveQueue; 
-
-    function updateQueueStateUI() {
-      const viewFila = document.getElementById('view-fila');
-      if(!viewFila || !viewFila.classList.contains('active')) return;
-
-      const myQueue = state.queue.find(q => q.userId === currentUser?.id);
-      const filaControls = document.getElementById('filaControls');
-      const filaWaiting = document.getElementById('filaWaiting');
-      const filaStatus = document.getElementById('filaStatus');
-      const visualContainer = document.getElementById('activeLobbyVisual');
-
-      if(!myQueue) {
-        if(filaControls) filaControls.classList.remove('hidden'); 
-        if(filaWaiting) filaWaiting.classList.add('hidden');
-        if(filaStatus) { filaStatus.className = "badge badge-gray"; filaStatus.innerText = "Não está na fila"; }
-      } else {
-        if(filaControls) filaControls.classList.add('hidden'); 
-        if(filaWaiting) filaWaiting.classList.remove('hidden');
-        if(filaStatus) filaStatus.className = "badge badge-gold"; 
-        
-        const lblTitle = document.getElementById('lblWaitTitle');
-        const lblTier = document.getElementById('lblWaitTier');
-        const btnSim = document.getElementById('btnSimulate');
-        
-        if (myQueue.isPrivate) {
-            if(filaStatus) filaStatus.innerText = "Na Sala Privada";
-            if(lblTitle) lblTitle.innerText = "Aguardando Amigos...";
-            if(btnSim) btnSim.classList.add('hidden');
-        } else {
-            if(filaStatus) filaStatus.innerText = "Na Fila Pública";
-            if(lblTitle) lblTitle.innerText = "Aguardando Oponentes...";
-            if(btnSim) btnSim.classList.remove('hidden');
+    <style>
+        body {
+            background-color: #FAF9F6;
+            color: #4A4A4A;
+            scroll-behavior: smooth;
+            font-family: 'Outfit', sans-serif;
         }
         
-        let tName = myQueue.tier.toUpperCase();
-        if(tName.startsWith("SALA-")) tName = "PRIVADA (" + tName + ")";
-        if(lblTier) lblTier.innerText = tName;
+        .glass-header {
+            background: rgba(250, 249, 246, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(183, 110, 121, 0.1);
+        }
         
-        const lblPix = document.getElementById('lblWaitPix');
-        if(lblPix) lblPix.innerText = money(myQueue.pix);
-        
-        const sameQueue = state.queue.filter(q => q.lobbyId === myQueue.lobbyId);
-        const teamA = sameQueue.filter(q => q.team === 'A');
-        const teamB = sameQueue.filter(q => q.team === 'B');
-        
-        const getPill = (qItem) => {
-            const u = state.users.find(x => x.id === qItem.userId);
-            const isMe = qItem.userId === currentUser.id;
-            return `<span class="lobby-player-pill" style="${isMe ? 'border-color:var(--primary); color:var(--primary);' : ''}">${getUserNick(u)}</span>`;
-        };
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
 
-        if(visualContainer) {
-            visualContainer.innerHTML = `
-            <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--stroke); border-radius: 12px; padding: 16px;">
-                <div style="text-align: center; margin-bottom: 12px; font-weight: bold; color: var(--muted); font-size: 13px;">Sala #${myQueue.lobbyId ? myQueue.lobbyId.substring(0,5) : '...'} - Jogadores: ${sameQueue.length}/8</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div style="text-align: center;">
-                        <h4 style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Time A</h4>
-                        <div style="min-height: 50px;">${teamA.map(getPill).join('')}</div>
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .btn-premium {
+            background-color: #B76E79;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-premium:hover {
+            background-color: #9d5b65;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(183, 110, 121, 0.3);
+        }
+
+        .modal-enter {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        #loading-overlay {
+            background: #FAF9F6;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+    <div id="loading-overlay" class="fixed inset-0 z-[200] flex flex-col items-center justify-center">
+        <div class="w-12 h-12 border-4 border-rose-gold border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="font-serif italic text-rose-gold text-lg">A preparar a lista dos sonhos...</p>
+    </div>
+
+    <nav class="fixed w-full z-50 glass-header shadow-sm h-20" id="navbar">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between items-center">
+            <div class="flex-shrink-0 cursor-pointer" onclick="window.showView('home')">
+                <h1 class="font-serif text-3xl text-rose-gold tracking-wider font-bold">E <span class="text-xl">&</span> J</h1>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <button onclick="window.showView('home')" class="text-text-main hover:text-rose-gold transition-colors font-medium">Início</button>
+                <button onclick="document.getElementById('presentes').scrollIntoView()" class="text-text-main hover:text-rose-gold transition-colors font-medium">Lista de Presentes</button>
+            </div>
+            <div class="md:hidden">
+                <i data-lucide="heart" class="text-rose-gold w-6 h-6 animate-pulse"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div id="view-home" class="block">
+        <section id="inicio" class="relative h-screen flex items-center justify-center hero-bg">
+            <div class="text-center px-4 z-10 pt-20">
+                <p class="text-gold tracking-[0.3em] text-sm md:text-base mb-4 uppercase font-medium">Vamos casar-nos</p>
+                <h1 class="font-serif text-6xl md:text-8xl text-white mb-6 drop-shadow-2xl text-center leading-tight font-bold">
+                    Emily <br class="md:hidden"> <span class="text-rose-gold">&</span> <br class="md:hidden"> João Vitor
+                </h1>
+                <p class="text-white text-lg md:text-2xl font-light mb-10 max-w-2xl mx-auto opacity-90 italic">
+                    "O amor é a poesia dos sentidos. E nós decidimos escrever o nosso livro juntos."
+                </p>
+                <button onclick="document.getElementById('presentes').scrollIntoView()" class="btn-premium px-10 py-4 rounded-full text-sm md:text-base tracking-widest uppercase inline-block shadow-2xl transition-all hover:scale-105 font-bold">
+                    Ver Lista de Presentes
+                </button>
+            </div>
+            <div class="absolute bottom-0 w-full overflow-hidden leading-none">
+                <svg class="relative block w-full h-[50px] md:h-[100px]" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,121.32,201.5,114.5,241.6,110.59,281.44,98.6,321.39,56.44Z" fill="#FAF9F6"></path>
+                </svg>
+            </div>
+        </section>
+
+        <section class="py-20 bg-off-white">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <i data-lucide="heart" class="mx-auto text-rose-gold w-10 h-10 mb-6 animate-pulse"></i>
+                <h2 class="font-serif text-3xl md:text-4xl text-text-main mb-12">O grande dia está a chegar...</h2>
+                <div class="grid grid-cols-4 gap-3 md:gap-6 max-w-3xl mx-auto">
+                    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-gold/20">
+                        <div id="cd-days" class="font-serif text-3xl md:text-6xl text-rose-gold mb-1 font-bold">00</div>
+                        <div class="text-[10px] md:text-xs text-text-light uppercase tracking-widest font-bold">Dias</div>
                     </div>
-                    <div style="text-align: center; border-left: 1px dashed rgba(255,255,255,0.1);">
-                        <h4 style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Time B</h4>
-                        <div style="min-height: 50px;">${teamB.map(getPill).join('')}</div>
+                    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-gold/20">
+                        <div id="cd-hours" class="font-serif text-3xl md:text-6xl text-rose-gold mb-1 font-bold">00</div>
+                        <div class="text-[10px] md:text-xs text-text-light uppercase tracking-widest font-bold">Horas</div>
+                    </div>
+                    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-gold/20">
+                        <div id="cd-minutes" class="font-serif text-3xl md:text-6xl text-rose-gold mb-1 font-bold">00</div>
+                        <div class="text-[10px] md:text-xs text-text-light uppercase tracking-widest font-bold">Minutos</div>
+                    </div>
+                    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-rose-gold/20">
+                        <div id="cd-seconds" class="font-serif text-3xl md:text-6xl text-rose-gold mb-1 font-bold">00</div>
+                        <div class="text-[10px] md:text-xs text-text-light uppercase tracking-widest font-bold">Segundos</div>
                     </div>
                 </div>
-            </div>`;
-        }
-      }
-    }
+            </div>
+        </section>
 
-    window.addBotToQueue = async () => {
-      const myQueue = state.queue.find(q => q.userId === currentUser.id);
-      if(!myQueue) return;
+        <section id="presentes" class="py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif text-4xl md:text-5xl text-text-main mb-4 tracking-tighter font-bold">A Nossa Lista de Presentes</h2>
+                    <div class="w-24 h-1 bg-rose-gold mx-auto mb-6 rounded-full opacity-50"></div>
+                    <p class="text-text-light max-w-2xl mx-auto text-lg">A sua presença é o nosso maior presente! Mas se desejar ajudar-nos a construir o nosso lar, escolha um artigo abaixo.</p>
+                </div>
+                
+                <div id="empty-state" class="hidden text-center py-20">
+                    <i data-lucide="gift" class="mx-auto w-16 h-16 text-gray-200 mb-4"></i>
+                    <p class="text-text-light text-lg">A lista de presentes está a ser preparada pelos noivos.</p>
+                </div>
 
-      const sameQueue = state.queue.filter(q => q.lobbyId === myQueue.lobbyId);
-      const teamACount = sameQueue.filter(q => q.team === 'A').length;
-      const teamBCount = sameQueue.filter(q => q.team === 'B').length;
-      
-      let botTeam = 'A';
-      if(teamACount >= 4 && teamBCount >= 4) return; // Lotado
-      if(teamACount >= 4) botTeam = 'B';
-      else if (teamBCount >= 4) botTeam = 'A';
-      else botTeam = teamACount <= teamBCount ? 'A' : 'B'; 
+                <div id="gifts-grid" class="flex flex-wrap justify-center gap-8 md:gap-10">
+                    </div>
+            </div>
+        </section>
 
-      const fakeId = uid();
-      const botPts = currentQueueTier === 'dificil' ? 600 : (currentQueueTier === 'medio' ? 300 : 50);
-      const botUser = {
-        id: fakeId, nick: "Bot_" + Math.floor(Math.random()*100), email: "bot@bot", role: "user", plan: "free", ffid: null, isVerified: false, isBanned: false,
-        stats: { pts: botPts, w:0, l:0, streak:0, balance:0, betTotal:0 }
-      };
-      await setDocFirebase('users', fakeId, botUser);
-      
-      const qId = uid();
-      const queueObj = { 
-        id: qId, userId: fakeId, tier: myQueue.tier, pix: myQueue.pix, time: Date.now(), 
-        maxPlayers: myQueue.maxPlayers || 8, isPrivate: myQueue.isPrivate || false, 
-        lobbyId: myQueue.lobbyId, team: botTeam
-      };
-      
-      state.queue.push(queueObj);
-      await setDocFirebase('queue', qId, queueObj);
-      
-      window.updateQueueCountsUI();
-      window.renderPublicLobbies();
-      checkMatchmaking();
-    };
+        <footer class="bg-[#f4ecee] py-16 text-center border-t border-rose-gold/10">
+            <div class="max-w-4xl mx-auto px-4">
+                <h3 class="font-serif text-4xl text-rose-gold mb-4 font-bold">E & J</h3>
+                <p class="text-text-light mb-10 italic">"Para sempre juntos."</p>
+                <div class="border-t border-rose-gold/20 pt-10 flex flex-col md:flex-row justify-between items-center text-sm text-text-light gap-6">
+                    <p>&copy; 2026 Emily & João Vitor. Todos os direitos reservados.</p>
+                    <div class="flex items-center space-x-4">
+                        <span class="font-bold text-rose-gold/80 italic">Desenvolvido por Ryanz</span>
+                        <span class="text-gray-300">|</span>
+                        <button onclick="window.showView('login')" class="flex items-center space-x-2 hover:text-rose-gold transition-all font-medium uppercase tracking-widest text-[10px]">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Painel dos Noivos</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 
-    async function checkMatchmaking() {
-      const groups = {};
-      
-      state.queue.forEach(q => {
-        const key = q.lobbyId || (q.isPrivate ? q.tier : `${q.tier}_${q.pix}_legacy`);
-        if(!groups[key]) groups[key] = { A: [], B: [], unassigned: [], all: [], sample: q };
+    <div id="checkout-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="window.closeModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl overflow-hidden modal-enter flex flex-col md:flex-row max-h-[90vh] no-scrollbar overflow-y-auto">
+                <div class="bg-gradient-to-br from-[#f4ecee] to-[#FAF9F6] p-10 md:w-2/5 flex flex-col items-center justify-center text-center border-r border-rose-gold/10">
+                    <img id="modal-img" src="" class="w-48 h-48 object-cover rounded-full shadow-2xl border-4 border-white mb-6">
+                    <h3 id="modal-title" class="font-serif text-2xl text-text-main mb-3 font-bold"></h3>
+                    <p id="modal-price" class="text-rose-gold text-3xl font-bold"></p>
+                </div>
+                <div class="p-10 md:w-3/5 relative flex flex-col justify-center items-center text-center">
+                    <button onclick="window.closeModal()" class="absolute top-6 right-6 text-text-light hover:text-rose-gold transition-all bg-gray-100 p-2 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-6 shadow-inner"><i data-lucide="shield-check" class="text-blue-600 w-8 h-8"></i></div>
+                    <h4 class="font-serif text-3xl mb-4 font-bold text-text-main">Checkout Seguro</h4>
+                    <p class="text-text-light mb-8 leading-relaxed">Será redirecionado para o ambiente seguro do <b>Mercado Pago</b>. Lá poderá pagar com Pix ou parcelar no Cartão de Crédito.</p>
+                    
+                    <a id="mp-link" href="#" target="_blank" onclick="window.markAsPending()" class="w-full btn-premium py-5 rounded-2xl font-bold text-lg shadow-xl flex items-center justify-center space-x-3 transition-all hover:scale-[1.02]">
+                        <span>IR PARA O PAGAMENTO</span>
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                    </a>
+
+                    <div class="mt-8 flex items-center justify-center space-x-6 opacity-50 grayscale">
+                         <img src="https://logodownload.org/wp-content/uploads/2020/02/pix-logo-pk-1.png" class="h-5">
+                         <img src="https://logodownload.org/wp-content/uploads/2014/07/visa-logo-1.png" class="h-5">
+                         <img src="https://logodownload.org/wp-content/uploads/2014/07/mastercard-logo-7.png" class="h-5">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-login" class="hidden min-h-screen bg-off-white flex items-center justify-center p-4 pt-24">
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl max-w-md w-full relative text-center">
+            <button onclick="window.showView('home')" class="absolute top-8 left-8 text-text-light hover:text-rose-gold bg-gray-50 p-2 rounded-full"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+            <div class="w-20 h-20 bg-rose-gold/10 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="lock" class="text-rose-gold w-10 h-10"></i></div>
+            <h2 class="font-serif text-3xl mb-2 font-bold text-text-main">Gestão dos Noivos</h2>
+            <p class="text-sm text-text-light mb-8">Faça login para administrar a sua lista.</p>
+            
+            <form onsubmit="window.handleLogin(event)" class="space-y-5">
+                <div class="text-left">
+                    <label class="text-xs font-bold text-text-light uppercase tracking-widest ml-2">E-mail</label>
+                    <input type="email" id="login-email" value="noiva@casamento.com" required class="w-full mt-1 px-6 py-4 rounded-2xl border border-gray-200 outline-none focus:border-rose-gold bg-gray-50/50 transition-colors">
+                </div>
+                <div class="text-left">
+                    <label class="text-xs font-bold text-text-light uppercase tracking-widest ml-2">Palavra-passe</label>
+                    <input type="password" id="login-password" value="senha123" required class="w-full mt-1 px-6 py-4 rounded-2xl border border-gray-200 outline-none focus:border-rose-gold bg-gray-50/50 transition-colors">
+                </div>
+                <button type="submit" class="w-full btn-premium py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all mt-4">Entrar no Painel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="view-admin" class="hidden min-h-screen bg-gray-50 pt-28 pb-20 relative">
         
-        groups[key].all.push(q);
-        if(q.team === 'A') groups[key].A.push(q);
-        else if(q.team === 'B') groups[key].B.push(q);
-        else groups[key].unassigned.push(q); 
-      });
+        <button onclick="window.openAddModal()" title="Criar Novo Presente" class="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[90] btn-premium w-16 h-16 rounded-full shadow-[0_10px_25px_rgba(183,110,121,0.5)] flex items-center justify-center hover:scale-110 transition-transform group">
+            <i data-lucide="plus" class="w-8 h-8 text-white group-hover:rotate-90 transition-transform duration-300"></i>
+        </button>
 
-      for(const key in groups) {
-        const group = groups[key];
-        const maxPlayers = group.sample.maxPlayers || 8;
-        const requiredPerTeam = maxPlayers / 2;
-        
-        if(group.all.length >= maxPlayers) {
-          let teamA_ids = group.A.map(x => x.userId);
-          let teamB_ids = group.B.map(x => x.userId);
-          
-          group.unassigned.forEach(p => {
-              if(teamA_ids.length < requiredPerTeam) teamA_ids.push(p.userId);
-              else teamB_ids.push(p.userId);
-          });
-          
-          const matchId = uid();
-          
-          const matchObj = {
-            id: matchId, createdAt: Date.now(), tier: group.sample.tier, pixValue: group.sample.pix,
-            status: "pending_pix", teamA: teamA_ids, teamB: teamB_ids,
-            scoreA: null, scoreB: null, winner: null 
-          };
+        <div class="max-w-7xl mx-auto px-4 md:px-6 w-full mb-10">
+            <header class="bg-white border border-gray-200 px-6 py-6 rounded-[2rem] shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
+                <h1 class="font-serif text-2xl md:text-3xl text-rose-gold font-bold text-center">Painel Emily & João</h1>
+                <div class="flex items-center justify-center space-x-3 w-full md:w-auto">
+                    <button onclick="window.openAddModal()" class="flex-1 md:flex-none btn-premium px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest shadow-md flex items-center justify-center space-x-2 hover:scale-105 transition-transform">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Criar Presente</span>
+                    </button>
+                    <button onclick="window.logout()" class="flex-1 md:flex-none text-red-500 font-bold text-xs uppercase tracking-widest bg-red-50 hover:bg-red-100 px-6 py-3 rounded-full transition-colors text-center">Sair</button>
+                </div>
+            </header>
+        </div>
 
-          await setDocFirebase('matches', matchId, matchObj);
-          
-          for(const p of group.all) {
-            await deleteDocFirebase('queue', p.id);
-          }
+        <main class="max-w-7xl mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition-shadow">
+                    <div>
+                        <p class="text-[10px] font-bold text-text-light uppercase tracking-widest mb-2">Total Angariado</p>
+                        <h3 id="admin-total-money" class="text-4xl font-serif font-bold text-green-600">R$ 0,00</h3>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-2xl"><i data-lucide="dollar-sign" class="text-green-500 w-8 h-8"></i></div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition-shadow">
+                    <div>
+                        <p class="text-[10px] font-bold text-text-light uppercase tracking-widest mb-2">Presentes Ganhos</p>
+                        <h3 id="admin-total-gifts" class="text-4xl font-serif font-bold text-rose-gold">0</h3>
+                    </div>
+                    <div class="bg-rose-gold/10 p-4 rounded-2xl"><i data-lucide="gift" class="text-rose-gold w-8 h-8"></i></div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition-shadow">
+                    <div>
+                        <p class="text-[10px] font-bold text-text-light uppercase tracking-widest mb-2">Artigos na Lista</p>
+                        <h3 id="admin-available-gifts" class="text-4xl font-serif font-bold text-blue-500">0</h3>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-2xl"><i data-lucide="layout-grid" class="text-blue-500 w-8 h-8"></i></div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden mb-10">
+                <div class="px-8 py-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+                    <h3 class="font-serif text-xl font-bold text-text-main">Gerir Presentes Cadastrados</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-[10px] uppercase font-bold text-text-light tracking-widest border-b border-gray-100">
+                            <tr>
+                                <th class="px-8 py-5 min-w-[200px]">Presente</th>
+                                <th class="px-8 py-5 min-w-[120px]">Valor</th>
+                                <th class="px-8 py-5 min-w-[100px]">Estado</th>
+                                <th class="px-8 py-5 text-right min-w-[120px]">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 
-          const modeStr = teamA_ids.length + "x" + teamB_ids.length;
-          const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: matchObj.tier, text: `🔥 Partida ${matchObj.tier.toUpperCase()} (${modeStr}) formada! Verifiquem a aba Partidas.`, time: Date.now() };
-          await setDocFirebase('chat', chatObj.id, chatObj);
+    <div id="add-item-modal" class="fixed inset-0 z-[110] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="window.closeAddModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg p-8 md:p-10 modal-enter overflow-y-auto max-h-[90vh] no-scrollbar relative">
+                <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+                    <h3 class="font-serif text-2xl text-text-main font-bold">Novo Presente</h3>
+                    <button onclick="window.closeAddModal()" class="text-text-light hover:text-rose-gold bg-gray-50 p-2 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+                
+                <form id="add-gift-form" class="space-y-5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-text-light uppercase tracking-widest mb-2 ml-2">Qual é o presente?</label>
+                        <input type="text" id="new-gift-name" placeholder="Ex: Máquina de Café Expresso" required class="w-full px-5 py-4 rounded-xl border border-gray-200 outline-none focus:border-rose-gold bg-gray-50/50 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-text-light uppercase tracking-widest mb-2 ml-2">Preço (R$)</label>
+                        <input type="number" step="0.01" id="new-gift-price" placeholder="Ex: 450.00" required class="w-full px-5 py-4 rounded-xl border border-gray-200 outline-none focus:border-rose-gold bg-gray-50/50 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-text-light uppercase tracking-widest mb-2 ml-2">Mensagem Curta</label>
+                        <input type="text" id="new-gift-desc" placeholder="Ex: Para alegrar as nossas manhãs" required class="w-full px-5 py-4 rounded-xl border border-gray-200 outline-none focus:border-rose-gold bg-gray-50/50 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-text-light uppercase tracking-widest mb-2 ml-2">Link da Imagem (Opcional)</label>
+                        <input type="url" id="new-gift-image" placeholder="https://images.unsplash.com/..." class="w-full px-5 py-4 rounded-xl border border-gray-200 outline-none focus:border-rose-gold bg-gray-50/50 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-text-light uppercase tracking-widest mb-2 ml-2">Link Mercado Pago</label>
+                        <input type="url" id="new-gift-link" placeholder="Ex: https://mpago.la/..." required class="w-full px-5 py-4 rounded-xl border border-gray-200 outline-none focus:border-rose-gold bg-gray-50/50 transition-colors text-sm">
+                    </div>
+                    <div class="pt-6 flex space-x-4">
+                        <button type="button" onclick="window.closeAddModal()" class="flex-1 py-4 border-2 border-gray-200 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-gray-50 text-text-main transition-colors">Cancelar</button>
+                        <button type="submit" id="submit-add-gift" class="flex-1 btn-premium py-4 rounded-xl font-bold shadow-lg hover:shadow-xl uppercase tracking-widest text-xs transition-all">Guardar Presente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-          if(group.all.find(p => p.userId === currentUser?.id)) {
-            window.customAlert("SALA ENCONTRADA E BALANCEADA! Vá para a aba partidas realizar o pagamento com a Administração.", "Sala Pronta");
-            window.switchView('partidas');
-          }
-        }
-      }
-    }
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getFirestore, collection, onSnapshot, addDoc, updateDoc, doc, deleteDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-    // --- CHAT ---
-    function renderChat() {
-      const box = document.getElementById('chatBox');
-      if(!box) return;
+        lucide.createIcons();
 
-      const filteredChat = state.chat.filter(c => c.tier === currentQueueTier).sort((a,b)=>a.time-b.time);
-      
-      box.innerHTML = filteredChat.slice(-50).map(c => {
-        const isMe = currentUser && c.userId === currentUser.id;
-        const isSys = c.userId === 'system';
-        const color = isSys ? 'var(--warning)' : (isMe ? 'var(--accent)' : 'var(--primary)');
-        const safeText = (c.text||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-        return `
-          <div class="chat-msg ${isMe ? 'me' : ''}">
-            <div class="author" style="color: ${color}">${c.nick} <span>${formatTime(c.time)}</span></div>
-            <div class="text" style="${isSys ? 'font-style: italic; color: #FCD34D;' : ''}">${safeText}</div>
-          </div>
-        `;
-      }).join('');
-      box.scrollTop = box.scrollHeight;
-    }
-
-    window.sendChatMessage = async () => {
-      if(!currentUser) return window.customAlert("Faça login para participar do chat.");
-      const inp = document.getElementById('chatInput');
-      if(!inp) return;
-      const text = inp.value.trim();
-      if(!text) return;
-      
-      const chatObj = { id: uid(), userId: currentUser.id, nick: getUserNick(currentUser), tier: currentQueueTier, text, time: Date.now() };
-      inp.value = '';
-      await setDocFirebase('chat', chatObj.id, chatObj);
-    };
-
-    // --- PARTIDAS E RESULTADOS ---
-    function renderPartidas() {
-      const list = document.getElementById('matchesList');
-      if(!list) return;
-
-      if(state.matches.length === 0) return list.innerHTML = `<div class="text-center" style="padding: 40px; color: var(--muted);">Nenhuma partida registrada ainda.</div>`;
-
-      const order = {"pending_pix": 1, "active": 2, "closed": 3};
-      const sorted = [...state.matches].sort((a,b) => order[a.status] - order[b.status] || b.createdAt - a.createdAt);
-
-      list.innerHTML = sorted.map(m => {
-        const pot = m.pixValue * 2; 
-        let statusBadge = m.status === 'pending_pix' ? `<span class="badge badge-orange">Aguardando PIX</span>` : 
-                          m.status === 'active' ? `<span class="badge badge-green">Em Andamento</span>` : `<span class="badge badge-gray">Finalizada</span>`;
-        
-        const getNickFmt = (id) => {
-            const u = state.users.find(x => x.id === id);
-            const rColor = u ? getRankDetails(u.stats.pts || 0).color : '#fff';
-            return `<span><span style="color:${rColor}">${getUserNick(u)}</span></span>`; 
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAicR-Ah8Tgw2qeak20_gnNXvy53E3B72A",
+            authDomain: "casamento-emilyejoao.firebaseapp.com",
+            projectId: "casamento-emilyejoao",
+            storageBucket: "casamento-emilyejoao.firebasestorage.app",
+            messagingSenderId: "167049383928",
+            appId: "1:167049383928:web:5674c709639378ad3f900d"
         };
-        const strTeamA = m.teamA.map(getNickFmt).join('');
-        const strTeamB = m.teamB.map(getNickFmt).join('');
 
-        const isUserInMatch = currentUser && (m.teamA.includes(currentUser.id) || m.teamB.includes(currentUser.id));
-        const isAdmin = currentUser && currentUser.role === 'admin';
+        const hasFirebaseKeys = Object.keys(firebaseConfig).length > 0 && firebaseConfig.apiKey;
 
-        let tName = m.tier.toUpperCase();
-        if(tName.startsWith("SALA-")) tName = "PRIVADA (" + tName + ")";
+        let db = null;
+        let gifts = [];
+        let purchases = [];
 
-        // COMO ERA ANTES: Fluxo manual em que os jogadores copiam a chave PIX no botão e o admin Inicia.
-        let actions = '';
-        if(m.status === 'pending_pix' && isAdmin) {
-          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="window.adminConfirmPix('${m.id}')">Marcar Pago e Iniciar</button>`;
-        } else if(m.status === 'active' && isAdmin) {
-          actions = `<button class="btn btn-accent" style="padding: 6px 12px; font-size: 12px;" onclick="window.openFinishMatch('${m.id}')">Registrar Resultado</button>`;
-        } else if(m.status === 'pending_pix' && isUserInMatch && !isAdmin) {
-          actions = `<button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; color:black;" onclick="window.openPixModal()">Pagar PIX (QR Code)</button>`;
+        if (hasFirebaseKeys) {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                startFirestore();
+            } catch (error) {
+                console.error("Erro ao inicializar Firebase.", error);
+                startLocal();
+            }
+        } else {
+            startLocal();
         }
 
-        const scoreStr = m.status === 'closed' ? `<div class="match-score">${m.scoreA} <span>-</span> ${m.scoreB}</div>` : `<div class="vs">VS</div>`;
-        const modeStr = m.teamA.length + "x" + m.teamB.length;
+        function startFirestore() {
+            const giftsCol = collection(db, 'gifts');
+            const purchasesCol = collection(db, 'purchases');
 
-        return `
-          <div class="match-card ${isUserInMatch ? 'my-match' : ''}">
-            <div class="match-header">
-              <div class="match-header-info">
-                <div class="match-tier-title">Fila ${tName} (${modeStr})</div>
-                <div class="match-pot-info mono">Aposta Time: <span>${money(m.pixValue)}</span> <span style="opacity:0.3; margin:0 6px">|</span> Pot: <span class="pot-green">${money(pot)}</span></div>
-              </div>
-              <div class="match-status">${statusBadge}</div>
-            </div>
+            onSnapshot(giftsCol, (snapshot) => {
+                gifts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                updateUI();
+            }, (error) => {
+                console.warn("Aviso Firebase: Regras de segurança bloqueadas ou a falhar. A ativar Modo Offline.");
+                db = null;
+                startLocal();
+            });
+
+            if(db) {
+                onSnapshot(purchasesCol, (snapshot) => {
+                    purchases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    updateUI();
+                }, (error) => console.error(error));
+            }
+        }
+
+        function startLocal() {
+            gifts = JSON.parse(localStorage.getItem('wedding_gifts_db')) || [];
+            purchases = JSON.parse(localStorage.getItem('wedding_purchases_db')) || [];
+            updateUI();
+        }
+
+        function saveLocal() {
+            localStorage.setItem('wedding_gifts_db', JSON.stringify(gifts));
+            localStorage.setItem('wedding_purchases_db', JSON.stringify(purchases));
+        }
+
+        function updateUI() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+            renderGuestGrid();
+            renderAdminTable();
+        }
+
+        function formatMoney(val) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        }
+
+        function renderGuestGrid() {
+            const grid = document.getElementById('gifts-grid');
+            const emptyState = document.getElementById('empty-state');
             
-            <div class="match-teams">
-              <div class="team ${m.winner === 'A' ? 'winner' : ''}">
-                <div class="team-name">${m.winner === 'A' ? '👑 Vencedor' : 'Time A'}</div>
-                <div class="team-players">${strTeamA}</div>
-              </div>
-              
-              <div class="match-middle">
-                ${scoreStr}
-              </div>
-              
-              <div class="team ${m.winner === 'B' ? 'winner' : ''}">
-                <div class="team-name">${m.winner === 'B' ? '👑 Vencedor' : 'Time B'}</div>
-                <div class="team-players">${strTeamB}</div>
-              </div>
-            </div>
+            if (gifts.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
             
-            ${actions ? `<div class="match-footer">${actions}</div>` : ''}
-          </div>
-        `;
-      }).join('');
-    }
+            emptyState.classList.add('hidden');
+            grid.innerHTML = '';
+            
+            gifts.forEach(g => {
+                const isBought = g.status === 'bought';
+                const imageSrc = g.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600';
+                
+                grid.innerHTML += `
+                    <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-lg border border-gray-100 transition-all flex flex-col w-full max-w-[340px] mx-auto ${!isBought ? 'card-hover' : 'opacity-80 grayscale-[15%]'}">
+                        <div class="h-64 md:h-72 overflow-hidden relative flex-shrink-0 bg-gray-50">
+                            <img src="${imageSrc}" class="w-full h-full object-cover transition-transform duration-1000 hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600'">
+                            ${isBought ? `<div class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center"><span class="bg-rose-dark text-white px-8 py-3 rounded-full text-sm shadow-2xl uppercase font-bold tracking-widest border border-white/20">Recebido</span></div>` : ''}
+                        </div>
+                        <div class="p-6 md:p-8 text-center flex flex-col flex-grow">
+                            <h3 class="font-serif text-2xl mb-2 font-bold text-text-main line-clamp-1">${g.name}</h3>
+                            <p class="text-sm text-text-light mb-6 font-light line-clamp-2 h-10">${g.desc}</p>
+                            <p class="text-3xl text-rose-gold font-bold mb-8">${formatMoney(g.price)}</p>
+                            
+                            <div class="mt-auto">
+                                <button ${isBought ? 'disabled' : `onclick="window.openCheckout('${g.id}')"`} class="w-full py-4 rounded-xl font-bold tracking-widest transition-all ${isBought ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'btn-premium shadow-xl shadow-rose-gold/20 hover:-translate-y-1'} uppercase text-xs">
+                                    ${isBought ? 'JÁ PRESENTEADO' : 'PRESENTEAR AGORA'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        }
 
-    window.openPixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.add('active'); };
-    window.closePixModal = () => { const m = document.getElementById('modalPix'); if(m) m.classList.remove('active'); };
-    window.copyPixKey = () => { 
-        const el = document.getElementById('pixKeyMatch'); 
-        if(el) { el.select(); document.execCommand('copy'); window.customAlert("Chave PIX copiada!", "Sucesso"); }
-    };
+        function renderAdminTable() {
+            const total = purchases.reduce((acc, curr) => acc + curr.price, 0);
+            document.getElementById('admin-total-money').innerText = formatMoney(total);
+            document.getElementById('admin-total-gifts').innerText = purchases.length;
+            document.getElementById('admin-available-gifts').innerText = gifts.filter(g => g.status === 'available').length;
 
-    window.adminConfirmPix = (matchId) => {
-      window.customConfirm("Confirmar recebimento de todos os PIX? A partida será iniciada!", async () => {
-        const m = state.matches.find(x => x.id === matchId);
-        if(m) { m.status = 'active'; await setDocFirebase('matches', m.id, m); window.customAlert("Partida Iniciada!", "Sucesso"); }
-      });
-    };
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+            
+            if (gifts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="px-8 py-10 text-center text-text-light">Nenhum presente cadastrado.</td></tr>`;
+                return;
+            }
 
-    window.openFinishMatch = (matchId) => { 
-        const matchInp = document.getElementById('finMatchId');
-        const modal = document.getElementById('modalMatch');
-        if(matchInp && modal) { matchInp.value = matchId; modal.classList.add('active'); }
-    };
-    window.closeMatchModal = () => { const m = document.getElementById('modalMatch'); if(m) m.classList.remove('active'); };
-    
-    window.confirmFinishMatch = async () => {
-      const matchInp = document.getElementById('finMatchId');
-      const winInp = document.getElementById('finWinner');
-      const scoreAInp = document.getElementById('finScoreA');
-      const scoreBInp = document.getElementById('finScoreB');
-      if(!matchInp || !winInp || !scoreAInp || !scoreBInp) return;
+            const sortedGifts = [...gifts].sort((a, b) => a.status.localeCompare(b.status));
 
-      const matchId = matchInp.value;
-      const m = state.matches.find(x => x.id === matchId);
-      if(!m) return;
+            sortedGifts.forEach(g => {
+                const isBought = g.status === 'bought';
+                const imageSrc = g.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150';
 
-      m.status = 'closed'; m.winner = winInp.value; 
-      m.scoreA = parseInt(scoreAInp.value); m.scoreB = parseInt(scoreBInp.value);
-      
-      const wIds = m.winner === 'A' ? m.teamA : m.teamB;
-      const lIds = m.winner === 'A' ? m.teamB : m.teamA;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition-colors group">
+                        <td class="px-8 py-4 font-bold text-text-main">
+                            <div class="flex items-center space-x-4">
+                                <img src="${imageSrc}" class="w-14 h-14 rounded-2xl object-cover shadow-sm flex-shrink-0" onerror="this.src='https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150'">
+                                <div>
+                                    <span class="block text-sm">${g.name}</span>
+                                    <a href="${g.pay_link}" target="_blank" class="text-[10px] text-blue-500 font-normal hover:underline inline-flex items-center mt-1"><i data-lucide="link" class="w-3 h-3 mr-1"></i> Ver Link MP</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-4 text-rose-gold font-bold text-lg whitespace-nowrap">${formatMoney(g.price)}</td>
+                        <td class="px-8 py-4"><span class="px-3 py-1 rounded-lg text-[10px] font-bold ${isBought ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-gray-100 text-gray-500 border border-gray-200'} tracking-widest uppercase">${isBought ? 'Recebido' : 'Na Lista'}</span></td>
+                        <td class="px-8 py-4 text-right">
+                            <div class="flex flex-col items-end space-y-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                                ${!isBought ? `<button onclick="window.adminMarkBought('${g.id}')" class="text-[10px] font-bold text-green-600 hover:text-white hover:bg-green-500 border border-green-500 uppercase tracking-widest px-3 py-1.5 rounded transition-colors w-full lg:w-32 text-center">Marcar Pago</button>` : ''}
+                                ${isBought ? `<button onclick="window.adminUndo('${g.id}')" class="text-[10px] font-bold text-gray-500 hover:text-white hover:bg-gray-500 border border-gray-400 uppercase tracking-widest px-3 py-1.5 rounded transition-colors w-full lg:w-32 text-center">Desfazer</button>` : ''}
+                                <button onclick="window.adminDelete('${g.id}')" class="text-[10px] font-bold text-red-500 hover:text-white hover:bg-red-500 border border-red-500 uppercase tracking-widest px-3 py-1.5 rounded transition-colors w-full lg:w-32 text-center">Excluir</button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+            lucide.createIcons();
+        }
 
-      await setDocFirebase('matches', m.id, m);
-      
-      // Calculation of Team ELO Averages to distribute points
-      let ptsA = 0; let ptsB = 0;
-      for(let id of m.teamA){ const u = state.users.find(x => x.id === id); if(u) ptsA += u.stats.pts || 0; }
-      for(let id of m.teamB){ const u = state.users.find(x => x.id === id); if(u) ptsB += u.stats.pts || 0; }
-      const avgA = m.teamA.length > 0 ? ptsA / m.teamA.length : 0;
-      const avgB = m.teamB.length > 0 ? ptsB / m.teamB.length : 0;
-      
-      const avgW = m.winner === 'A' ? avgA : avgB;
-      const avgL = m.winner === 'A' ? avgB : avgA;
+        // ==========================================
+        // ACOES (FIREBASE COM TRATAMENTO DE ERROS DE ID)
+        // ==========================================
 
-      let gain = 25; let loss = 20;
-      if (avgL > avgW + 50) gain = 30; // Underdog WINS
-      if (avgL > avgW + 50) loss = 25; // Favorite LOSES
+        document.getElementById('add-gift-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-add-gift');
+            btn.innerText = 'A guardar...';
+            btn.disabled = true;
 
-      for(let id of wIds) {
-        let u = state.users.find(x => x.id === id);
-        if(u) { u.stats.pts = (u.stats.pts||0)+gain; u.stats.w+=1; u.stats.streak=u.stats.streak>=0?u.stats.streak+1:1; u.stats.balance+=m.pixValue; u.stats.betTotal+=m.pixValue; await setDocFirebase('users', u.id, u); }
-      }
-      for(let id of lIds) {
-        let u = state.users.find(x => x.id === id);
-        if(u) { u.stats.pts = Math.max(0, (u.stats.pts||0)-loss); u.stats.l+=1; u.stats.streak=u.stats.streak<=0?u.stats.streak-1:-1; u.stats.balance-=m.pixValue; u.stats.betTotal+=m.pixValue; await setDocFirebase('users', u.id, u); }
-      }
+            const newGift = {
+                id: Date.now().toString(),
+                name: document.getElementById('new-gift-name').value,
+                price: parseFloat(document.getElementById('new-gift-price').value),
+                desc: document.getElementById('new-gift-desc').value,
+                image: document.getElementById('new-gift-image').value || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600',
+                pay_link: document.getElementById('new-gift-link').value,
+                status: 'available',
+                createdAt: new Date().toISOString()
+            };
 
-      const chatObj = { id: uid(), userId: "system", nick: "SISTEMA", tier: m.tier, text: `🏁 Partida Finalizada! Time ${m.winner} vence (+${gain} Pts).`, time: Date.now() };
-      await setDocFirebase('chat', chatObj.id, chatObj);
-      window.closeMatchModal();
-    };
+            gifts.push(newGift);
+            saveLocal();
+            updateUI();
 
-    // --- HOME, RANKING, ADMIN ---
-    function renderHome() {
-      const el = document.getElementById('homeKpis');
-      if(!el) return;
+            if (db) {
+                try {
+                    await setDoc(doc(db, 'gifts', newGift.id), newGift, { merge: true });
+                } catch (err) { console.error("Falha ao gravar no Firebase.", err); }
+            }
 
-      const verified = state.users.filter(u => u.role !== 'admin').length;
-      const closed = state.matches.filter(m => m.status === 'closed').length;
-      const totalPot = state.matches.filter(m => m.status === 'closed').reduce((acc, m) => acc + (m.pixValue * 2), 0);
-      
-      el.innerHTML = `
-        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--text);">${verified}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Jogadores</div></div>
-        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--text);">${closed}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Partidas Finalizadas</div></div>
-        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--success);">${money(totalPot)}</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Giro de PIX</div></div>
-        <div class="panel text-center"><div style="font-size:32px; font-weight:900; color:var(--primary);">Auto</div><div style="color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:800;">Matchmaking Elo</div></div>
-      `;
-    }
+            e.target.reset();
+            btn.innerText = 'Guardar Presente';
+            btn.disabled = false;
+            window.closeAddModal();
+        });
 
-    function renderRanking() {
-      const el = document.querySelector('#rankingTable tbody');
-      if(!el) return;
+        window.openCheckout = function(id) {
+            const gift = gifts.find(g => g.id === id);
+            if(!gift) return;
 
-      let players = state.users.filter(u => u.role !== 'admin').sort((a,b) => {
-        if(b.stats.pts !== a.stats.pts) return (b.stats.pts || 0) - (a.stats.pts || 0);
-        if(b.stats.balance !== a.stats.balance) return b.stats.balance - a.stats.balance;
-        const wrA = (a.stats.w + a.stats.l) > 0 ? (a.stats.w / (a.stats.w + a.stats.l)) : 0;
-        const wrB = (b.stats.w + b.stats.l) > 0 ? (b.stats.w / (b.stats.w + b.stats.l)) : 0;
-        return wrB - wrA;
-      });
+            document.getElementById('modal-title').innerText = gift.name;
+            document.getElementById('modal-price').innerText = formatMoney(gift.price);
+            document.getElementById('modal-img').src = gift.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600';
+            document.getElementById('mp-link').href = gift.pay_link;
+            document.getElementById('mp-link').setAttribute('data-gift-id', id);
 
-      el.innerHTML = players.length === 0 ? `<tr><td colspan="8" class="text-center">Nenhum jogador registrado.</td></tr>` : players.map((p, idx) => {
-        const wr = (p.stats.w + p.stats.l) > 0 ? (p.stats.w / (p.stats.w + p.stats.l)) : 0;
-        let streakBadge = p.stats.streak > 0 ? `<span class="badge badge-green">W${p.stats.streak}</span>` : p.stats.streak < 0 ? `<span class="badge badge-red">L${Math.abs(p.stats.streak)}</span>` : `<span class="badge badge-gray">0</span>`;
-        let balanceColor = p.stats.balance > 0 ? 'var(--success)' : (p.stats.balance < 0 ? 'var(--danger)' : 'var(--muted)');
-        const r = getRankDetails(p.stats.pts || 0);
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
 
-        return `
-          <tr>
-            <td class="mono" style="font-weight:bold;">${idx + 1}</td>
-            <td style="display:flex; align-items:center; gap:8px;"><div style="width:24px; height:24px; border-radius:4px; background: url('${getUserAvatar(p)}') center/cover;"></div><b>${getUserNick(p)}</b></td>
-            <td><span class="badge ${getPlanClass(p.plan)}">${getPlanName(p.plan)}</span></td>
-            <td><span style="color:${r.color}; font-weight:800; font-size:13px;">${r.name}</span></td>
-            <td><b style="color:var(--primary);">${p.stats.pts||0}</b></td>
-            <td class="mono">${p.stats.w}/${p.stats.l}</td>
-            <td class="mono" style="color:${balanceColor}; font-weight:bold;">${money(p.stats.balance)}</td><td>${streakBadge}</td>
-          </tr>`;
-      }).join('');
-    }
+        window.markAsPending = async function() {
+            const id = document.getElementById('mp-link').getAttribute('data-gift-id');
+            const gift = gifts.find(g => g.id === id);
+            
+            setTimeout(async () => {
+                window.closeModal();
+                if(gift) gift.status = 'bought';
+                purchases.push({ id: Date.now().toString(), giftId: id, giftName: gift.name, price: gift.price, date: new Date().toISOString() });
+                saveLocal();
+                updateUI();
 
-    function renderAdminQueue() {
-      const list = document.getElementById('adminQueueList');
-      if(list) {
-          list.innerHTML = state.queue.length === 0 ? "Nenhum jogador na fila de espera." : `<ul style="list-style:none; padding:0; margin:0;">` + state.queue.map(q => {
-            const u = state.users.find(x => x.id === q.userId);
-            return `<li style="padding: 6px 0; border-bottom: 1px solid var(--stroke);">[<span style="color:var(--primary)">${q.tier.toUpperCase()} - R$${q.pix}</span>] ${getUserNick(u)}</li>`;
-          }).join('') + `</ul>`;
-      }
+                if (db) {
+                    try {
+                        await setDoc(doc(db, 'gifts', id), { status: 'bought' }, { merge: true });
+                        await setDoc(doc(db, 'purchases', `pur_${id}`), { giftId: id, giftName: gift.name, price: gift.price, date: new Date().toISOString() }, { merge: true });
+                    } catch (e) { console.error(e); }
+                }
+                
+                alert("A ser redirecionado para o Mercado Pago!");
+            }, 2000);
+        }
 
-      const tableBody = document.querySelector('#adminUsersTable tbody');
-      if(tableBody) {
-          tableBody.innerHTML = state.users.filter(u=>u.role!=='admin').map(u => {
-              const bText = u.isBanned ? "Desbanir" : "Banir (Smurf)";
-              const bCol = u.isBanned ? "var(--success)" : "var(--danger)";
-              return `
-                  <tr>
-                      <td style="font-size:12px;"><b>${u.nick}</b><br><span style="color:var(--muted)">${u.id.substring(0,8)}...</span></td>
-                      <td>
-                          <select class="select" style="padding:4px 8px; font-size:11px;" onchange="window.adminChangePlan('${u.id}', this.value)">
-                              <option value="free" ${u.plan==='free'?'selected':''}>FREE</option>
-                              <option value="vip_basic" ${u.plan==='vip_basic'?'selected':''}>VIP BÁSICO</option>
-                              <option value="vip_pro" ${u.plan==='vip_pro'?'selected':''}>VIP PRO</option>
-                              <option value="vip_premium" ${u.plan==='vip_premium'?'selected':''}>VIP PREMIUM</option>
-                          </select>
-                      </td>
-                      <td><b>${u.stats.pts||0}</b></td>
-                      <td>
-                          <button class="btn" style="padding:4px 8px; font-size:11px; background:${bCol}; color:#fff;" onclick="window.adminToggleBan('${u.id}')">${bText}</button>
-                      </td>
-                  </tr>
-              `;
-          }).join('');
-      }
-    }
+        window.adminMarkBought = async function(id) {
+            const gift = gifts.find(g => g.id === id);
+            if(!gift) return;
 
-    window.adminClearQueue = () => {
-      window.customConfirm("Esvaziar todas as filas ativas?", async () => {
-        for(let q of state.queue) await deleteDocFirebase('queue', q.id);
-        window.customAlert("Filas limpas com sucesso.");
-      });
-    };
+            gift.status = 'bought';
+            purchases.push({ id: Date.now().toString(), giftId: id, giftName: gift.name, price: gift.price, date: new Date().toISOString() });
+            saveLocal();
+            updateUI();
 
-    window.adminChangePlan = async (uId, newPlan) => {
-        const u = state.users.find(x => x.id === uId);
-        if(u) { u.plan = newPlan; await setDocFirebase('users', u.id, u); }
-    };
+            if (db) {
+                try {
+                    await setDoc(doc(db, 'gifts', id), { status: 'bought' }, { merge: true });
+                    await setDoc(doc(db, 'purchases', `pur_${id}`), { giftId: id, giftName: gift.name, price: gift.price, date: new Date().toISOString() }, { merge: true });
+                } catch (e) { console.error(e); }
+            }
+        }
 
-    window.adminToggleBan = async (uId) => {
-        const u = state.users.find(x => x.id === uId);
-        if(u) { u.isBanned = !u.isBanned; await setDocFirebase('users', u.id, u); }
-    };
+        window.adminUndo = async function(id) {
+            if(!confirm("Voltar a colocar este artigo 'Disponível' para outros convidados?")) return;
+            
+            const gift = gifts.find(g => g.id === id);
+            if(gift) gift.status = 'available';
+            purchases = purchases.filter(p => p.giftId !== id);
+            saveLocal();
+            updateUI();
 
-    window.adminResetSeason = () => {
-      window.customConfirm("ATENÇÃO: Deseja realizar o Soft Reset? Isso multiplicará os pontos de TODOS os jogadores por 0.75 e iniciará uma nova temporada.", async () => {
-          for(let u of state.users.filter(x=>x.role!=='admin')) {
-              u.stats.pts = Math.floor((u.stats.pts || 0) * 0.75);
-              await setDocFirebase('users', u.id, u);
-          }
-          window.customAlert("Temporada Resetada. Novos pontos aplicados.");
-      }, "Reset de Temporada");
-    };
+            if (db) {
+                try { 
+                    await setDoc(doc(db, 'gifts', id), { status: 'available' }, { merge: true });
+                    await deleteDoc(doc(db, 'purchases', `pur_${id}`));
+                } catch(e) { console.error(e); }
+            }
+        }
 
-    window.nukeDB = () => {
-      window.customConfirm("Apagar TUDO (Partidas, Usuários e Chat)? Isso é irreversível.", async () => {
-        for(let u of state.users.filter(x=>x.role!=='admin')) await deleteDocFirebase('users', u.id);
-        for(let m of state.matches) await deleteDocFirebase('matches', m.id);
-        for(let c of state.chat) await deleteDocFirebase('chat', c.id);
-        for(let q of state.queue) await deleteDocFirebase('queue', q.id);
-        window.customAlert("Banco de dados resetado com sucesso.");
-      }, "Zerar Banco de Dados");
-    };
+        window.adminDelete = async function(id) {
+            if(!confirm("Eliminar este presente da lista para sempre?")) return;
 
-    // BOOT
-    initApp();
+            gifts = gifts.filter(g => g.id !== id);
+            purchases = purchases.filter(p => p.giftId !== id);
+            saveLocal();
+            updateUI();
 
-  </script>
+            if (db) {
+                try { 
+                    await deleteDoc(doc(db, 'gifts', id)); 
+                    await deleteDoc(doc(db, 'purchases', `pur_${id}`));
+                } catch(e) { console.log('O documento já não existe na base de dados.'); }
+            }
+        }
+
+    </script>
+
+    <script>
+        window.showView = function(view) {
+            ['view-home', 'view-login', 'view-admin'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.handleLogin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            if(email === 'noiva@casamento.com' && pass === 'senha123') {
+                window.showView('admin');
+            } else {
+                alert('Credenciais incorretas!');
+            }
+        }
+
+        window.logout = function() { window.showView('home'); }
+        window.openAddModal = function() { document.getElementById('add-item-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        window.closeAddModal = function() { document.getElementById('add-item-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+        window.closeModal = function() { document.getElementById('checkout-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+        const targetDate = new Date('2026-07-26T00:00:00').getTime();
+        setInterval(() => {
+            const distance = targetDate - new Date().getTime();
+            if(distance < 0) return;
+            document.getElementById('cd-days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById('cd-hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById('cd-minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById('cd-seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }, 1000);
+    </script>
 </body>
 </html>
